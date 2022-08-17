@@ -1,26 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
+    "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "es5",
+    "noEmit": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "build/types",
+    "baseUrl": ".",
+    "paths": {
+        "cannon" : ["src/lib/cannon/cannon"]
+    }
+},
   "include": [
-    "src"
+    "src",
+    "src/systems/**/*"
   ]
 }
