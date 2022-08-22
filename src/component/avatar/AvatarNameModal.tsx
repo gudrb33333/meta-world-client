@@ -3,10 +3,10 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
 function AvatarNameModal(props) {
-  Modal.setAppElement('#root')
+  Modal.setAppElement('#root');
 
   const navigate = useNavigate();
-  const{ isOpenModal, close } = props
+  const{ isOpenModal, close } = props;
 
   const [info, setInfo] = useState({
     name: "",
@@ -23,12 +23,12 @@ function AvatarNameModal(props) {
     const regex = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/;
 
     if(!regex.test(info.name)){
-      alert('한글, 영어, 숫자만 가능합니다. 아바타 이름을 다시 적어주세요')
-      return
+      alert('한글, 영어, 숫자만 가능합니다. 아바타 이름을 다시 적어주세요');
+      return;
     }
 
-    localStorage.setItem('name', info.name)
-    navigate("/room")
+    localStorage.setItem('avatar_name', info.name);
+    navigate("/room");
   }
 
   return (
