@@ -1,0 +1,9 @@
+.home{
+	background-image: url(../../../public/building.png);
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-size: cover;
+	background-attachment: fixed;
+	width: 100%;
+	height: 100vh;
+}
