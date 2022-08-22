@@ -1,7 +1,7 @@
 import './App.css';
 import { Route, Routes, BrowserRouter as Router} from 'react-router-dom';
-import Home from './component/home/home';
-import Avatar from './component/Avatar';
+import Home from './component/home/Home';
+import Avatar from './component/avatar/Avatar';
 
 function App() {
   return (

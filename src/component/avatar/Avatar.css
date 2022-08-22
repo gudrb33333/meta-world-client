@@ -1,0 +1,15 @@
+.topBar {
+    align-items: center;
+    border-bottom: 2px solid #333;
+    display: flex;
+    height: 98px;
+    justify-content: center;
+}
+.toggleButton {
+    margin: 1rem;
+}
+.iFrame {
+    border: none;
+    width: 100%;
+    height: calc(100vh);
+}
