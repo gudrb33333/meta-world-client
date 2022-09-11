@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const InterpolateHtmlPlugin = require("interpolate-html-plugin");
 const webpack = require("webpack");
 
 module.exports = {
@@ -12,11 +13,17 @@ module.exports = {
         libraryTarget: 'umd',
     },
     plugins: [
+        new InterpolateHtmlPlugin({
+            PUBLIC_URL: './'
+        }),
         new HtmlWebpackPlugin({
           template: './public/index.html',
+          filename: 'index.html',
+          favicon: './public/favicon.ico',
+          manifest: './public/manifest.json',
         }),
         new webpack.ProvidePlugin({
-            React: "react",
+            React: 'react',
           }),
     ],
     resolve: {
@@ -29,7 +36,7 @@ module.exports = {
         rules: [
         {
             test: /\.(ts|tsx|js|jsx)$/,
-            use: "babel-loader",
+            use: 'babel-loader',
             exclude: /node_modules/,
         },
         {
