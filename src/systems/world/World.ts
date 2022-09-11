@@ -5,15 +5,20 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { CameraOperator } from '../core/CameraOperator';
 
+import { InputManager } from '../core/InputManager';
 import { LoadingManager } from '../core/LoadingManager';
 import { Sky } from './Sky';
+import { IUpdatable } from '../interfaces/IUpdatable';
+
 
 export class World {
     public requestAnimationFrameId;
     public renderer: THREE.WebGLRenderer;
     public camera: THREE.PerspectiveCamera;
-    public sky: Sky;
+    public cameraOperator: CameraOperator;
+	public sky: Sky;
     public composer: EffectComposer;
     public graphicsWorld: THREE.Scene;
 	public physicsWorld: CANNON.World;
@@ -25,6 +30,10 @@ export class World {
 	public justRendered: boolean;
     public params: WorldParams;
     public timeScaleTarget = 1;
+
+	public inputManager: InputManager;
+
+	public updatables: IUpdatable[] = [];
 
     constructor(worldScenePath?: string){
         const scope = this;
@@ -80,9 +89,6 @@ export class World {
 			1010,
 		);
 
-        this.camera.position.y = 2
-        // this.camera.position.x = 3
-
         // Passes
 		const renderPass = new RenderPass(this.graphicsWorld, this.camera);
 		const fxaaPass = new ShaderPass(FXAAShader);
@@ -123,13 +129,15 @@ export class World {
 		//this.createParamsGUI(scope);
 
         // Initialization
-		// this.inputManager = new InputManager(this, this.renderer.domElement);
-		// this.cameraOperator = new CameraOperator(
-		// 	this,
-		// 	this.camera,
-		// 	this.params.Mouse_Sensitivity,
-		// );
+		this.inputManager = new InputManager(this, this.renderer.domElement);
+		this.cameraOperator = new CameraOperator(
+			this,
+			this.camera,
+			this.params.Mouse_Sensitivity,
+		);
 		this.sky = new Sky(this);
+
+		this.inputManager.setInputReceiver(this.cameraOperator);
     
         // Load scene if path is supplied
 		if (worldScenePath !== undefined) {
@@ -157,10 +165,25 @@ export class World {
         this.graphicsWorld.add(gltf.scene);
     }
 
+	public registerUpdatable(registree: IUpdatable): void {
+		this.updatables.push(registree);
+		this.updatables.sort((a, b) => (a.updateOrder > b.updateOrder ? 1 : -1));
+	}
+
     // Update
 	// Handles all logic updates.
 	public update(timeStep: number, unscaledTimeStep: number): void {
+		// Update registred objects
+		this.updatables.forEach((entity) => {
+			entity.update(timeStep, unscaledTimeStep);
+		});
 
+		// Lerp time scale
+		this.params.Time_Scale = THREE.MathUtils.lerp(
+			this.params.Time_Scale,
+			this.timeScaleTarget,
+			0.2,
+		);
     }
 
     	/**
