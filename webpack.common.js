@@ -1,26 +1,23 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const InterpolateHtmlPlugin = require("interpolate-html-plugin")
+const webpack = require("webpack");
 
 module.exports = {
     entry: {
         app: './src/index.tsx'
     },
     output: {
-        filename: './build/main.js',
+        filename: 'main.js',
         library: 'MetaWorld',
         libraryTarget: 'umd',
-        path: path.resolve(__dirname)
     },
     plugins: [
         new HtmlWebpackPlugin({
           template: './public/index.html',
-          filename: './index.html',
-          favicon: './public/favicon.ico'
         }),
-        new InterpolateHtmlPlugin({
-            PUBLIC_URL: 'public' // can modify `static` to another name or get it from `process`
-        })
+        new webpack.ProvidePlugin({
+            React: "react",
+          }),
     ],
     resolve: {
         alias: {
@@ -30,6 +27,11 @@ module.exports = {
     },
     module: {
         rules: [
+        {
+            test: /\.(ts|tsx|js|jsx)$/,
+            use: "babel-loader",
+            exclude: /node_modules/,
+        },
         {
             test: /\.tsx?$/,
             use: 'ts-loader',
@@ -43,16 +45,12 @@ module.exports = {
             ]
         },
         {
-            test: /\.(glb|gltf)$/,
-            use:
-            [
-                {
-                    loader: 'file-loader',
-                    options:
-                    {
-                        outputPath: 'assets/models/'
-                    }
-                }
+            test: /\.(bin)$/,
+            use: [
+              {
+                loader: 'file-loader',
+                options: {}
+              }
             ]
         },
       ]
