@@ -10,7 +10,7 @@
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "declaration": true,
-    "declarationDir": "build/types",
+    "declarationDir": "dist/types",
     "baseUrl": ".",
     "paths": {
         "cannon" : ["src/lib/cannon/cannon"]
