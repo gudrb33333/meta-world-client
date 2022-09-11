@@ -1,10 +1,10 @@
 import { SkyShader } from '../../lib/shaders/SkyShader';
 import * as THREE from 'three';
 import { World } from './World';
-//import { IUpdatable } from '../interfaces/IUpdatable';
+import { IUpdatable } from '../interfaces/IUpdatable';
 import { default as CSM } from 'three-csm';
 
-export class Sky extends THREE.Object3D {
+export class Sky extends THREE.Object3D implements IUpdatable{
 	public updateOrder = 5;
 
 	public sunPosition: THREE.Vector3 = new THREE.Vector3();
@@ -98,7 +98,7 @@ export class Sky extends THREE.Object3D {
 		this.refreshSunPosition();
 
 		world.graphicsWorld.add(this);
-		//world.registerUpdatable(this);
+		world.registerUpdatable(this);
 	}
 
 	public update(timeScale: number): void {
