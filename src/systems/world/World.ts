@@ -8,6 +8,10 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { CameraOperator } from '../core/CameraOperator';
 
 import { InputManager } from '../core/InputManager';
+import * as Utils from '../core/FunctionLibrary';
+import { CollisionGroups } from '../enums/CollisionGroups';
+import { BoxCollider } from '../physics/colliders/BoxCollider';
+import { TrimeshCollider } from '../physics/colliders/TrimeshCollider';
 import { LoadingManager } from '../core/LoadingManager';
 import { Sky } from './Sky';
 import { IUpdatable } from '../interfaces/IUpdatable';
@@ -22,6 +26,9 @@ export class World {
     public composer: EffectComposer;
     public graphicsWorld: THREE.Scene;
 	public physicsWorld: CANNON.World;
+	public physicsFrameRate: number;
+	public physicsFrameTime: number;
+	public physicsMaxPrediction: number;
     public clock: THREE.Clock;
 	public renderDelta: number;
 	public logicDelta: number;
@@ -106,15 +113,15 @@ export class World {
 		this.composer.addPass(fxaaPass);
     
         // Physics
-		// this.physicsWorld = new CANNON.World();
-		// this.physicsWorld.gravity.set(0, -9.81, 0);
-		// this.physicsWorld.broadphase = new CANNON.SAPBroadphase(this.physicsWorld);
-		// this.physicsWorld.solver.iterations = 10;
-		// this.physicsWorld.allowSleep = true;
+		this.physicsWorld = new CANNON.World();
+		this.physicsWorld.gravity.set(0, -9.81, 0);
+		this.physicsWorld.broadphase = new CANNON.SAPBroadphase(this.physicsWorld);
+		this.physicsWorld.solver.iterations = 10;
+		this.physicsWorld.allowSleep = true;
 
-		// this.physicsFrameRate = 60;
-		// this.physicsFrameTime = 1 / this.physicsFrameRate;
-		// this.physicsMaxPrediction = this.physicsFrameRate;
+		this.physicsFrameRate = 60;
+		this.physicsFrameTime = 1 / this.physicsFrameRate;
+		this.physicsMaxPrediction = this.physicsFrameRate;
 
         // RenderLoop
 		this.clock = new THREE.Clock();
@@ -162,7 +169,51 @@ export class World {
 	}
 
     public loadScene(loadingManager: LoadingManager, gltf: any): void {
-        this.graphicsWorld.add(gltf.scene);
+		gltf.scene.traverse((child) => {
+			if (child.hasOwnProperty('userData')) {
+				if (child.type === 'Mesh') {
+					Utils.setupMeshProperties(child);
+					this.sky.csm.setupMaterial(child.material);
+				}
+
+				if (child.userData.hasOwnProperty('data')) {
+					if (child.userData.data === 'physics') {
+						if (child.userData.hasOwnProperty('type')) {
+							// Convex doesn't work! Stick to boxes!
+							if (child.userData.type === 'box') {
+								const phys = new BoxCollider({
+									size: new THREE.Vector3(
+										child.scale.x,
+										child.scale.y,
+										child.scale.z,
+									),
+								});
+								phys.body.position.copy(Utils.cannonVector(child.position));
+								phys.body.quaternion.copy(Utils.cannonQuat(child.quaternion));
+								phys.body.computeAABB();
+
+								phys.body.shapes.forEach((shape) => {
+									shape.collisionFilterMask = ~CollisionGroups.TrimeshColliders;
+								});
+
+								this.physicsWorld.addBody(phys.body);
+							} else if (child.userData.type === 'trimesh') {
+								const phys = new TrimeshCollider(child, {});
+								this.physicsWorld.addBody(phys.body);
+							}
+
+							child.visible = false;
+						}
+					}
+
+					// if (child.userData.data === 'scenario') {
+					// 	this.scenarios.push(new Scenario(child, this));
+					// }
+				}
+			}
+		});
+		
+		this.graphicsWorld.add(gltf.scene);
     }
 
 	public registerUpdatable(registree: IUpdatable): void {
@@ -173,6 +224,8 @@ export class World {
     // Update
 	// Handles all logic updates.
 	public update(timeStep: number, unscaledTimeStep: number): void {
+		this.updatePhysics(timeStep);
+
 		// Update registred objects
 		this.updatables.forEach((entity) => {
 			entity.update(timeStep, unscaledTimeStep);
@@ -185,6 +238,29 @@ export class World {
 			0.2,
 		);
     }
+
+	public updatePhysics(timeStep: number): void {
+		// Step the physics world
+		this.physicsWorld.step(this.physicsFrameTime, timeStep);
+
+		// this.avatars.forEach((char) => {
+		// 	if (this.isOutOfBounds(char.avatarCapsule.body.position)) {
+		// 		this.outOfBoundsRespawn(char.avatarCapsule.body);
+		// 	}
+		// });
+
+		// this.chairs.forEach((Chair) => {
+		// 	if (this.isOutOfBounds(Chair.rayCastVehicle.chassisBody.position)) {
+		// 		const worldPos = new THREE.Vector3();
+		// 		Chair.spawnPoint.getWorldPosition(worldPos);
+		// 		worldPos.y += 1;
+		// 		this.outOfBoundsRespawn(
+		// 			Chair.rayCastVehicle.chassisBody,
+		// 			Utils.cannonVector(worldPos),
+		// 		);
+		// 	}
+		// });
+	}
 
     	/**
 	 * Rendering loop.
@@ -205,12 +281,21 @@ export class World {
         let timeStep = unscaledTimeStep * this.params.Time_Scale;
         timeStep = Math.min(timeStep, 1 / 30); // min 30 fps
 
-        // Actual rendering with a FXAA ON/OFF switch
-		if (this.params.FXAA) this.composer.render();
-		else this.renderer.render(this.graphicsWorld, this.camera);
-
 		// Logic
 		world.update(timeStep, unscaledTimeStep);
+
+		// Measuring render time
+		this.renderDelta = this.clock.getDelta();
+
+		// Frame limiting
+		const interval = 1 / 60;
+		this.sinceLastFrame +=
+			this.requestDelta + this.renderDelta + this.logicDelta;
+		this.sinceLastFrame %= interval;
+
+		// Actual rendering with a FXAA ON/OFF switch
+		if (this.params.FXAA) this.composer.render();
+		else this.renderer.render(this.graphicsWorld, this.camera);
 
 		// Measuring render time
 		this.renderDelta = this.clock.getDelta();
