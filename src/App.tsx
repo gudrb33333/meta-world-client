@@ -1,17 +1,17 @@
 import './App.css';
-import { Route, Routes, BrowserRouter as Router} from 'react-router-dom';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import Home from './component/home/Home';
 import Avatar from './component/avatar/Avatar';
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />}/>
-        <Route path="/avatar" element={<Avatar />}/>
-      </Routes>
-    </Router>
-  );
+	return (
+		<Router>
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/avatar" element={<Avatar />} />
+			</Routes>
+		</Router>
+	);
 }
 
 export default App;
