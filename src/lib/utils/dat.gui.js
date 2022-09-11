@@ -1937,7 +1937,7 @@
                     dom.addClass(autoPlaceContainer, CSS_NAMESPACE);
                     dom.addClass(autoPlaceContainer, GUI.CLASS_AUTO_PLACE_CONTAINER);
 					// document.body.appendChild(autoPlaceContainer);
-					document.getElementById('debug-container').appendChild(autoPlaceContainer);
+					////document.getElementById('debug-container').appendChild(autoPlaceContainer);
                     autoPlaceVirgin = false;
                 }
                 autoPlaceContainer.appendChild(this.domElement);

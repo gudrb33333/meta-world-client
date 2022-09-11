@@ -19,8 +19,8 @@ function Room() {
 	});
 
 	const listenBackEvent = () => {
-		world.stopRendering();
-		world.disconnectPhoenixAdapter();
+		//world.stopRendering();
+		//world.disconnectPhoenixAdapter();
 
 		const canvas = document.getElementsByTagName(
 			'canvas',
