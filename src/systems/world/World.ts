@@ -6,7 +6,6 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { CameraOperator } from '../core/CameraOperator';
-
 import { InputManager } from '../core/InputManager';
 import * as Utils from '../core/FunctionLibrary';
 import { CollisionGroups } from '../enums/CollisionGroups';
@@ -15,7 +14,17 @@ import { TrimeshCollider } from '../physics/colliders/TrimeshCollider';
 import { LoadingManager } from '../core/LoadingManager';
 import { Sky } from './Sky';
 import { IUpdatable } from '../interfaces/IUpdatable';
-
+import { AvatarSpawnPoint } from './AvatarSpawnPoint';
+import { ISpawnPoint } from '../interfaces/ISpawnPoint';
+import { Chair } from '../objects/Chair';
+import { Avatar } from '../avatars/Avatar';
+import { IWorldEntity } from '../interfaces/IWorldEntity';
+import { Detector } from '../../lib/utils/Detector';
+import { Stats } from '../../lib/utils/Stats';
+import * as GUI from '../../lib/utils/dat.gui';
+import { CannonDebugRenderer } from '../../lib/cannon/CannonDebugRenderer';
+import * as _ from 'lodash';
+import { UIManager } from '../core/UIManager';
 
 export class World {
     public requestAnimationFrameId;
@@ -40,24 +49,21 @@ export class World {
 
 	public inputManager: InputManager;
 
+	private spawnPoints: ISpawnPoint[] = [];
+	public avatars: Avatar[] = [];
+	public avatarMap = new Map<string, Avatar>();
+	public chairs: Chair[] = [];
+
+	public stats: Stats;
+	public scenarioGUIFolder: GUI;
+	public cannonDebugRenderer: CannonDebugRenderer;
+
 	public updatables: IUpdatable[] = [];
 
-    constructor(worldScenePath?: string){
-        const scope = this;
+	constructor(worldScenePath?: string) {
+		const scope = this;
 
-        this.params = {
-			Pointer_Lock: true,
-			Mouse_Sensitivity: 0.3,
-			Time_Scale: 1,
-			Shadows: true,
-			FXAA: true,
-			Debug_Physics: false,
-			Debug_FPS: false,
-			Sun_Elevation: 50,
-			Sun_Rotation: 145,
-		};
-        
-        // Renderer
+		// Renderer
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -65,12 +71,12 @@ export class World {
 		this.renderer.toneMappingExposure = 1.0;
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMap.type = THREE.BasicShadowMap;
-    
-        // Canvas
+
+		// Canvas
 		this.renderer.domElement.id = 'main-canvas';
 		document.body.appendChild(this.renderer.domElement);
-    
-        // Auto window resize
+
+		// Auto window resize
 		function onWindowResize(): void {
 			scope.camera.aspect = window.innerWidth / window.innerHeight;
 			scope.camera.updateProjectionMatrix();
@@ -86,7 +92,6 @@ export class World {
 		}
 		window.addEventListener('resize', onWindowResize, false);
 
-        
 		// Three.js scene
 		this.graphicsWorld = new THREE.Scene();
 		this.camera = new THREE.PerspectiveCamera(
@@ -96,23 +101,23 @@ export class World {
 			1010,
 		);
 
-        // Passes
+		// Passes
 		const renderPass = new RenderPass(this.graphicsWorld, this.camera);
 		const fxaaPass = new ShaderPass(FXAAShader);
 
-        // FXAA
+		// FXAA
 		const pixelRatio = this.renderer.getPixelRatio();
 		fxaaPass.material['uniforms'].resolution.value.x =
 			1 / (window.innerWidth * pixelRatio);
 		fxaaPass.material['uniforms'].resolution.value.y =
 			1 / (window.innerHeight * pixelRatio);
 
-        // Composer
+		// Composer
 		this.composer = new EffectComposer(this.renderer);
 		this.composer.addPass(renderPass);
 		this.composer.addPass(fxaaPass);
-    
-        // Physics
+
+		// Physics
 		this.physicsWorld = new CANNON.World();
 		this.physicsWorld.gravity.set(0, -9.81, 0);
 		this.physicsWorld.broadphase = new CANNON.SAPBroadphase(this.physicsWorld);
@@ -123,19 +128,19 @@ export class World {
 		this.physicsFrameTime = 1 / this.physicsFrameRate;
 		this.physicsMaxPrediction = this.physicsFrameRate;
 
-        // RenderLoop
+		// RenderLoop
 		this.clock = new THREE.Clock();
 		this.renderDelta = 0;
 		this.logicDelta = 0;
 		this.sinceLastFrame = 0;
 		this.justRendered = false;
 
-        // Stats (FPS, Frame time, Memory)
-		//this.stats = Stats();
+		// Stats (FPS, Frame time, Memory)
+		this.stats = Stats();
 		// Create right panel GUI
-		//this.createParamsGUI(scope);
+		this.createParamsGUI(scope);
 
-        // Initialization
+		// Initialization
 		this.inputManager = new InputManager(this, this.renderer.domElement);
 		this.cameraOperator = new CameraOperator(
 			this,
@@ -144,8 +149,6 @@ export class World {
 		);
 		this.sky = new Sky(this);
 
-		this.inputManager.setInputReceiver(this.cameraOperator);
-    
         // Load scene if path is supplied
 		if (worldScenePath !== undefined) {
             const loadingManager = new LoadingManager(this);
@@ -158,15 +161,10 @@ export class World {
             loadingManager.loadGLTF(worldScenePath, (gltf) => {
 				this.loadScene(loadingManager, gltf);
 			});
-
-            this.render(this);
         }
-    }
 
-    public setTimeScale(value: number): void {
-		this.params.Time_Scale = value;
-		this.timeScaleTarget = value;
-	}
+		this.render(this);
+    }
 
     public loadScene(loadingManager: LoadingManager, gltf: any): void {
 		gltf.scene.traverse((child) => {
@@ -205,23 +203,160 @@ export class World {
 							child.visible = false;
 						}
 					}
+				}
+			}
 
-					// if (child.userData.data === 'scenario') {
-					// 	this.scenarios.push(new Scenario(child, this));
-					// }
+			if (
+				child.hasOwnProperty('userData') &&
+				child.userData.hasOwnProperty('data')
+			) {
+				if (child.userData.data === 'spawn') {
+					if (child.userData.type === 'chair') {
+						// const sp = new ObjectSpawnPoint(child);
+
+						// if (child.userData.hasOwnProperty('type')) {
+						// 	sp.type = child.userData.type;
+						// }
+
+						// this.spawnPoints.push(sp);
+					} else if (child.userData.type === 'player') {
+						const sp = new AvatarSpawnPoint(child);
+						this.spawnPoints.push(sp);
+					}
 				}
 			}
 		});
 		
 		this.graphicsWorld.add(gltf.scene);
+
+		this.spawnPoints.forEach((sp) => {
+			sp.spawn(loadingManager, this);
+		});
     }
+
+	public setTimeScale(value: number): void {
+		this.params.Time_Scale = value;
+		this.timeScaleTarget = value;
+	}
+
+	public add(worldEntity: IWorldEntity): void {
+		worldEntity.addToWorld(this);
+		this.registerUpdatable(worldEntity);
+	}
+
 
 	public registerUpdatable(registree: IUpdatable): void {
 		this.updatables.push(registree);
 		this.updatables.sort((a, b) => (a.updateOrder > b.updateOrder ? 1 : -1));
 	}
 
-    // Update
+	public remove(worldEntity: IWorldEntity): void {
+		worldEntity.removeFromWorld(this);
+		this.unregisterUpdatable(worldEntity);
+	}
+
+	public unregisterUpdatable(registree: IUpdatable): void {
+		_.pull(this.updatables, registree);
+	}
+
+	public clearEntities(): void {
+		for (let i = 0; i < this.avatars.length; i++) {
+			this.remove(this.avatars[i]);
+			i--;
+		}
+
+		for (let i = 0; i < this.chairs.length; i++) {
+			this.remove(this.chairs[i]);
+			i--;
+		}
+	}
+
+	private createParamsGUI(scope: World): void {
+		this.params = {
+			Pointer_Lock: true,
+			Mouse_Sensitivity: 0.3,
+			Time_Scale: 1,
+			Shadows: true,
+			FXAA: true,
+			Debug_Physics: false,
+			Debug_FPS: false,
+			Sun_Elevation: 50,
+			Sun_Rotation: 145,
+		};
+
+		const gui = new GUI.GUI();
+
+		// Scenario
+		this.scenarioGUIFolder = gui.addFolder('Scenarios');
+		this.scenarioGUIFolder.open();
+
+		// World
+		const worldFolder = gui.addFolder('World');
+		worldFolder
+			.add(this.params, 'Time_Scale', 0, 1)
+			.listen()
+			.onChange((value) => {
+				scope.timeScaleTarget = value;
+			});
+		worldFolder
+			.add(this.params, 'Sun_Elevation', 0, 180)
+			.listen()
+			.onChange((value) => {
+				scope.sky.phi = value;
+			});
+		worldFolder
+			.add(this.params, 'Sun_Rotation', 0, 360)
+			.listen()
+			.onChange((value) => {
+				scope.sky.theta = value;
+			});
+
+		// Input
+		const settingsFolder = gui.addFolder('Settings');
+		settingsFolder.add(this.params, 'FXAA');
+		settingsFolder.add(this.params, 'Shadows').onChange((enabled) => {
+			if (enabled) {
+				this.sky.csm.lights.forEach((light) => {
+					light.castShadow = true;
+				});
+			} else {
+				this.sky.csm.lights.forEach((light) => {
+					light.castShadow = false;
+				});
+			}
+		});
+		settingsFolder.add(this.params, 'Pointer_Lock').onChange((enabled) => {
+			scope.inputManager.setPointerLock(enabled);
+		});
+		settingsFolder
+			.add(this.params, 'Mouse_Sensitivity', 0, 1)
+			.onChange((value) => {
+				scope.cameraOperator.setSensitivity(value, value * 0.8);
+			});
+		settingsFolder.add(this.params, 'Debug_Physics').onChange((enabled) => {
+			if (enabled) {
+				this.cannonDebugRenderer = new CannonDebugRenderer(
+					this.graphicsWorld,
+					this.physicsWorld,
+				);
+			} else {
+				this.cannonDebugRenderer.clearMeshes();
+				this.cannonDebugRenderer = undefined;
+			}
+
+			scope.avatars.forEach((char) => {
+				char.raycastBox.visible = enabled;
+			});
+		});
+		settingsFolder.add(this.params, 'Debug_FPS').onChange((enabled) => {
+			UIManager.setFPSVisible(enabled);
+		});
+
+		gui.open();
+	}
+
+
+		// Update
 	// Handles all logic updates.
 	public update(timeStep: number, unscaledTimeStep: number): void {
 		this.updatePhysics(timeStep);
@@ -237,17 +372,20 @@ export class World {
 			this.timeScaleTarget,
 			0.2,
 		);
-    }
+
+		// Physics debug
+		if (this.params.Debug_Physics) this.cannonDebugRenderer.update();
+	}
 
 	public updatePhysics(timeStep: number): void {
 		// Step the physics world
 		this.physicsWorld.step(this.physicsFrameTime, timeStep);
 
-		// this.avatars.forEach((char) => {
-		// 	if (this.isOutOfBounds(char.avatarCapsule.body.position)) {
-		// 		this.outOfBoundsRespawn(char.avatarCapsule.body);
-		// 	}
-		// });
+		this.avatars.forEach((char) => {
+			if (this.isOutOfBounds(char.avatarCapsule.body.position)) {
+				this.outOfBoundsRespawn(char.avatarCapsule.body);
+			}
+		});
 
 		// this.chairs.forEach((Chair) => {
 		// 	if (this.isOutOfBounds(Chair.rayCastVehicle.chassisBody.position)) {
@@ -262,30 +400,58 @@ export class World {
 		// });
 	}
 
-    	/**
+	public isOutOfBounds(position: CANNON.Vec3): boolean {
+		const inside =
+			position.x > -211.882 &&
+			position.x < 211.882 &&
+			position.z > -169.098 &&
+			position.z < 153.232 &&
+			position.y > 0.107;
+		const belowSeaLevel = position.y < 14.989;
+
+		return !inside && belowSeaLevel;
+	}
+
+	public outOfBoundsRespawn(body: CANNON.Body, position?: CANNON.Vec3): void {
+		const newPos = position || new CANNON.Vec3(0, 16, 0);
+		const newQuat = new CANNON.Quaternion(0, 0, 0, 1);
+
+		body.position.copy(newPos);
+		body.interpolatedPosition.copy(newPos);
+		body.quaternion.copy(newQuat);
+		body.interpolatedQuaternion.copy(newQuat);
+		body.velocity.setZero();
+		body.angularVelocity.setZero();
+	}
+
+	public stopRendering() {
+		cancelAnimationFrame(this.requestAnimationFrameId);
+	}
+
+	/**
 	 * Rendering loop.
 	 * Implements fps limiter and frame-skipping
 	 * Calls world's "update" function before rendering.
 	 * @param {World} world
 	 */
 	public render(world: World): void {
-        this.requestDelta = this.clock.getDelta();
-        
-        this.requestAnimationFrameId = requestAnimationFrame(() => {
+		this.requestDelta = this.clock.getDelta();
+
+		this.requestAnimationFrameId = requestAnimationFrame(() => {
 			world.render(world);
 		});
 
-        // Getting timeStep
+		// Getting timeStep
 		const unscaledTimeStep =
-            this.requestDelta + this.renderDelta + this.logicDelta;
-        let timeStep = unscaledTimeStep * this.params.Time_Scale;
-        timeStep = Math.min(timeStep, 1 / 30); // min 30 fps
+			this.requestDelta + this.renderDelta + this.logicDelta;
+		let timeStep = unscaledTimeStep * this.params.Time_Scale;
+		timeStep = Math.min(timeStep, 1 / 30); // min 30 fps
 
 		// Logic
 		world.update(timeStep, unscaledTimeStep);
 
-		// Measuring render time
-		this.renderDelta = this.clock.getDelta();
+		// Measuring logic time
+		this.logicDelta = this.clock.getDelta();
 
 		// Frame limiting
 		const interval = 1 / 60;
@@ -293,11 +459,15 @@ export class World {
 			this.requestDelta + this.renderDelta + this.logicDelta;
 		this.sinceLastFrame %= interval;
 
+		// Stats end
+		this.stats.end();
+		this.stats.begin();
+
 		// Actual rendering with a FXAA ON/OFF switch
 		if (this.params.FXAA) this.composer.render();
 		else this.renderer.render(this.graphicsWorld, this.camera);
 
 		// Measuring render time
 		this.renderDelta = this.clock.getDelta();
-    }
+	}
 }
