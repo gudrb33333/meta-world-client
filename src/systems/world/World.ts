@@ -161,6 +161,23 @@ export class World {
             loadingManager.onFinishedCallback = async () => {
                 this.update(1, 1);
 				this.setTimeScale(1);
+
+				const profile = {
+					avatar_url: localStorage.getItem('avatar_url'),
+					avatar_name: localStorage.getItem('avatar_name'),
+				};
+				this.phoenixAdapter = new PhoenixAdapter(
+					this,
+					process.env.PHOENIX_SERVER_URL,
+					process.env.PHOENIX_CHANNER_TOPIC,
+					profile,
+				);
+				await this.phoenixAdapter.phoenixSocketConnect();
+				await this.phoenixAdapter.phoenixChannelJoin();
+
+				//this.phoenixAdapter.onJoin(loadingManager2);
+				this.phoenixAdapter.onLeave();
+				this.phoenixAdapter.onSync();
             }
 
             loadingManager.loadGLTF(worldScenePath, (gltf) => {
