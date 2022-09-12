@@ -80,8 +80,6 @@ export var Stats = function () {
 
                 fpsPanel.update((frames * 1000) / (time - prevTime), 100);
 
-                document.getElementById('fps').innerHTML = (frames * 1000) / (time - prevTime);
-
                 prevTime = time;
                 frames = 0;
 
