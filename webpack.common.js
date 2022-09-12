@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const InterpolateHtmlPlugin = require("interpolate-html-plugin");
+const DotEnv = require("dotenv-webpack");
 const webpack = require("webpack");
 
 module.exports = {
@@ -24,7 +25,8 @@ module.exports = {
         }),
         new webpack.ProvidePlugin({
             React: 'react',
-          }),
+        }),
+        new DotEnv(),
     ],
     resolve: {
         alias: {
