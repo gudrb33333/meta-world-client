@@ -11,7 +11,7 @@ export var Stats = function () {
 	var container = document.createElement('div');
 	container.id = 'statsBox';
 	container.style.display = 'none';
-	////document.getElementById('debug-container').appendChild(container);
+	document.getElementById('debug-container').appendChild(container);
     // container.addEventListener('click', function (event) {
 
     //     event.preventDefault();
