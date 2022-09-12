@@ -33,7 +33,7 @@ export abstract class ExitingStateBase extends AvatarStateBase {
 		this.avatar.setPhysicsEnabled(true);
 		this.avatar.inputReceiverUpdate(0);
 		this.avatar.avatarCapsule.body.velocity.copy(
-			(this.chair as unknown as Chair).rayCastVehicle.chassisBody.velocity,
+			(this.chair as unknown as Chair).getRayCastVehicle().chassisBody.velocity,
 		);
 		this.avatar.feetRaycast();
 	}
@@ -47,7 +47,7 @@ export abstract class ExitingStateBase extends AvatarStateBase {
 		this.exitPoint.getWorldPosition(this.dummyObj.position);
 		const target = this.dummyObj.position.clone().add(forward);
 		this.dummyObj.lookAt(target);
-		this.chair.seatPointObject.parent.attach(this.dummyObj);
+		this.chair.getSeatPointObject().parent.attach(this.dummyObj);
 		this.endRotation.copy(this.dummyObj.quaternion);
 	}
 }

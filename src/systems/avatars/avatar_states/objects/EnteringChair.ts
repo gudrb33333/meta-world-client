@@ -27,13 +27,13 @@ export class EnteringChair extends AvatarStateBase {
 		(this.chair as unknown as THREE.Object3D).attach(this.avatar);
 
 		this.startPosition.copy(entryPoint.position);
-		this.endPosition.copy(chair.seatPointObject.position);
+		this.endPosition.copy(chair.getSeatPointObject().position);
 		this.initialPositionOffset
 			.copy(this.startPosition)
 			.sub(this.avatar.position);
 
 		this.startRotation.copy(this.avatar.quaternion);
-		this.endRotation.copy(this.chair.seatPointObject.quaternion);
+		this.endRotation.copy(this.chair.getSeatPointObject().quaternion);
 	}
 
 	public update(timeStep: number): void {
