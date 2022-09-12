@@ -90,14 +90,14 @@ export class PhoenixAdapter implements IUpdatable {
 		return this.channel;
 	}
 
-	public onJoin(loadingManager2: LoadingManager) {
+	public onJoin(avatarLoadingManager: LoadingManager) {
 		this.presence.onJoin((id, beforeJoin, afterJoin) => {
 			if (beforeJoin === undefined) {
 				console.log('onJoin', ':', afterJoin.metas[0]);
 				if (id != this.sessionId) {
 					const avatarSpawnPoint = new AvatarSpawnPoint(new THREE.Object3D());
 					avatarSpawnPoint.spawnOtherAvatar(
-						loadingManager2,
+						avatarLoadingManager,
 						this.world,
 						id,
 						afterJoin.metas[0].profile,

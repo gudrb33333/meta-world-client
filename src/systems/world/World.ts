@@ -157,8 +157,8 @@ export class World {
         // Load scene if path is supplied
 		if (worldScenePath !== undefined) {
             const loadingManager = new LoadingManager(this);
-			const loadingManager2 = new LoadingManager(this);
-        
+			const avatarLoadingManager = new LoadingManager(this);
+
             loadingManager.onFinishedCallback = async () => {
                 this.update(1, 1);
 				this.setTimeScale(1);
@@ -176,7 +176,7 @@ export class World {
 				await this.phoenixAdapter.phoenixSocketConnect();
 				await this.phoenixAdapter.phoenixChannelJoin();
 
-				this.phoenixAdapter.onJoin(loadingManager2);
+				this.phoenixAdapter.onJoin(avatarLoadingManager);
 				this.phoenixAdapter.onLeave();
 				this.phoenixAdapter.onSync();
             }
