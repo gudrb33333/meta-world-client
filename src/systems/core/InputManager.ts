@@ -22,7 +22,7 @@ export class InputManager implements IUpdatable {
 
 	constructor(world: World, domElement: HTMLElement) {
 		this.world = world;
-		this.pointerLock = world.params.Pointer_Lock;
+		this.pointerLock = world.getParams().Pointer_Lock;
 		this.domElement = domElement || document.body;
 		this.isLocked = false;
 
@@ -64,12 +64,14 @@ export class InputManager implements IUpdatable {
 	}
 
 	public update(timestep: number, unscaledTimeStep: number): void {
+		const cameraOperator = this.world.getCameraOperator();
+
 		if (
 			this.inputReceiver === undefined &&
 			this.world !== undefined &&
-			this.world.cameraOperator !== undefined
+			cameraOperator !== undefined
 		) {
-			this.setInputReceiver(this.world.cameraOperator);
+			this.setInputReceiver(cameraOperator);
 		}
 
 		this.inputReceiver?.inputReceiverUpdate(unscaledTimeStep);

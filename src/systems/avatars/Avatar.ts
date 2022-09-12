@@ -255,11 +255,12 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 
 	public setPhysicsEnabled(value: boolean): void {
 		this.physicsEnabled = value;
+		const physicsWorld = this.world.getPhysicsWorld();
 
 		if (value === true) {
-			this.world.physicsWorld.addBody(this.avatarCapsule.body);
+			physicsWorld.addBody(this.avatarCapsule.body);
 		} else {
-			this.world.physicsWorld.remove(this.avatarCapsule.body);
+			physicsWorld.remove(this.avatarCapsule.body);
 		}
 	}
 
@@ -283,11 +284,12 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		if (this.controlledObject !== undefined) {
 			this.controlledObject.handleKeyboardEvent(event, code, pressed);
 		} else {
+			const cameraOperator = this.world.getCameraOperator()
 			// Free camera
 			if (code === 'KeyC' && pressed === true && event.shiftKey === true) {
 				this.resetControls();
-				this.world.cameraOperator.avatarCaller = this;
-				this.world.inputManager.setInputReceiver(this.world.cameraOperator);
+				cameraOperator.avatarCaller = this;
+				this.world.getInputManager().setInputReceiver(cameraOperator);
 			} else if (
 				code === 'KeyR' &&
 				pressed === true &&
@@ -336,7 +338,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		if (this.controlledObject !== undefined) {
 			this.controlledObject.handleMouseMove(event, deltaX, deltaY);
 		} else {
-			this.world.cameraOperator.move(deltaX, deltaY);
+			this.world.getCameraOperator().move(deltaX, deltaY);
 		}
 	}
 
@@ -375,7 +377,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 
 	public takeControl(): void {
 		if (this.world !== undefined) {
-			this.world.inputManager.setInputReceiver(this);
+			this.world.getInputManager().setInputReceiver(this);
 		} else {
 			console.warn(
 				"Attempting to take control of a avatar that doesn't belong to a world.",
@@ -427,9 +429,9 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			this.controlledObject.inputReceiverInit();
 			return;
 		}
-
-		this.world.cameraOperator.setRadius(2, true);
-		this.world.cameraOperator.followMode = false;
+		const cameraOperator = this.world.getCameraOperator();
+		cameraOperator.setRadius(2, true);
+		cameraOperator.followMode = false;
 		// this.world.dirLight.target = this;
 
 		//this.displayControls();
@@ -471,9 +473,9 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			// Look in camera's direction
 			this.viewVector = new THREE.Vector3().subVectors(
 				this.position,
-				this.world.camera.position,
+				this.world.getCamera().position,
 			);
-			this.getWorldPosition(this.world.cameraOperator.target);
+			this.getWorldPosition(this.world.getCameraOperator().target);
 		}
 	}
 
@@ -606,7 +608,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 
 		// Find best chair
 		const chairFinder = new ClosestObjectFinder<Chair>(this.position, 1);
-		this.world.chairs.forEach((chair) => {
+		this.world.getChairs().forEach((chair) => {
 			chairFinder.consider(chair, chair.position);
 		});
 
@@ -727,7 +729,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			skipBackfaces: true /* ignore back faces */,
 		};
 		// Cast the ray
-		this.rayHasHit = this.world.physicsWorld.raycastClosest(
+		this.rayHasHit = this.world.getPhysicsWorld().raycastClosest(
 			start,
 			end,
 			rayCastOptions,
@@ -848,7 +850,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			body.position.y =
 				avatar.rayResult.hitPointWorld.y +
 				avatar.rayCastLength +
-				newVelocity.y / avatar.world.physicsFrameRate;
+				newVelocity.y / avatar.world.getPhysicsFrameRate();
 		} else {
 			// If we're in air
 			body.velocity.x = newVelocity.x;
@@ -894,48 +896,52 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	}
 
 	public addToWorld(world: World): void {
-		if (_.includes(world.avatars, this)) {
+		if (_.includes(world.getAvatars(), this)) {
 			console.warn('Adding avatar to a world in which it already exists.');
 		} else {
 			// Set world
 			this.world = world;
 
 			// Register avatar
-			world.avatars.push(this);
+			world.getAvatars().push(this);
 
 			// Register physics
-			world.physicsWorld.addBody(this.avatarCapsule.body);
+			world.getPhysicsWorld().addBody(this.avatarCapsule.body);
 
 			// Add to graphicsWorld
-			world.graphicsWorld.add(this);
-			world.graphicsWorld.add(this.raycastBox);
+			world.getGraphicsWorld().add(this);
+			world.getGraphicsWorld().add(this.raycastBox);
 
 			// Shadow cascades
 			this.materials.forEach((mat) => {
-				world.sky.csm.setupMaterial(mat);
+				world.getSky().csm.setupMaterial(mat);
 			});
 		}
 	}
 
 	public removeFromWorld(world: World): void {
-		if (!_.includes(world.avatars, this)) {
+		const inputManager = world.getInputManager();
+		const avatars = world.getAvatars();
+		const physicsWorld = world.getPhysicsWorld();
+		const graphicsWorld = world.getGraphicsWorld();
+		if (!_.includes(avatars, this)) {
 			console.warn("Removing avatar from a world in which it isn't present.");
 		} else {
-			if (world.inputManager.inputReceiver === this) {
-				world.inputManager.inputReceiver = undefined;
+			if (inputManager.inputReceiver === this) {
+				inputManager.inputReceiver = undefined;
 			}
 
 			this.world = undefined;
 
 			// Remove from avatars
-			_.pull(world.avatars, this);
+			_.pull(avatars, this);
 
 			// Remove physics
-			world.physicsWorld.remove(this.avatarCapsule.body);
+			physicsWorld.remove(this.avatarCapsule.body);
 
 			// Remove visuals
-			world.graphicsWorld.remove(this);
-			world.graphicsWorld.remove(this.raycastBox);
+			graphicsWorld.remove(this);
+			graphicsWorld.remove(this.raycastBox);
 		}
 	}
 }

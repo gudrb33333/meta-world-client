@@ -116,7 +116,7 @@ export class Chair
 		deltaX: number,
 		deltaY: number,
 	): void {
-		this.world.cameraOperator.move(deltaX, deltaY);
+		this.world.getCameraOperator().move(deltaX, deltaY);
 	}
 
 	public handleMouseWheel(event: WheelEvent, value: number): void {
@@ -129,7 +129,7 @@ export class Chair
 
 	public inputReceiverUpdate(timeStep: number): void {
 		// Position camera
-		this.world.cameraOperator.target.set(
+		this.world.getCameraOperator().target.set(
 			this.position.x,
 			this.position.y + 5.5,
 			this.position.z,
@@ -143,30 +143,32 @@ export class Chair
 	}
 
 	public addToWorld(world: World): void {
-		if (_.includes(world.chairs, this)) {
+		const chairs = world.getChairs();
+		if (_.includes(chairs, this)) {
 			console.warn('Adding avatar to a world in which it already exists.');
 		} else if (this.rayCastVehicle === undefined) {
 			console.error('Trying to create chair without raycastChairComponent');
 		} else {
 			this.world = world;
-			world.chairs.push(this);
-			world.graphicsWorld.add(this);
-			this.rayCastVehicle.addToWorld(world.physicsWorld);
+			chairs.push(this);
+			world.getGraphicsWorld().add(this);
+			this.rayCastVehicle.addToWorld(world.getPhysicsWorld());
 
 			this.materials.forEach((mat) => {
-				world.sky.csm.setupMaterial(mat);
+				world.getSky().csm.setupMaterial(mat);
 			});
 		}
 	}
 
 	public removeFromWorld(world: World): void {
-		if (!_.includes(world.chairs, this)) {
+		const chairs = world.getChairs();
+		if (!_.includes(chairs, this)) {
 			console.warn("Removing avatar from a world in which it isn't present.");
 		} else {
 			this.world = undefined;
-			_.pull(world.chairs, this);
-			world.graphicsWorld.remove(this);
-			this.rayCastVehicle.removeFromWorld(world.physicsWorld);
+			_.pull(chairs, this);
+			world.getGraphicsWorld().remove(this);
+			this.rayCastVehicle.removeFromWorld(world.getPhysicsWorld());
 		}
 	}
 

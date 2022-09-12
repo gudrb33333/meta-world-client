@@ -28,7 +28,7 @@ export abstract class ExitingStateBase extends AvatarStateBase {
 	public detachAvatarFromChair(): void {
 		this.avatar.controlledObject = undefined;
 		this.avatar.resetOrientation();
-		this.avatar.world.graphicsWorld.attach(this.avatar);
+		this.avatar.world.getGraphicsWorld().attach(this.avatar);
 		this.avatar.resetVelocity();
 		this.avatar.setPhysicsEnabled(true);
 		this.avatar.inputReceiverUpdate(0);
@@ -43,7 +43,7 @@ export abstract class ExitingStateBase extends AvatarStateBase {
 		forward.y = 0;
 		forward.normalize();
 
-		this.avatar.world.graphicsWorld.attach(this.dummyObj);
+		this.avatar.world.getGraphicsWorld().attach(this.dummyObj);
 		this.exitPoint.getWorldPosition(this.dummyObj.position);
 		const target = this.dummyObj.position.clone().add(forward);
 		this.dummyObj.lookAt(target);

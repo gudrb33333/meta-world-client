@@ -112,7 +112,8 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					const forward = Utils.getForward(this.object);
 					player.setOrientation(forward, false);
 					world.add(player);
-					world.avatarMap.set(sessionId, player);
+					const avatarMap = world.getAvatarMap()
+					avatarMap.set(sessionId, player);
 					player.setPhysicsEnabled(false);
 				})
 				.catch((err) => {

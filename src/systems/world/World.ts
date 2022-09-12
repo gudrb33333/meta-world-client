@@ -25,38 +25,43 @@ import * as GUI from '../../lib/utils/dat.gui';
 import { CannonDebugRenderer } from '../../lib/cannon/CannonDebugRenderer';
 import * as _ from 'lodash';
 import { UIManager } from '../core/UIManager';
+import { ObjectSpawnPoint } from './ObjectSpawnPoint';
+import { PhoenixAdapter } from '../core/PhoenixAdapter';
 
 export class World {
-    public requestAnimationFrameId;
-    public renderer: THREE.WebGLRenderer;
-    public camera: THREE.PerspectiveCamera;
-    public cameraOperator: CameraOperator;
-	public sky: Sky;
-    public composer: EffectComposer;
-    public graphicsWorld: THREE.Scene;
-	public physicsWorld: CANNON.World;
-	public physicsFrameRate: number;
-	public physicsFrameTime: number;
-	public physicsMaxPrediction: number;
-    public clock: THREE.Clock;
-	public renderDelta: number;
-	public logicDelta: number;
-	public requestDelta: number;
-	public sinceLastFrame: number;
-	public justRendered: boolean;
-    public params: WorldParams;
-    public timeScaleTarget = 1;
+    private requestAnimationFrameId;
+    private renderer: THREE.WebGLRenderer;
+    private camera: THREE.PerspectiveCamera;
+    private cameraOperator: CameraOperator;
+	private sky: Sky;
+    private composer: EffectComposer;
+    private graphicsWorld: THREE.Scene;
+	private physicsWorld: CANNON.World;
+	private physicsFrameRate: number;
+	private physicsFrameTime: number;
+	private physicsMaxPrediction: number;
+    private clock: THREE.Clock;
+	private renderDelta: number;
+	private logicDelta: number;
+	private requestDelta: number;
+	private sinceLastFrame: number;
+	private justRendered: boolean;
+    private params: WorldParams;
+    private timeScaleTarget = 1;
 
-	public inputManager: InputManager;
+	private inputManager: InputManager;
 
 	private spawnPoints: ISpawnPoint[] = [];
-	public avatars: Avatar[] = [];
-	public avatarMap = new Map<string, Avatar>();
-	public chairs: Chair[] = [];
+	private avatars: Avatar[] = [];
+	private avatarMap = new Map<string, Avatar>();
+	private chairs: Chair[] = [];
 
-	public stats: Stats;
-	public scenarioGUIFolder: GUI;
-	public cannonDebugRenderer: CannonDebugRenderer;
+	private stats: Stats;
+	private scenarioGUIFolder: GUI;
+	private cannonDebugRenderer: CannonDebugRenderer;
+
+	private phoenixAdapter: PhoenixAdapter;
+	private userAvatar: Avatar;
 
 	public updatables: IUpdatable[] = [];
 
@@ -203,26 +208,22 @@ export class World {
 							child.visible = false;
 						}
 					}
-				}
-			}
 
-			if (
-				child.hasOwnProperty('userData') &&
-				child.userData.hasOwnProperty('data')
-			) {
-				if (child.userData.data === 'spawn') {
-					if (child.userData.type === 'chair') {
-						// const sp = new ObjectSpawnPoint(child);
-
-						// if (child.userData.hasOwnProperty('type')) {
-						// 	sp.type = child.userData.type;
-						// }
-
-						// this.spawnPoints.push(sp);
-					} else if (child.userData.type === 'player') {
-						const sp = new AvatarSpawnPoint(child);
-						this.spawnPoints.push(sp);
+					if (child.userData.data === 'spawn') {
+						if (child.userData.type === 'chair') {
+							const sp = new ObjectSpawnPoint(child);
+	
+							if (child.userData.hasOwnProperty('type')) {
+								sp.type = child.userData.type;
+							}
+	
+							this.spawnPoints.push(sp);
+						} else if (child.userData.type === 'player') {
+							const sp = new AvatarSpawnPoint(child);
+							this.spawnPoints.push(sp);
+						}
 					}
+
 				}
 			}
 		});
@@ -355,8 +356,61 @@ export class World {
 		gui.open();
 	}
 
+	public getParams(){
+		return this.params;
+	}
 
-		// Update
+	public getCamera(){
+		return this.camera;
+	}
+
+	public getCameraOperator(){
+		return this.cameraOperator;
+	}
+
+	public getInputManager(){
+		return this.inputManager;
+	}
+
+	public getPhysicsFrameRate(){
+		return this.physicsFrameRate;
+	}
+
+	public getSky(){
+		return this.sky;
+	}
+
+	public getGraphicsWorld(){
+		return this.graphicsWorld;
+	}
+
+	public getPhysicsWorld(){
+		return this.physicsWorld;
+	}
+	
+	public setUserAvatar(sessionId: string) {
+		this.userAvatar = this.avatars[0];
+		this.userAvatar.sessionId = sessionId;
+		this.avatarMap.set(sessionId, this.userAvatar);
+	}
+
+	public getUserAvatar() {
+		return this.userAvatar;
+	}
+
+	public getAvatars() {
+		return this.avatars;
+	}
+
+	public getAvatarMap() {
+		return this.avatarMap;
+	}
+
+	public getChairs(){
+		return this.chairs;
+	}
+
+	// Update
 	// Handles all logic updates.
 	public update(timeStep: number, unscaledTimeStep: number): void {
 		this.updatePhysics(timeStep);
