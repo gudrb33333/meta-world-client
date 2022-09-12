@@ -13,8 +13,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 	}
 
 	public spawn(loadingManager: LoadingManager, world: World): void {
-		//loadingManager.loadGLTF(localStorage.getItem('avatar_url'), (model) => {
-		loadingManager.loadGLTF("https://d1a370nemizbjq.cloudfront.net/1aaa1067-2168-4cec-839d-600da23c220c.glb", (model) => {
+		loadingManager.loadGLTF(localStorage.getItem('avatar_url'), (model) => {
 			const mixer = new THREE.AnimationMixer(model.scene);
 			const animationClipArr = new Array<THREE.AnimationClip>();
 			const modelType = this.findAvatarType(model);

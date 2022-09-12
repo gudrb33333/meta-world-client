@@ -184,8 +184,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	}
 
 	public setAvatarName(avatarName: string) {
-		//const charaterNameText = new SpriteText2D(avatarName, {
-		const charaterNameText = new SpriteText2D("테스트", {
+		const charaterNameText = new SpriteText2D(avatarName, {
 			align: textAlign.center,
 			font: '20px Arial',
 			fillStyle: '#000000',
