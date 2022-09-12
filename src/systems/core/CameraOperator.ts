@@ -3,7 +3,7 @@ import * as Utils from './FunctionLibrary';
 import { World } from '../world/World';
 import { IInputReceiver } from '../interfaces/IInputReceiver';
 import { KeyBinding } from './KeyBinding';
-//import { Avatar } from '../avatars/Avatar';
+import { Avatar } from '../avatars/Avatar';
 import _ = require('lodash');
 import { IUpdatable } from '../interfaces/IUpdatable';
 
@@ -31,7 +31,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 
 	public followMode = false;
 
-	//public avatarCaller: Avatar;
+	public avatarCaller: Avatar;
 
 	constructor(
 		world: World,
@@ -106,7 +106,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 			this.camera.position.y = newPos.y;
 			this.camera.position.z = newPos.z;
 		} else {
-			this.target.y += 0.008;
+			this.target.y += 0.8;
 			this.radius = THREE.MathUtils.lerp(this.radius, this.targetRadius, 0.1);
 			this.camera.position.x =
 				this.target.x +
@@ -133,7 +133,6 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		for (const action in this.actions) {
 			if (this.actions.hasOwnProperty(action)) {
 				const binding = this.actions[action];
-
 				if (_.includes(binding.eventCodes, code)) {
 					binding.isPressed = pressed;
 				}
