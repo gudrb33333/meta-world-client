@@ -27,6 +27,7 @@ import * as _ from 'lodash';
 import { UIManager } from '../core/UIManager';
 import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
+import { MediasoupAdapter } from '../core/MediasoupAdapter';
 
 export class World {
     private requestAnimationFrameId;
@@ -52,6 +53,7 @@ export class World {
 	private inputManager: InputManager;
 
 	private spawnPoints: ISpawnPoint[] = [];
+	private userAvatar: Avatar;
 	private avatars: Avatar[] = [];
 	private avatarMap = new Map<string, Avatar>();
 	private chairs: Chair[] = [];
@@ -61,7 +63,7 @@ export class World {
 	private cannonDebugRenderer: CannonDebugRenderer;
 
 	private phoenixAdapter: PhoenixAdapter;
-	private userAvatar: Avatar;
+	private mediasoupAdapter: MediasoupAdapter;
 
 	public updatables: IUpdatable[] = [];
 
@@ -179,6 +181,11 @@ export class World {
 				this.phoenixAdapter.onJoin(avatarLoadingManager);
 				this.phoenixAdapter.onLeave();
 				this.phoenixAdapter.onSync();
+
+				this.mediasoupAdapter = new MediasoupAdapter(
+					this,
+					process.env.MEDIASOUP_SERVER_URL,
+				);
             }
 
             loadingManager.loadGLTF(worldScenePath, (gltf) => {
@@ -424,6 +431,11 @@ export class World {
 		return this.avatarMap;
 	}
 
+	public getTargetAvatar(sessionId: string): Avatar {
+		return this.avatarMap.get(sessionId);
+	}
+
+
 	public getChairs(){
 		return this.chairs;
 	}
@@ -452,24 +464,6 @@ export class World {
 	public updatePhysics(timeStep: number): void {
 		// Step the physics world
 		this.physicsWorld.step(this.physicsFrameTime, timeStep);
-
-		this.avatars.forEach((char) => {
-			if (this.isOutOfBounds(char.avatarCapsule.body.position)) {
-				this.outOfBoundsRespawn(char.avatarCapsule.body);
-			}
-		});
-
-		// this.chairs.forEach((Chair) => {
-		// 	if (this.isOutOfBounds(Chair.rayCastVehicle.chassisBody.position)) {
-		// 		const worldPos = new THREE.Vector3();
-		// 		Chair.spawnPoint.getWorldPosition(worldPos);
-		// 		worldPos.y += 1;
-		// 		this.outOfBoundsRespawn(
-		// 			Chair.rayCastVehicle.chassisBody,
-		// 			Utils.cannonVector(worldPos),
-		// 		);
-		// 	}
-		// });
 	}
 
 	public isOutOfBounds(position: CANNON.Vec3): boolean {
