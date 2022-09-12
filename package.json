@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.49",
+    "dotenv-webpack": "^8.0.1",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "mediasoup-client": "^3.6.55",
