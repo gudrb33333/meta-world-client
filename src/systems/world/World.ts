@@ -279,7 +279,7 @@ export class World {
 			Shadows: true,
 			FXAA: true,
 			Debug_Physics: false,
-			Debug_FPS: false,
+			Debug_FPS: true,
 			Sun_Elevation: 50,
 			Sun_Rotation: 145,
 		};
