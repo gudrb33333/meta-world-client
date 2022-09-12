@@ -237,9 +237,10 @@ export class World {
 					if (child.userData.data === 'spawn') {
 						if (child.userData.type === 'chair') {
 							const sp = new ObjectSpawnPoint(child);
-	
+							let type = sp.getType();
+
 							if (child.userData.hasOwnProperty('type')) {
-								sp.type = child.userData.type;
+								type = child.userData.type;
 							}
 	
 							this.spawnPoints.push(sp);
@@ -381,35 +382,35 @@ export class World {
 		gui.open();
 	}
 
-	public getParams(){
+	public getParams(): WorldParams{
 		return this.params;
 	}
 
-	public getCamera(){
+	public getCamera(): THREE.PerspectiveCamera{
 		return this.camera;
 	}
 
-	public getCameraOperator(){
+	public getCameraOperator(): CameraOperator{
 		return this.cameraOperator;
 	}
 
-	public getInputManager(){
+	public getInputManager(): InputManager{
 		return this.inputManager;
 	}
 
-	public getPhysicsFrameRate(){
+	public getPhysicsFrameRate(): number{
 		return this.physicsFrameRate;
 	}
 
-	public getSky(){
+	public getSky(): Sky{
 		return this.sky;
 	}
 
-	public getGraphicsWorld(){
+	public getGraphicsWorld(): THREE.Scene{
 		return this.graphicsWorld;
 	}
 
-	public getPhysicsWorld(){
+	public getPhysicsWorld(): CANNON.World{
 		return this.physicsWorld;
 	}
 	
@@ -419,15 +420,15 @@ export class World {
 		this.avatarMap.set(sessionId, this.userAvatar);
 	}
 
-	public getUserAvatar() {
+	public getUserAvatar(): Avatar {
 		return this.userAvatar;
 	}
 
-	public getAvatars() {
+	public getAvatars(): Avatar[] {
 		return this.avatars;
 	}
 
-	public getAvatarMap() {
+	public getAvatarMap(): Map<string, Avatar> {
 		return this.avatarMap;
 	}
 
@@ -436,7 +437,7 @@ export class World {
 	}
 
 
-	public getChairs(){
+	public getChairs(): Chair[]{
 		return this.chairs;
 	}
 
