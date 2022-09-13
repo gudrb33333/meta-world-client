@@ -5,11 +5,11 @@ import { IUpdatable } from '../interfaces/IUpdatable';
 export class InputManager implements IUpdatable {
 	public updateOrder = 3;
 
-	public world: World;
-	public domElement: any;
-	public pointerLock: any;
-	public isLocked: boolean;
-	public inputReceiver: IInputReceiver;
+	private world: World;
+	private domElement: any;
+	private pointerLock: any;
+	private isLocked: boolean;
+	private inputReceiver: IInputReceiver;
 
 	public boundOnMouseDown: (evt: any) => void;
 	public boundOnMouseMove: (evt: any) => void;
@@ -75,6 +75,10 @@ export class InputManager implements IUpdatable {
 		}
 
 		this.inputReceiver?.inputReceiverUpdate(unscaledTimeStep);
+	}
+
+	public getInputReceiver(): IInputReceiver {
+		return this.inputReceiver;
 	}
 
 	public setInputReceiver(receiver: IInputReceiver): void {
@@ -181,4 +185,5 @@ export class InputManager implements IUpdatable {
 			this.inputReceiver.handleMouseWheel(event, event.deltaY);
 		}
 	}
+	
 }

@@ -925,8 +925,8 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		if (!_.includes(avatars, this)) {
 			console.warn("Removing avatar from a world in which it isn't present.");
 		} else {
-			if (inputManager.inputReceiver === this) {
-				inputManager.inputReceiver = undefined;
+			if (inputManager.getInputReceiver() === this) {
+				inputManager.setInputReceiver(undefined);
 			}
 
 			this.world = undefined;
