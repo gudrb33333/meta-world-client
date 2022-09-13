@@ -175,7 +175,7 @@ export class PhoenixAdapter implements IUpdatable {
 				vehicleRotationX: userEnteredVehicle[0].rotation.x,
 				vehicleRotationY: userEnteredVehicle[0].rotation.y,
 				vehicleRotationZ: userEnteredVehicle[0].rotation.z,
-				vehicleSpawnName: userEnteredVehicle[0].spawnPoint.name,
+				vehicleSpawnName: userEnteredVehicle[0].getSpawnPoint().name,
 			});
 		} else if (userAvatar != null) {
 			this.channel.push('networkedData', {
