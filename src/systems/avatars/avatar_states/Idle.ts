@@ -6,8 +6,8 @@ export class Idle extends AvatarStateBase implements IAvatarState {
 	constructor(avatar: Avatar) {
 		super(avatar);
 
-		this.avatar.velocitySimulator.damping = 0.6;
-		this.avatar.velocitySimulator.mass = 10;
+		this.avatar.getVelocitySimulator().damping = 0.6;
+		this.avatar.getVelocitySimulator().mass = 10;
 
 		this.avatar.setArcadeVelocityTarget(0);
 		this.playAnimation('idle', 0.1);
@@ -27,7 +27,7 @@ export class Idle extends AvatarStateBase implements IAvatarState {
 		}
 
 		if (this.anyDirection()) {
-			if (this.avatar.velocity.length() > 0.5) {
+			if (this.avatar.getVelocity().length() > 0.5) {
 				this.avatar.setState(new Walk(this.avatar));
 			} else {
 				this.setAppropriateStartWalkState();

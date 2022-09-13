@@ -7,9 +7,9 @@ export class Sprint extends AvatarStateBase {
 
 		this.canEnterChairs = true;
 
-		this.avatar.velocitySimulator.mass = 10;
-		this.avatar.rotationSimulator.damping = 0.8;
-		this.avatar.rotationSimulator.mass = 50;
+		this.avatar.getVelocitySimulator().mass = 10;
+		this.avatar.getRotationSimulator().damping = 0.8;
+		this.avatar.getRotationSimulator().mass = 50;
 
 		this.avatar.setArcadeVelocityTarget(1.4);
 		this.playAnimation('sprint', 0.1);

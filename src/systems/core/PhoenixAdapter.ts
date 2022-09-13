@@ -111,7 +111,7 @@ export class PhoenixAdapter implements IUpdatable {
 		this.presence.onLeave((id, remaining, afteremovedrJoin) => {
 			let leaveAvatar: Avatar;
 			this.world.getAvatars().forEach((avatar) => {
-				if (avatar.sessionId == id) {
+				if (avatar.getSessionId() == id) {
 					leaveAvatar = avatar;
 					this.world.getAvatarMap().delete(id);
 				}
@@ -167,11 +167,11 @@ export class PhoenixAdapter implements IUpdatable {
 
 		if (userAvatar != null && userEnteredVehicle[0] != null) {
 			this.channel.push('networkedDataInVehicle', {
-				sessionId: userAvatar.sessionId,
+				sessionId: userAvatar.getSessionId(),
 				positionX: userEnteredVehicle[0].position.x,
 				positionY: userEnteredVehicle[0].position.y + 0.5,
 				positionZ: userEnteredVehicle[0].position.z,
-				animation: userAvatar.avatarAnimationState,
+				animation: userAvatar.getAvatarAnimationState(),
 				vehicleRotationX: userEnteredVehicle[0].rotation.x,
 				vehicleRotationY: userEnteredVehicle[0].rotation.y,
 				vehicleRotationZ: userEnteredVehicle[0].rotation.z,
@@ -179,11 +179,11 @@ export class PhoenixAdapter implements IUpdatable {
 			});
 		} else if (userAvatar != null) {
 			this.channel.push('networkedData', {
-				sessionId: userAvatar.sessionId,
+				sessionId: userAvatar.getSessionId(),
 				positionX: userAvatar.position.x,
 				positionY: userAvatar.position.y,
 				positionZ: userAvatar.position.z,
-				animation: userAvatar.avatarAnimationState,
+				animation: userAvatar.getAvatarAnimationState(),
 				rotationX: userAvatar.rotation.x,
 				rotationY: userAvatar.rotation.y,
 				rotationZ: userAvatar.rotation.z,

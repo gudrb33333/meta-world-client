@@ -24,7 +24,7 @@ export class ChairEntryInstance {
 		const heightDifference = viewVector.y;
 		viewVector.y = 0;
 		if (
-			this.avatar.charState.canEnterChairs &&
+			this.avatar.getCharState().canEnterChairs &&
 			viewVector.length() < 0.2 &&
 			heightDifference < 2
 		) {

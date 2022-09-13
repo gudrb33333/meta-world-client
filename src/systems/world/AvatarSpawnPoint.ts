@@ -101,7 +101,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 
 					model.animations = animationClipArr;
 					const player = new Avatar(model);
-					player.sessionId = sessionId;
+					player.setSessionId(sessionId);
 					player.setAvatarName(profile.avatar_name);
 					const worldPos = new THREE.Vector3();
 					//this.object.getWorldPosition(worldPos);

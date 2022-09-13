@@ -8,7 +8,7 @@ export class JumpRunning extends AvatarStateBase implements IAvatarState {
 	constructor(avatar: Avatar) {
 		super(avatar);
 
-		this.avatar.velocitySimulator.mass = 100;
+		this.avatar.getVelocitySimulator().mass = 100;
 		this.playAnimation('jump_running', 0.03);
 		this.alreadyJumped = false;
 	}
@@ -27,10 +27,10 @@ export class JumpRunning extends AvatarStateBase implements IAvatarState {
 			this.avatar.jump(4);
 			this.alreadyJumped = true;
 
-			this.avatar.rotationSimulator.damping = 0.3;
-			this.avatar.arcadeVelocityIsAdditive = true;
+			this.avatar.getRotationSimulator().damping = 0.3;
+			this.avatar.setArcadeVelocityIsAdditive(true);
 			this.avatar.setArcadeVelocityInfluence(0.05, 0, 0.05);
-		} else if (this.timer > 0.24 && this.avatar.rayHasHit) {
+		} else if (this.timer > 0.24 && this.avatar.getRayHasHit()) {
 			this.setAppropriateDropState();
 		} else if (this.animationEnded(timeStep)) {
 			this.avatar.setState(new Falling(this.avatar));

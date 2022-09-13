@@ -12,7 +12,7 @@ export class Sitting extends AvatarStateBase {
 
 	public update(timeStep: number): void {
 		super.update(timeStep);
-		this.avatar.chairEntryInstance = null;
+		this.avatar.setChairEntryInstance(null);
 	}
 
 	public onInputChange(): void {

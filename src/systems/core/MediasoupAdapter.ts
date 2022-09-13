@@ -71,7 +71,7 @@ export class MediasoupAdapter implements IUpdatable {
 		this.mediasoupSocket = io(serverUrl, { transports: ['websocket'] });
 
 		this.mediasoupSocket.on('connection-success', async ({ socketId }) => {
-			const avaterSessionId = this.world.getUserAvatar().sessionId;
+			const avaterSessionId = this.world.getUserAvatar().getSessionId();
 			await this.mediasoupSocket.emit(
 				'set-socket-id',
 				{ avaterSessionId },

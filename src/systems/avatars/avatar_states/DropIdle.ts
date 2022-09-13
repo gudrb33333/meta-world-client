@@ -6,8 +6,8 @@ export class DropIdle extends AvatarStateBase implements IAvatarState {
 	constructor(avatar: Avatar) {
 		super(avatar);
 
-		this.avatar.velocitySimulator.damping = 0.5;
-		this.avatar.velocitySimulator.mass = 7;
+		this.avatar.getVelocitySimulator().damping = 0.5;
+		this.avatar.getVelocitySimulator().mass = 7;
 
 		this.avatar.setArcadeVelocityTarget(0);
 		this.playAnimation('drop_idle', 0.1);

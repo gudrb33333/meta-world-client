@@ -370,8 +370,8 @@ export class World {
 				this.cannonDebugRenderer = undefined;
 			}
 
-			scope.avatars.forEach((char) => {
-				char.raycastBox.visible = enabled;
+			scope.avatars.forEach((avatar) => {
+				avatar.getRaycastBox().visible = enabled;
 			});
 		});
 		settingsFolder.add(this.params, 'Debug_FPS').onChange((enabled) => {
@@ -415,7 +415,7 @@ export class World {
 	
 	public setUserAvatar(sessionId: string) {
 		this.userAvatar = this.avatars[0];
-		this.userAvatar.sessionId = sessionId;
+		this.userAvatar.setSessionId(sessionId);
 		this.avatarMap.set(sessionId, this.userAvatar);
 	}
 

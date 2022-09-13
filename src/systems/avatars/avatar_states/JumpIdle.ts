@@ -8,7 +8,7 @@ export class JumpIdle extends AvatarStateBase implements IAvatarState {
 	constructor(avatar: Avatar) {
 		super(avatar);
 
-		this.avatar.velocitySimulator.mass = 50;
+		this.avatar.getVelocitySimulator().mass = 50;
 
 		this.avatar.setArcadeVelocityTarget(0);
 		this.playAnimation('jump_idle', 0.1);
@@ -29,15 +29,15 @@ export class JumpIdle extends AvatarStateBase implements IAvatarState {
 			this.avatar.jump();
 			this.alreadyJumped = true;
 
-			this.avatar.velocitySimulator.mass = 100;
-			this.avatar.rotationSimulator.damping = 0.3;
+			this.avatar.getVelocitySimulator().mass = 100;
+			this.avatar.getRotationSimulator().damping = 0.3;
 
-			if (this.avatar.rayResult.body.velocity.length() > 0) {
+			if (this.avatar.getRayResult().body.velocity.length() > 0) {
 				this.avatar.setArcadeVelocityInfluence(0, 0, 0);
 			} else {
 				this.avatar.setArcadeVelocityInfluence(0.3, 0, 0.3);
 			}
-		} else if (this.timer > 0.3 && this.avatar.rayHasHit) {
+		} else if (this.timer > 0.3 && this.avatar.getRayHasHit()) {
 			this.setAppropriateDropState();
 		} else if (this.animationEnded(timeStep)) {
 			this.avatar.setState(new Falling(this.avatar));
