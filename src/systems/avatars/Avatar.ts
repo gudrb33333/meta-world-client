@@ -620,7 +620,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 
 			if (chairFinder.closestObject !== undefined) {
 				const targetChair = chairFinder.closestObject;
-				chairEntryInstance.targetChair = targetChair;
+				chairEntryInstance.setTargetChair(targetChair);
 
 				const entryPointFinder = new ClosestObjectFinder<Object3D>(
 					this.position,
@@ -631,7 +631,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 				entryPointFinder.consider(point, worldPos);
 
 				if (entryPointFinder.closestObject !== undefined) {
-					chairEntryInstance.entryPoint = entryPointFinder.closestObject;
+					chairEntryInstance.setEntryPoint(entryPointFinder.closestObject);
 					this.triggerAction('up', true);
 					this.chairEntryInstance = chairEntryInstance;
 				}

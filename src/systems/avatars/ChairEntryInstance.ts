@@ -3,10 +3,10 @@ import { Chair } from '../objects/Chair';
 import { Avatar } from './Avatar';
 
 export class ChairEntryInstance {
-	public avatar: Avatar;
-	public targetChair: Chair;
-	public entryPoint: THREE.Object3D;
-	public wantsToSit = false;
+	private avatar: Avatar;
+	private targetChair: Chair;
+	private entryPoint: THREE.Object3D;
+	private wantsToSit = false;
 
 	constructor(avatar: Avatar) {
 		this.avatar = avatar;
@@ -30,5 +30,17 @@ export class ChairEntryInstance {
 		) {
 			this.avatar.enterChair(this.targetChair, this.entryPoint);
 		}
+	}
+
+	public getEntryPoint(): THREE.Object3D{
+		return this.entryPoint;
+	}
+
+	public setEntryPoint(object: THREE.Object3D){
+		this.entryPoint = object;
+	}
+
+	public setTargetChair(targetChair: Chair){
+		this.targetChair = targetChair;
 	}
 }
