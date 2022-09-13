@@ -16,26 +16,26 @@ export class Chair
 {
 	public updateOrder = 2;
 	public entityType: EntityType;
+
 	public controllingAvatar: Avatar;
 	public actions: { [action: string]: KeyBinding } = {};
-
-	private rayCastVehicle: CANNON.RaycastVehicle;
-	private world: World;
-	private collision: CANNON.Body;
-	private materials: THREE.Material[] = [];
-	private spawnPoint: THREE.Object3D;
+	public rayCastVehicle: CANNON.RaycastVehicle;
+	public world: World;
+	public collision: CANNON.Body;
+	public materials: THREE.Material[] = [];
+	public spawnPoint: THREE.Object3D;
 	private modelContainer: THREE.Group;
 
 	//public vehicle: IControllable;
-	private seatPointObject: THREE.Object3D;
+	public seatPointObject: THREE.Object3D;
 
 	// String of names of connected seats
-	private connectedSeatsString: string;
+	public connectedSeatsString: string;
 	// Actual seatPoint objects, need to be identified
 	// by parsing connectedSeatsString *after* all seats are imported
 
-	private entryPoints: THREE.Object3D;
-	private occupiedBy: Avatar = null;
+	public entryPoints: THREE.Object3D;
+	public occupiedBy: Avatar = null;
 
 	constructor(gltf: any, object: THREE.Object3D) {
 		super();
@@ -234,37 +234,5 @@ export class Chair
 		if (this.collision.shapes.length === 0) {
 			console.warn('Chair ' + typeof this + ' has no collision data.');
 		}
-	}
-
-	public getSpawnPoint(): THREE.Object3D{
-		return this.spawnPoint;
-	}
-
-	public setSpawnPoint(spawnPoint: THREE.Object3D){
-		this.spawnPoint = spawnPoint;
-	}
-
-	public getCollision(): CANNON.Body{
-		return this.collision;
-	}
-
-	public getEntryPoints(): THREE.Object3D{
-		return this.entryPoints;
-	}
-
-	public getRayCastVehicle(): CANNON.RaycastVehicle{
-		return this.rayCastVehicle;
-	}
-
-	public getSeatPointObject(): THREE.Object3D{
-		return this.seatPointObject;
-	}
-
-	public getOccupiedBy(): Avatar{
-		return this.occupiedBy;
-	}
-
-	public setOccupiedBy(avatar: Avatar){
-		this.occupiedBy = avatar;
 	}
 }

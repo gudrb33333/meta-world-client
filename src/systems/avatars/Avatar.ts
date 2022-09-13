@@ -615,7 +615,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			const chair = chairFinder.closestObject;
 			const chairEntryInstance = new ChairEntryInstance(this);
 
-			chair.getSeatPointObject().getWorldPosition(worldPos);
+			chair.seatPointObject.getWorldPosition(worldPos);
 			chairFinder.consider(chair, worldPos);
 
 			if (chairFinder.closestObject !== undefined) {
@@ -626,7 +626,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 					this.position,
 				);
 
-				const point = targetChair.getEntryPoints();
+				const point = targetChair.entryPoints;
 				point.getWorldPosition(worldPos);
 				entryPointFinder.consider(point, worldPos);
 
@@ -677,12 +677,12 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 
 	public occupySeat(chair: Chair): void {
 		this.occupyingChair = chair;
-		chair.setOccupiedBy(this);
+		chair.occupiedBy = this;
 	}
 
 	public leaveSeat(): void {
 		if (this.occupyingChair !== null) {
-			this.occupyingChair.setOccupiedBy(null);
+			this.occupyingChair.occupiedBy = null;
 			this.occupyingChair = null;
 		}
 	}

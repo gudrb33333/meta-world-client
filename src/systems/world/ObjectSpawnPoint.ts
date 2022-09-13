@@ -6,7 +6,9 @@ import { Chair } from '../objects/Chair';
 import { LoadingManager } from '../core/LoadingManager';
 
 export class ObjectSpawnPoint implements ISpawnPoint {
-	private type: string;
+	public type: string;
+	public firstAINode: string;
+
 	private object: THREE.Object3D;
 
 	constructor(object: THREE.Object3D) {
@@ -20,7 +22,7 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 				this.type,
 				this.object,
 			);
-			object.setSpawnPoint(this.object);
+			object.spawnPoint = this.object;
 
 			const worldPos = new THREE.Vector3();
 			const worldQuat = new THREE.Quaternion();
@@ -28,13 +30,9 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 			this.object.getWorldQuaternion(worldQuat);
 
 			object.setPosition(worldPos.x, worldPos.y, worldPos.z);
-			object.getCollision().quaternion.copy(Utils.cannonQuat(worldQuat));
+			object.collision.quaternion.copy(Utils.cannonQuat(worldQuat));
 			world.add(object);
 		});
-	}
-
-	public getType(): string{
-		return this.type;
 	}
 
 	private getNewChairByType(
