@@ -97,7 +97,7 @@ export class World {
 				window.innerHeight * pixelRatio,
 			);
 		}
-		window.addEventListener('resize', onWindowResize, false);
+		//window.addEventListener('resize', onWindowResize, false);
 
 		// Three.js scene
 		this.graphicsWorld = new THREE.Scene();

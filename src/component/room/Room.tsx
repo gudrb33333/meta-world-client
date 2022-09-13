@@ -5,6 +5,7 @@ import LoadingScreen from './LoadingScreen';
 import UiContainer from './UiContainer';
 import { createBrowserHistory } from 'history';
 import { useNavigate } from 'react-router-dom';
+import screenfull from 'screenfull';
 
 function Room() {
 	const world = new World('/assets/test22222.glb');
@@ -29,6 +30,10 @@ function Room() {
 
 		navigate('/');
 	};
+
+	const test = () =>{
+		screenfull.request();
+	}
 
 	return (
 		<>
@@ -73,6 +78,10 @@ function Room() {
 			<LoadingScreen world={world} />
 			<UiContainer world={world} />
 			<Footer world={world} />
+			
+			<button onClick={test}>asd
+						
+						</button>
 		</>
 	);
 }
