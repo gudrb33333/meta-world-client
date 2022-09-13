@@ -287,7 +287,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			// Free camera
 			if (code === 'KeyC' && pressed === true && event.shiftKey === true) {
 				this.resetControls();
-				cameraOperator.avatarCaller = this;
+				cameraOperator.setAvatarCaller(this);
 				this.world.getInputManager().setInputReceiver(cameraOperator);
 			} else if (
 				code === 'KeyR' &&
@@ -430,7 +430,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		}
 		const cameraOperator = this.world.getCameraOperator();
 		cameraOperator.setRadius(2, true);
-		cameraOperator.followMode = false;
+		cameraOperator.setFollowMode(false);
 		// this.world.dirLight.target = this;
 
 		//this.displayControls();
@@ -474,7 +474,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 				this.position,
 				this.world.getCamera().position,
 			);
-			this.getWorldPosition(this.world.getCameraOperator().target);
+			this.getWorldPosition(this.world.getCameraOperator().getTarget());
 		}
 	}
 

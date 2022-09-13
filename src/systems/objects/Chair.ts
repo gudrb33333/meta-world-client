@@ -128,7 +128,7 @@ export class Chair
 
 	public inputReceiverUpdate(timeStep: number): void {
 		// Position camera
-		this.world.getCameraOperator().target.set(
+		this.world.getCameraOperator().getTarget().set(
 			this.position.x,
 			this.position.y + 5.5,
 			this.position.z,

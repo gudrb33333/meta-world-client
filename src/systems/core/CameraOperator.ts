@@ -9,29 +9,29 @@ import { IUpdatable } from '../interfaces/IUpdatable';
 
 export class CameraOperator implements IInputReceiver, IUpdatable {
 	public updateOrder = 4;
-
-	public world: World;
-	public camera: THREE.Camera;
-	public target: THREE.Vector3;
-	public sensitivity: THREE.Vector2;
-	public radius = 1;
-	public theta: number;
-	public phi: number;
-	public onMouseDownPosition: THREE.Vector2;
-	public onMouseDownTheta: any;
-	public onMouseDownPhi: any;
-	public targetRadius = 1;
-
-	public movementSpeed: number;
 	public actions: { [action: string]: KeyBinding };
+	
+	private world: World;
+	private camera: THREE.Camera;
+	private target: THREE.Vector3;
+	private sensitivity: THREE.Vector2;
+	private radius = 1;
+	private theta: number;
+	private phi: number;
+	private onMouseDownPosition: THREE.Vector2;
+	private onMouseDownTheta: any;
+	private onMouseDownPhi: any;
+	private targetRadius = 1;
 
-	public upVelocity = 0;
-	public forwardVelocity = 0;
-	public rightVelocity = 0;
+	private movementSpeed: number;
 
-	public followMode = false;
+	private upVelocity = 0;
+	private forwardVelocity = 0;
+	private rightVelocity = 0;
 
-	public avatarCaller: Avatar;
+	private followMode = false;
+
+	private avatarCaller: Avatar;
 
 	constructor(
 		world: World,
@@ -222,5 +222,21 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		this.target.add(up.multiplyScalar(speed * this.upVelocity));
 		this.target.add(forward.multiplyScalar(speed * this.forwardVelocity));
 		this.target.add(right.multiplyScalar(speed * this.rightVelocity));
+	}
+
+	public getTarget(): THREE.Vector3{
+		return this.target;
+	}
+
+	public getAvatarCaller(): Avatar{
+		return this.avatarCaller;
+	}
+
+	public setAvatarCaller(avatar: Avatar){
+		this.avatarCaller = avatar;
+	}
+
+	public setFollowMode(followMode: boolean){
+		this.followMode = followMode;
 	}
 }
