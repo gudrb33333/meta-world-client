@@ -6,8 +6,7 @@ import { Chair } from '../objects/Chair';
 import { LoadingManager } from '../core/LoadingManager';
 
 export class ObjectSpawnPoint implements ISpawnPoint {
-	public type: string;
-	public firstAINode: string;
+	private type: string;
 
 	private object: THREE.Object3D;
 
@@ -46,7 +45,6 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 		}
 	}
 
-	
 	public getType(): string{
 		return this.type;
 	}
