@@ -26,58 +26,58 @@ import { EntityType } from '../enums/EntityType';
 export class Avatar extends THREE.Object3D implements IWorldEntity {
 	public updateOrder = 1;
 	public entityType: EntityType = EntityType.Avatar;
+	public actions: { [action: string]: KeyBinding };
 
-	public height = 0;
-	public tiltContainer: THREE.Group;
-	public modelContainer: THREE.Group;
-	public materials: THREE.Material[] = [];
-	public mixer: THREE.AnimationMixer;
-	public animations: any[];
+	private height = 0;
+	private tiltContainer: THREE.Group;
+	private modelContainer: THREE.Group;
+	private materials: THREE.Material[] = [];
+	private mixer: THREE.AnimationMixer;
+	private animations: any[];
 
 	// Movement
-	public acceleration: THREE.Vector3 = new THREE.Vector3();
-	public velocity: THREE.Vector3 = new THREE.Vector3();
-	public arcadeVelocityInfluence: THREE.Vector3 = new THREE.Vector3();
-	public velocityTarget: THREE.Vector3 = new THREE.Vector3();
-	public arcadeVelocityIsAdditive = false;
+	private acceleration: THREE.Vector3 = new THREE.Vector3();
+	private velocity: THREE.Vector3 = new THREE.Vector3();
+	private arcadeVelocityInfluence: THREE.Vector3 = new THREE.Vector3();
+	private velocityTarget: THREE.Vector3 = new THREE.Vector3();
+	private arcadeVelocityIsAdditive = false;
 
-	public defaultVelocitySimulatorDamping = 0.8;
-	public defaultVelocitySimulatorMass = 50;
-	public velocitySimulator: VectorSpringSimulator;
-	public moveSpeed = 4;
-	public angularVelocity = 0;
-	public orientation: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
-	public orientationTarget: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
-	public defaultRotationSimulatorDamping = 0.5;
-	public defaultRotationSimulatorMass = 10;
-	public rotationSimulator: RelativeSpringSimulator;
-	public viewVector: THREE.Vector3;
-	public actions: { [action: string]: KeyBinding };
-	public avatarCapsule: CapsuleCollider;
+	private defaultVelocitySimulatorDamping = 0.8;
+	private defaultVelocitySimulatorMass = 50;
+	private velocitySimulator: VectorSpringSimulator;
+	private moveSpeed = 4;
+	private angularVelocity = 0;
+	private orientation: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
+	private orientationTarget: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
+	private defaultRotationSimulatorDamping = 0.5;
+	private defaultRotationSimulatorMass = 10;
+	private rotationSimulator: RelativeSpringSimulator;
+	private viewVector: THREE.Vector3;
+	private avatarCapsule: CapsuleCollider;
 
 	// Ray casting
-	public rayResult: CANNON.RaycastResult = new CANNON.RaycastResult();
-	public rayHasHit = false;
-	public rayCastLength = 0.57;
-	public raySafeOffset = 0.03;
-	public wantsToJump = false;
-	public initJumpSpeed = -1;
-	public groundImpactData: GroundImpactData = new GroundImpactData();
-	public raycastBox: THREE.Mesh;
+	private rayResult: CANNON.RaycastResult = new CANNON.RaycastResult();
+	private rayHasHit = false;
+	private rayCastLength = 0.57;
+	private raySafeOffset = 0.03;
+	private wantsToJump = false;
+	private initJumpSpeed = -1;
+	private groundImpactData: GroundImpactData = new GroundImpactData();
+	private raycastBox: THREE.Mesh;
 
-	public world: World;
-	public charState: IAvatarState;
+	private world: World;
+	private charState: IAvatarState;
 
 	//chairs
-	public controlledObject: IControllable;
-	public occupyingChair: Chair = null;
-	public chairEntryInstance: ChairEntryInstance = null;
+	private controlledObject: IControllable;
+	private occupyingChair: Chair = null;
+	private chairEntryInstance: ChairEntryInstance = null;
 
-	public sessionId: string;
+	private sessionId: string;
 
 	private physicsEnabled = true;
 
-	public avatarAnimationState: string = null;
+	private avatarAnimationState: string = null;
 
 	constructor(gltf: any) {
 		super();
@@ -941,5 +941,94 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			graphicsWorld.remove(this);
 			graphicsWorld.remove(this.raycastBox);
 		}
+	}
+
+	public getWorld(): World{
+		return this.world;
+	}
+
+	public getSessionId(): string {
+		return this.sessionId
+	}
+
+	public setSessionId(sessionId: string){
+		this.sessionId = sessionId;
+	}
+
+	public getCharState(): IAvatarState{
+		return this.charState;
+	}
+
+	public setControlledObject(controllableObject: IControllable){
+		this.controlledObject = controllableObject;
+	}
+
+	public getAvatarAnimationState(): string{
+		return this.avatarAnimationState;
+	}
+
+	public getAvatarCapsule(): CapsuleCollider{
+		return this.avatarCapsule;
+	}
+
+	
+	public getChairEntryInstance(): ChairEntryInstance{
+		return this.chairEntryInstance;
+	}
+
+	public setChairEntryInstance(chairEntryInstance: ChairEntryInstance){
+		this.chairEntryInstance = chairEntryInstance;
+	}
+
+	public getVelocity(): THREE.Vector3{
+		return this.velocity;
+	}
+
+	public getVelocitySimulator(): VectorSpringSimulator{
+		return this.velocitySimulator;
+	}
+
+	public getRotationSimulator(): RelativeSpringSimulator{
+		return this.rotationSimulator;
+	}
+
+	public setArcadeVelocityIsAdditive(arcadeVelocityIsAdditive : boolean){
+		this.arcadeVelocityIsAdditive = arcadeVelocityIsAdditive;
+	}
+
+	public getRayHasHit(): boolean{
+		return this.rayHasHit;
+	}
+
+	public getRayResult(): CANNON.RaycastResult{
+		return this.rayResult;
+	}
+
+	public getDefaultVelocitySimulatorDamping(): number{
+		return this.defaultVelocitySimulatorDamping;
+	}
+
+	public getDefaultVelocitySimulatorMass(): number{
+		return this.defaultVelocitySimulatorMass;
+	}
+
+	public getDefaultRotationSimulatorDamping(): number{
+		return this.defaultRotationSimulatorDamping;
+	}
+
+	public getDefaultRotationSimulatorMass(): number{
+		return this.defaultRotationSimulatorMass;
+	}
+
+	public getMixer(): THREE.AnimationMixer{
+		return this.mixer;
+	}
+
+	public getGroundImpactData(): GroundImpactData{
+		return this.groundImpactData;
+	}
+
+	public getRaycastBox(): THREE.Mesh{
+		return this.raycastBox;
 	}
 }
