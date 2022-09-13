@@ -237,10 +237,9 @@ export class World {
 					if (child.userData.data === 'spawn') {
 						if (child.userData.type === 'chair') {
 							const sp = new ObjectSpawnPoint(child);
-							let type = sp.getType();
 
 							if (child.userData.hasOwnProperty('type')) {
-								type = child.userData.type;
+								sp.setType(child.userData.type);
 							}
 	
 							this.spawnPoints.push(sp);

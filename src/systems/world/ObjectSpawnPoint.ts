@@ -22,7 +22,7 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 				this.type,
 				this.object,
 			);
-			object.spawnPoint = this.object;
+			object.setSpawnPoint(this.object);
 
 			const worldPos = new THREE.Vector3();
 			const worldQuat = new THREE.Quaternion();
@@ -30,7 +30,7 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 			this.object.getWorldQuaternion(worldQuat);
 
 			object.setPosition(worldPos.x, worldPos.y, worldPos.z);
-			object.collision.quaternion.copy(Utils.cannonQuat(worldQuat));
+			object.getCollision().quaternion.copy(Utils.cannonQuat(worldQuat));
 			world.add(object);
 		});
 	}
@@ -44,5 +44,14 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 			case 'chair':
 				return new Chair(model, object);
 		}
+	}
+
+	
+	public getType(): string{
+		return this.type;
+	}
+
+	public setType(type: string){
+		this.type = type;
 	}
 }
