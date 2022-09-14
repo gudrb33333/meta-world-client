@@ -78,10 +78,6 @@ function Room() {
 			<LoadingScreen world={world} />
 			<UiContainer world={world} />
 			<Footer world={world} />
-			
-			<button onClick={test}>asd
-						
-						</button>
 		</>
 	);
 }

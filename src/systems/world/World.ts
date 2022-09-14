@@ -82,7 +82,8 @@ export class World {
 		// Canvas
 		this.renderer.domElement.id = 'main-canvas';
 		document.body.appendChild(this.renderer.domElement);
-
+		const viewport = document.createElement("div");
+		document.body.appendChild(viewport);
 		// Auto window resize
 		function onWindowResize(): void {
 			scope.camera.aspect = window.innerWidth / window.innerHeight;
@@ -97,6 +98,61 @@ export class World {
 				window.innerHeight * pixelRatio,
 			);
 		}
+
+		const maxResolution = {
+			width: screen.width,
+			height: screen.height,
+		}
+
+
+		function calculateRendererSize (canvasRect, maxResolution) {
+ 			// canvasRect values are CSS pixels based while
+ 			// maxResolution values are physical pixels based (CSS pixels * pixel ratio).
+ 			// Convert maxResolution values to CSS pixels based.
+ 			const pixelRatio = window.devicePixelRatio;
+ 			const maxWidth = maxResolution.width / pixelRatio;
+ 			const maxHeight = maxResolution.height / pixelRatio;
+
+			if (canvasRect.width <= maxWidth && canvasRect.height <= maxHeight) {
+				return canvasRect;
+			}
+			
+			const conversionRatio = Math.min(maxWidth / canvasRect.width, maxHeight / canvasRect.height);
+			
+			return {
+				width: Math.round(canvasRect.width * conversionRatio),
+				height: Math.round(canvasRect.height * conversionRatio)
+			};
+		}
+
+		const observer = new ResizeObserver(entries => {
+			this.stopRendering();
+			
+			const canvasRect = entries[0].contentRect;
+
+			const rendererSize = calculateRendererSize(canvasRect, maxResolution);
+
+			const canvas = document.getElementById('main-canvas');
+			canvas.style.width = canvasRect.width + "px";
+			canvas.style.height = canvasRect.height + "px";
+
+			scope.renderer.setSize(rendererSize.width, rendererSize.height, false);
+
+			fxaaPass.uniforms['resolution'].value.set(
+				1 / (window.innerWidth * pixelRatio),
+				1 / (window.innerHeight * pixelRatio),
+			);
+
+			scope.camera.aspect = rendererSize.width / rendererSize.height;
+			scope.camera.updateProjectionMatrix();
+
+			scope.render(this);
+
+		});
+		  
+		observer.observe(document.body);
+
+
 		//window.addEventListener('resize', onWindowResize, false);
 
 		// Three.js scene
