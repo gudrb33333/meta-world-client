@@ -100,8 +100,8 @@ export class World {
 		}
 
 		const maxResolution = {
-			width: screen.width,
-			height: screen.height,
+			width: screen.width * window.devicePixelRatio,
+			height: screen.height * window.devicePixelRatio,
 		}
 
 
@@ -126,6 +126,7 @@ export class World {
 		}
 
 		const observer = new ResizeObserver(entries => {
+			//TODO: 가로,세로 바꿀때 해상도 찌그러지는거 해결해야함.
 			this.stopRendering();
 			
 			const canvasRect = entries[0].contentRect;
