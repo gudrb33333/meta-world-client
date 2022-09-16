@@ -250,7 +250,7 @@ export class World {
 				this.loadScene(loadingManager, gltf);
 			});
         }
-		
+
 		this.render(this);
     }
 
@@ -496,6 +496,10 @@ export class World {
 
 	public getChairs(): Chair[]{
 		return this.chairs;
+	}
+
+	public getMediasoupAdapter() {
+		return this.mediasoupAdapter;
 	}
 
 	// Update

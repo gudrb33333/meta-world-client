@@ -8,7 +8,7 @@ export class UIManager {
 
 	public static setLoadingScreenVisible(value: boolean): void {
 		document.dispatchEvent(new Event('loading-screen-event'));
-		document.dispatchEvent(new Event('room-footer-event'));
+		//document.dispatchEvent(new Event('room-footer-event'));
 		//document.getElementById('loading-screen').style.display = value ? 'flex' : 'none';
 	}
 

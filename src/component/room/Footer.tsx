@@ -1,53 +1,99 @@
 import { useEffect, useState } from 'react';
+import { World } from 'src/systems/world/World';
 import './Footer.css';
 
 function Footer(props) {
-	const { world } = props;
-
-	const [isLoding, setIsLoding] = useState(false);
-	const [isMicOn, setIsMicOn] = useState(true);
+	const [isLoading, setIsLoading] = useState(props.isLoading);
+	const [isMicOn, setIsMicOn] = useState(false);
 	const [isWebcamOn, setIsWebcamOn] = useState(false);
 	const [isShareOn, setIsShareOn] = useState(false);
-	const [isControlsOn, setIsControlsOn] = useState(false);
+	const [isUiContainerOn, setIsUiContainerOn] = useState(props.isUiContainerOn);
 
 	useEffect(() => {
-		document.addEventListener('room-footer-event', function (event) {
-			setIsLoding(true);
+    	setIsLoading(props.isLoading);
+		setIsUiContainerOn(props.isUiContainerOn);
+    }, [props.isLoading, props.isUiContainerOn]);
+    
+
+	useEffect(() => {
+		document.addEventListener('init-mic-event', function (event) {
+			setIsMicOn(true);
 		});
+
+		document.addEventListener('stop-share-event', function (event) {
+			//world.mediasoupAdapter.disableShare();
+			setIsShareOn(false);
+		});
+
+		return () => {
+			document.addEventListener('init-mic-event', function (event) {
+				setIsMicOn(true);
+			});
+
+			document.addEventListener('stop-share-event', function (event) {
+				//world.mediasoupAdapter.disableShare();
+				setIsShareOn(false);
+			});
+		  }
 	}, []);
 
+	
+	const getWorldFromRoom = (): World => {
+        return props.getWorld();
+    }
+
 	const micButtonClicked = () => {
+		const world = getWorldFromRoom();
+		const mediasoupAdapter = world.getMediasoupAdapter();
 		if (isMicOn) {
-			world.mediasoupAdapter.muteMic();
+			mediasoupAdapter.muteMic();
 			setIsMicOn(false);
 		} else {
-			world.mediasoupAdapter.unmuteMic();
+			mediasoupAdapter.unmuteMic();
 			setIsMicOn(true);
 		}
 	};
 
 	const webcamButtonClicked = () => {
+		const world = getWorldFromRoom();
+		const mediasoupAdapter = world.getMediasoupAdapter();
 		if (isWebcamOn) {
-			world.mediasoupAdapter.disableWebcam();
+			mediasoupAdapter.disableWebcam();
 			setIsWebcamOn(false);
 		} else {
-			world.mediasoupAdapter.enableWebcam();
+			mediasoupAdapter.enableWebcam();
 			setIsWebcamOn(true);
 		}
 	};
 
-	const shareButtonClicked = () => {
+	const shareButtonClicked = async () => {
+		const world = getWorldFromRoom();
+		const mediasoupAdapter = world.getMediasoupAdapter();;
 		if (isShareOn) {
-			world.mediasoupAdapter.disableShare();
-			setIsShareOn(false);
+			if(await mediasoupAdapter.disableShare()){
+				setIsShareOn(false);
+			} else {
+				setIsShareOn(true);
+			}
 		} else {
-			world.mediasoupAdapter.enableShare();
-			setIsShareOn(true);
+			if(await mediasoupAdapter.enableShare()) {
+				setIsShareOn(true);
+			} else {
+				setIsShareOn(false);
+			}
+		}
+	};
+
+	const controlsButtonClicked = async () => {
+		if (isUiContainerOn) {
+			props.setUiContainerOn(false);
+		} else {
+			props.setUiContainerOn(true);
 		}
 	};
 
 	return (
-		<footer style={{ display: isLoding ? 'block' : 'none' }}>
+		<footer style={{ display: isLoading ? 'none' : 'block' }}>
 			<div className="footer-button">
 				<ul>
 					<li>
@@ -254,8 +300,9 @@ function Footer(props) {
 					</li>
 					<li>
 						<a
-							id="button-control"
-							className={isControlsOn ? 'active-on' : 'active-off'}
+							id="button-controls"
+							onClick={controlsButtonClicked}
+							className={isUiContainerOn ? 'active-on' : 'active-off'}
 						>
 							<svg
 								className="glow"

@@ -2,19 +2,18 @@ import './LoadingScreen.css';
 import { useEffect, useState } from 'react';
 
 function LoadingScreen(props) {
-	const [isLoding, setIsLoding] = useState(true);
+	const [isLoading, setIsLoading] = useState(props.isLoading);
 
 	useEffect(() => {
-		document.addEventListener('loading-screen-event', function (event) {
-			setIsLoding(false);
-		});
-	}, []);
+    	setIsLoading(props.isLoading);
+    }, [props.isLoading]);
+    
 
 	return (
 		<div
 			id="loading-screen"
 			className="kenburns-bottom"
-			style={{ display: isLoding ? 'flex' : 'none' }}
+			style={{ display: isLoading ? 'flex' : 'none' }}
 		>
 			<div className="loading-screen-background"></div>
 			<div className="kenburns-bottom"></div>
