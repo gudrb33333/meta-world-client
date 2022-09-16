@@ -48,30 +48,30 @@ function Room() {
 				id="local-webcam"
 				autoPlay
 				className="video"
-				width="1920"
-				height="1080"
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 				muted
 			></video>
 			<canvas
 				id="local-webcam-image"
-				width="1920"
-				height="1080"
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
 			<video
 				id="local-share"
 				autoPlay
 				className="video"
-				width="1920"
-				height="1080"
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 				muted
 			></video>
 			<canvas
 				id="local-share-image"
-				width="1920"
-				height="1080"
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
 			<div id="remote-producer-container"></div>

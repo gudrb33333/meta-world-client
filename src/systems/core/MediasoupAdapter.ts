@@ -469,7 +469,7 @@ export class MediasoupAdapter implements IUpdatable {
 						'-video" autoplay class="video" style="visibility: hidden; float:left; position: absolute;" ></video>' +
 						'<canvas id="' +
 						remoteProducerId +
-						'-canvas" width="1920" height="1080" style="visibility: hidden; float:left; position: absolute;" ></canvas>';
+						'-canvas" width="640" height="360" style="visibility: hidden; float:left; position: absolute;" ></canvas>';
 					remoteProducerContainer.appendChild(videoElem);
 
 					const remoteWebcamImage = document.getElementById(
@@ -537,7 +537,7 @@ export class MediasoupAdapter implements IUpdatable {
 						'-video" autoplay class="video" style="visibility: hidden; float:left; position: absolute;" ></video>' +
 						'<canvas id="' +
 						remoteProducerId +
-						'-canvas" width="1920" height="1080" style="visibility: hidden; float:left; position: absolute;" ></canvas>';
+						'-canvas" width="640" height="360" style="visibility: hidden; float:left; position: absolute;" ></canvas>';
 					remoteProducerContainer.appendChild(videoElem);
 
 					const remoteShareImage = document.getElementById(
@@ -659,11 +659,11 @@ export class MediasoupAdapter implements IUpdatable {
 					video: {
 						width: {
 							min: 640,
-							max: 1920,
+							max: 640,
 						},
 						height: {
-							min: 400,
-							max: 1080,
+							min: 360,
+							max: 360,
 						},
 					},
 				})
@@ -783,8 +783,8 @@ export class MediasoupAdapter implements IUpdatable {
 				.getDisplayMedia({
 					audio: false,
 					video: {
-						width: { max: 1920 },
-						height: { max: 1080 },
+						width: { max: 640 },
+						height: { max: 360 },
 						frameRate: { max: 30 },
 					},
 				})
