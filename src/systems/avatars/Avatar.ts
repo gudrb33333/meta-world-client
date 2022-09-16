@@ -78,6 +78,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	private physicsEnabled = true;
 
 	private avatarAnimationState: string = null;
+	private displacement: THREE.Vector3;
 
 	constructor(gltf: any) {
 		super();
@@ -289,17 +290,10 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 				this.resetControls();
 				cameraOperator.setAvatarCaller(this);
 				this.world.getInputManager().setInputReceiver(cameraOperator);
-			} else if (
-				code === 'KeyR' &&
-				pressed === true &&
-				event.shiftKey === true
-			) {
-				//this.world.restartScenario();
 			} else {
 				for (const action in this.actions) {
 					if (this.actions.hasOwnProperty(action)) {
 						const binding = this.actions[action];
-
 						if (_.includes(binding.eventCodes, code)) {
 							this.triggerAction(action, pressed);
 						}
@@ -307,6 +301,30 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 				}
 			}
 		}
+	}
+
+	public handleLeftJoystickEvent(
+		displacement: THREE.Vector3, 
+		code: string,
+		pressed: boolean,
+	): void{
+		this.displacement = displacement;
+		for (const action in this.actions) {
+			if (this.actions.hasOwnProperty(action)) {
+				const binding = this.actions[action];
+				if (_.includes(binding.eventCodes, code)) {
+					this.triggerAction(action, pressed);
+				}
+			}
+		}
+	}
+
+	public handleRightJoystickEvent(
+		lookDx: number,
+		lookDy: number,
+		pressed: boolean
+	): void {
+		this.world.getCameraOperator().move(lookDx, lookDy);
 	}
 
 	public handleMouseButton(
@@ -352,7 +370,6 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	public triggerAction(actionName: string, value: boolean): void {
 		// Get action and set it's parameters
 		const action = this.actions[actionName];
-
 		if (action.isPressed !== value) {
 			// Set value
 			action.isPressed = value;
@@ -553,16 +570,20 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	}
 
 	public getLocalMovementDirection(): THREE.Vector3 {
-		const positiveX = this.actions.right.isPressed ? -1 : 0;
-		const negativeX = this.actions.left.isPressed ? 1 : 0;
-		const positiveZ = this.actions.up.isPressed ? 1 : 0;
-		const negativeZ = this.actions.down.isPressed ? -1 : 0;
+		if(this.displacement !== undefined){
+			return this.displacement.normalize();
+		} else {
+			const positiveX = this.actions.right.isPressed ? -1 : 0;
+			const negativeX = this.actions.left.isPressed ? 1 : 0;
+			const positiveZ = this.actions.up.isPressed ? 1 : 0;
+			const negativeZ = this.actions.down.isPressed ? -1 : 0;
 
-		return new THREE.Vector3(
-			positiveX + negativeX,
-			0,
-			positiveZ + negativeZ,
-		).normalize();
+			return new THREE.Vector3(
+				positiveX + negativeX,
+				0,
+				positiveZ + negativeZ,
+			).normalize();
+		}
 	}
 
 	public getCameraRelativeMovementVector(): THREE.Vector3 {
