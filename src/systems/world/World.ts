@@ -28,6 +28,7 @@ import { UIManager } from '../core/UIManager';
 import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
+import { Joystick } from '../core/Joystick';
 
 export class World {
     private requestAnimationFrameId;
@@ -82,8 +83,7 @@ export class World {
 		// Canvas
 		this.renderer.domElement.id = 'main-canvas';
 		document.body.appendChild(this.renderer.domElement);
-		const viewport = document.createElement("div");
-		document.body.appendChild(viewport);
+
 		// Auto window resize
 		function onWindowResize(): void {
 			scope.camera.aspect = window.innerWidth / window.innerHeight;
@@ -212,6 +212,7 @@ export class World {
 			this.params.Mouse_Sensitivity,
 		);
 		this.sky = new Sky(this);
+		new Joystick(this, this.inputManager);
 
         // Load scene if path is supplied
 		if (worldScenePath !== undefined) {
@@ -249,7 +250,7 @@ export class World {
 				this.loadScene(loadingManager, gltf);
 			});
         }
-
+		
 		this.render(this);
     }
 
