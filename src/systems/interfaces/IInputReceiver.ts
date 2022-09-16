@@ -12,6 +12,19 @@ export interface IInputReceiver {
 	handleMouseMove(event: MouseEvent, deltaX: number, deltaY: number): void;
 	handleMouseWheel(event: WheelEvent, value: number): void;
 
+	
+	handleLeftJoystickEvent(
+		displacement: THREE.Vector3, 
+		code: string,
+		pressed: boolean,
+	): void;
+
+	handleRightJoystickEvent(
+		lookDx: number,
+		lookDy: number,
+		pressed: boolean
+	): void;
+
 	inputReceiverInit(): void;
 	inputReceiverUpdate(timeStep: number): void;
 }
