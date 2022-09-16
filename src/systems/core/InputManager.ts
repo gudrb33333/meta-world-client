@@ -180,10 +180,49 @@ export class InputManager implements IUpdatable {
 		}
 	}
 
+	public onLeftJoysickDown(
+		displacement: THREE.Vector3, 
+		code: string,
+		pressed: boolean
+	): void {
+		if (this.inputReceiver !== undefined) {
+			this.inputReceiver.handleLeftJoystickEvent(displacement, code, pressed);
+		}
+	}
+
+	public onLeftJoysickUp(
+		displacement: THREE.Vector3, 
+		code: string,
+		pressed: boolean
+	): void {
+		if (this.inputReceiver !== undefined) {
+			this.inputReceiver.handleLeftJoystickEvent(displacement, code, pressed);
+		}
+	}
+
+	public onRightJoystickDown(
+		lookDx: number,
+		lookDy: number,
+		pressed: boolean
+	): void {
+		if (this.inputReceiver !== undefined) {
+			this.inputReceiver.handleRightJoystickEvent(lookDx, lookDy, pressed);
+		}
+	}
+
+	public onRightJoystickUp(
+		lookDx: number,
+		lookDy: number,
+		pressed: boolean
+	): void {
+		if (this.inputReceiver !== undefined) {
+			this.inputReceiver.handleRightJoystickEvent(lookDx, lookDy, pressed);
+		}
+    }
+
 	public onMouseWheelMove(event: WheelEvent): void {
 		if (this.inputReceiver !== undefined) {
 			this.inputReceiver.handleMouseWheel(event, event.deltaY);
 		}
 	}
-	
 }
