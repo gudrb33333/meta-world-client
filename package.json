@@ -12,6 +12,7 @@
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "mediasoup-client": "^3.6.55",
+    "nipplejs": "^0.9.1",
     "phoenix": "^1.6.11",
     "protoo-client": "^4.0.6",
     "react": "^18.2.0",
