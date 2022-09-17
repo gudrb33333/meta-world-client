@@ -1,4 +1,4 @@
-import './Room.css';
+import styles from './Room.module.css';
 import { World } from '../../systems/world/World';
 import Footer from './Footer';
 import LoadingScreen from './LoadingScreen';
@@ -56,14 +56,14 @@ function Room() {
 			<audio
 				id="local-audio"
 				autoPlay
-				className="audio"
+				className={styles.audio}
 				style={{ display: 'none' }}
 				muted
 			></audio>
 			<video
 				id="local-webcam"
 				autoPlay
-				className="video"
+				className={styles.video}
 				width="640"
 				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
@@ -78,7 +78,7 @@ function Room() {
 			<video
 				id="local-share"
 				autoPlay
-				className="video"
+				className={styles.video}
 				width="640"
 				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
