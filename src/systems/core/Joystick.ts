@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { IUpdatable } from "../interfaces/IUpdatable";
 import { World } from "../world/World";
 import { InputManager } from "./InputManager";
-import './Joystick.css';
+import styles from './Joystick.module.css';
   
 const ROTATION_SPEED = 10;
 
@@ -39,17 +39,17 @@ export class Joystick implements IUpdatable {
         this.onLookJoystickEnd = this.onLookJoystickEnd.bind(this);
 
         this.mockJoystickContainer = document.createElement("div");
-        this.mockJoystickContainer.classList.add('mockJoystickContainer');
+        this.mockJoystickContainer.classList.add(styles.mockJoystickContainer);
         this.leftMock = document.createElement("div");
-        this.leftMock.classList.add('mockJoystick');
+        this.leftMock.classList.add(styles.mockJoystick);
         this.leftMockSmall = document.createElement("div");
-        this.leftMockSmall.classList.add('mockJoystick', 'inner');
+        this.leftMockSmall.classList.add(styles.mockJoystick, styles.inner);
         this.leftMock.appendChild(this.leftMockSmall);
         this.mockJoystickContainer.appendChild(this.leftMock);
         this.rightMock = document.createElement("div");
-        this.rightMock.classList.add('mockJoystick');
+        this.rightMock.classList.add(styles.mockJoystick);
         this.rightMockSmall = document.createElement("div");
-        this.rightMockSmall.classList.add('mockJoystick','inner');
+        this.rightMockSmall.classList.add(styles.mockJoystick, styles.inner);
         this.rightMock.appendChild(this.rightMockSmall);
         this.mockJoystickContainer.appendChild(this.rightMock);
 
@@ -73,7 +73,7 @@ export class Joystick implements IUpdatable {
 
     private createLeftStick(): void {
         this.leftTouchZone = document.createElement("div");
-        this.leftTouchZone.classList.add('touchZone', 'left');
+        this.leftTouchZone.classList.add(styles.touchZone, styles.left);
         this.insertAfter(this.leftTouchZone, this.mockJoystickContainer);
         this.leftStick = nipplejs.create({
           mode: "static",
@@ -90,7 +90,7 @@ export class Joystick implements IUpdatable {
 
     private createRightStick(): void {
         this.rightTouchZone = document.createElement("div");
-        this.rightTouchZone.classList.add('touchZone', 'right');
+        this.rightTouchZone.classList.add(styles.touchZone, styles.right);
         this.insertAfter(this.rightTouchZone, this.mockJoystickContainer);
         this.rightStick = nipplejs.create({
           mode: "static",
