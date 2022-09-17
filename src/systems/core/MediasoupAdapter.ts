@@ -765,7 +765,6 @@ export class MediasoupAdapter implements IUpdatable {
 				console.log('enableShare()');
 				if (this.shareProducer) return reject(false);
 				if (this.remoteShareKeyList.length > 0) return reject(false);
-				console.log(this.remoteShareKeyList.length);
 
 				// if (this.remoteShareKeyList.length > 1) {
 				// 	this.remoteShareKeyList.forEach(async (remoteShareKey) => {
@@ -926,12 +925,11 @@ export class MediasoupAdapter implements IUpdatable {
 					await this.mediasoupSocket.emit('closeProducer', {
 						producerId: this.shareProducer.id,
 					});
-
 					this.shareProducer = null;
 					resolve(true);
 				} catch (error) {
 					console.error(`Error closing server-side webcam Producer: ${error}`);
-					resolve(false);
+					reject(false);
 				}
 			},
 		);

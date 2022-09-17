@@ -4,11 +4,11 @@ import checkIsMobile from "../../utils/isMobile";
 import styles from './Footer.module.css';
 
 function Footer(props) {
-	const [isLoading, setIsLoading] = useState(props.isLoading);
+	const [isLoading, setIsLoading] = useState(true);
 	const [isMicOn, setIsMicOn] = useState(false);
 	const [isWebcamOn, setIsWebcamOn] = useState(false);
 	const [isShareOn, setIsShareOn] = useState(false);
-	const [isUiContainerOn, setIsUiContainerOn] = useState(props.isUiContainerOn);
+	const [isUiContainerOn, setIsUiContainerOn] = useState(false);
 
 	useEffect(() => {
 		setIsLoading(props.isLoading);
@@ -16,33 +16,25 @@ function Footer(props) {
 	}, [props.isLoading, props.isUiContainerOn]);
 
 	useEffect(() => {
-		document.addEventListener('init-mic-event', function (event) {
+		const initMicEventCallBack = () => {
 			setIsMicOn(true);
-		});
+		}
 
-		document.addEventListener('stop-share-event', function (event) {
-			//world.mediasoupAdapter.disableShare();
-			setIsShareOn(false);
-		});
+		const stopShareEventCallBack = () => {
+			shareButtonClicked();
+		}
+
+		document.addEventListener('init-mic-event', initMicEventCallBack);
+		document.addEventListener('stop-share-event', stopShareEventCallBack);
 
 		return () => {
-			document.addEventListener('init-mic-event', function (event) {
-				setIsMicOn(true);
-			});
-
-			document.addEventListener('stop-share-event', function (event) {
-				//world.mediasoupAdapter.disableShare();
-				setIsShareOn(false);
-			});
+			document.removeEventListener('init-mic-event', initMicEventCallBack);
+			document.removeEventListener('stop-share-event', stopShareEventCallBack);
 		};
-	}, []);
-
-	const getWorldFromRoom = (): World => {
-		return props.getWorld();
-	};
+	}, [props.getWorld, isShareOn]);
 
 	const micButtonClicked = () => {
-		const world = getWorldFromRoom();
+		const world = props.getWorld();
 		const mediasoupAdapter = world.getMediasoupAdapter();
 		if (isMicOn) {
 			mediasoupAdapter.muteMic();
@@ -54,7 +46,7 @@ function Footer(props) {
 	};
 
 	const webcamButtonClicked = () => {
-		const world = getWorldFromRoom();
+		const world = props.getWorld();
 		const mediasoupAdapter = world.getMediasoupAdapter();
 		if (isWebcamOn) {
 			mediasoupAdapter.disableWebcam();
@@ -66,7 +58,7 @@ function Footer(props) {
 	};
 
 	const shareButtonClicked = async () => {
-		const world = getWorldFromRoom();
+		const world = props.getWorld();
 		const mediasoupAdapter = world.getMediasoupAdapter();
 		if (isShareOn) {
 			if (await mediasoupAdapter.disableShare()) {
