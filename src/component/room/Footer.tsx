@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { World } from 'src/systems/world/World';
-import './Footer.css';
+import styles from './Footer.module.css';
 
 function Footer(props) {
 	const [isLoading, setIsLoading] = useState(props.isLoading);
@@ -94,13 +94,13 @@ function Footer(props) {
 
 	return (
 		<footer style={{ display: isLoading ? 'none' : 'block' }}>
-			<div className="footer-button">
+			<div className={styles.footerButton}>
 				<ul>
 					<li>
 						<a
-							id="button-mic"
+							id={styles.buttonMic}
 							onClick={micButtonClicked}
-							className={isMicOn ? 'active-on' : 'active-off'}
+							className={isMicOn ? styles.activeOn : styles.activeOff}
 						>
 							<svg
 								className="glow"
@@ -181,9 +181,9 @@ function Footer(props) {
 					</li>
 					<li>
 						<a
-							id="button-webcam"
+							id={styles.buttonWebcam}
 							onClick={webcamButtonClicked}
-							className={isWebcamOn ? 'active-on' : 'active-off'}
+							className={isWebcamOn ? styles.activeOn : styles.activeOff}
 						>
 							<svg
 								className="glow"
@@ -238,9 +238,9 @@ function Footer(props) {
 					</li>
 					<li>
 						<a
-							id="button-share"
+							id={styles.buttonShare}
 							onClick={shareButtonClicked}
-							className={isShareOn ? 'active-on' : 'active-off'}
+							className={isShareOn ? styles.activeOn : styles.activeOff}
 						>
 							<svg
 								className="glow"
@@ -300,9 +300,9 @@ function Footer(props) {
 					</li>
 					<li>
 						<a
-							id="button-controls"
+							id={styles.buttonControls}
 							onClick={controlsButtonClicked}
-							className={isUiContainerOn ? 'active-on' : 'active-off'}
+							className={isUiContainerOn ? styles.activeOn : styles.activeOff}
 						>
 							<svg
 								className="glow"
