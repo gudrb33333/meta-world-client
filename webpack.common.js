@@ -50,7 +50,15 @@ module.exports = {
             test: /\.css$/,
             use: [
                 { loader: 'style-loader', options: { injectType: 'singletonStyleTag' } },
-                { loader: 'css-loader' },
+                { 
+                    loader: 'css-loader',
+                    options: {
+                        modules: {
+                            localIdentName: "[name]__[local]__[hash:base64:5]",
+                            exportLocalsConvention: "camelCase",
+                        }
+                    }, 
+                },
             ]
         },
         {
