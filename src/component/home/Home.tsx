@@ -1,24 +1,25 @@
 import { Link } from 'react-router-dom';
-import './Home.css';
+import classNames from "classnames";
+import styles from './Home.module.css';
 
 function Home() {
-	return (
-		<div className="home fade-in">
-			<div className="home-screen">
-				<div className="home-title text-flicker-in-glow">Meta World</div>
-				<div className="home-button-container">
+	return ( 
+		<div className={classNames([styles.home, styles.fadeIn])}>
+			<div className={styles.homeScreen}>
+				<div className={classNames([styles.homeTitle, styles.textFlickerInGlow])}>Meta World</div>
+				<div className={styles.homeButtonContainer}>
 					<Link to="/avatar">
-						<button className="home-create-avatar-button pushable slide-in-left">
-							<span className="shadow"></span>
-							<span className="edge"></span>
-							<span className="front">아바타 만들기</span>
+						<button className={classNames([styles.homeCreateAvatarButton, styles.pushable, styles.slideInLeft])}>
+							<span className={styles.shadow}></span>
+							<span className={styles.edge}></span>
+							<span className={styles.front}>아바타 만들기</span>
 						</button>
 					</Link>
 					<Link to="/avatar-list">
-						<button className="pushable slide-in-right">
-							<span className="shadow"></span>
-							<span className="edge"></span>
-							<span className="front">캐릭터 선택</span>
+						<button className={classNames([styles.pushable, styles.slideInRight])}>
+							<span className={styles.shadow}></span>
+							<span className={styles.edge}></span>
+							<span className={styles.front}>캐릭터 선택</span>
 						</button>
 					</Link>
 				</div>
