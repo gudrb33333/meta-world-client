@@ -45,11 +45,11 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 		}
 	}
 
-	public getType(): string{
+	public getType(): string {
 		return this.type;
 	}
 
-	public setType(type: string){
+	public setType(type: string) {
 		this.type = type;
 	}
 }

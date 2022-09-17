@@ -160,7 +160,7 @@ export class PhoenixAdapter implements IUpdatable {
 
 	public update(timestep: number, unscaledTimeStep: number): void {
 		const userAvatar = this.world.getUserAvatar();
-		const chairs = this.world.getChairs()
+		const chairs = this.world.getChairs();
 		const userEnteredVehicle = chairs.filter(
 			(chair) => chair.children.length > 1,
 		);

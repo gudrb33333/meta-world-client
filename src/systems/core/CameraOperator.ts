@@ -10,7 +10,7 @@ import { IUpdatable } from '../interfaces/IUpdatable';
 export class CameraOperator implements IInputReceiver, IUpdatable {
 	public updateOrder = 4;
 	public actions: { [action: string]: KeyBinding };
-	
+
 	private world: World;
 	private camera: THREE.Camera;
 	private target: THREE.Vector3;
@@ -141,17 +141,17 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 	}
 
 	public handleLeftJoystickEvent(
-		displacement: THREE.Vector3, 
+		displacement: THREE.Vector3,
 		code: string,
 		pressed: boolean,
-	): void{
+	): void {
 		//TODO: implement handleLeftJoystickEvent
 	}
 
 	public handleRightJoystickEvent(
 		lookDx: number,
 		lookDy: number,
-		pressed: boolean
+		pressed: boolean,
 	): void {
 		//TODO: implement handleRightJoystickEvent
 	}
@@ -240,19 +240,19 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		this.target.add(right.multiplyScalar(speed * this.rightVelocity));
 	}
 
-	public getTarget(): THREE.Vector3{
+	public getTarget(): THREE.Vector3 {
 		return this.target;
 	}
 
-	public getAvatarCaller(): Avatar{
+	public getAvatarCaller(): Avatar {
 		return this.avatarCaller;
 	}
 
-	public setAvatarCaller(avatar: Avatar){
+	public setAvatarCaller(avatar: Avatar) {
 		this.avatarCaller = avatar;
 	}
 
-	public setFollowMode(followMode: boolean){
+	public setFollowMode(followMode: boolean) {
 		this.followMode = followMode;
 	}
 }

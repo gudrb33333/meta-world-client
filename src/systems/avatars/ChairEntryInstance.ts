@@ -32,15 +32,15 @@ export class ChairEntryInstance {
 		}
 	}
 
-	public getEntryPoint(): THREE.Object3D{
+	public getEntryPoint(): THREE.Object3D {
 		return this.entryPoint;
 	}
 
-	public setEntryPoint(object: THREE.Object3D){
+	public setEntryPoint(object: THREE.Object3D) {
 		this.entryPoint = object;
 	}
 
-	public setTargetChair(targetChair: Chair){
+	public setTargetChair(targetChair: Chair) {
 		this.targetChair = targetChair;
 	}
 }

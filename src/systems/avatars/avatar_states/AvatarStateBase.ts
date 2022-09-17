@@ -55,7 +55,10 @@ export abstract class AvatarStateBase implements IAvatarState {
 			this.avatar.actions.enter_passenger.justPressed
 		) {
 			this.avatar.findChairToEnter(false);
-		} else if (this.canEnterChairs && this.avatar.getChairEntryInstance() !== null) {
+		} else if (
+			this.canEnterChairs &&
+			this.avatar.getChairEntryInstance() !== null
+		) {
 			if (
 				this.avatar.actions.up.justPressed ||
 				this.avatar.actions.down.justPressed ||

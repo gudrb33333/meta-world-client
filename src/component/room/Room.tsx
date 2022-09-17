@@ -9,9 +9,9 @@ import screenfull from 'screenfull';
 import { useEffect, useState } from 'react';
 
 function Room() {
-	const [ world, setWorld ] = useState(null);
-	const [ isLoading, setIsLoading ] = useState(true);
-	const [ isUiContainerOn, setUiContainerOn ] = useState(false);
+	const [world, setWorld] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [isUiContainerOn, setUiContainerOn] = useState(false);
 
 	useEffect(() => {
 		setWorld(new World('/assets/test22222.glb'));
@@ -20,7 +20,7 @@ function Room() {
 			setIsLoading(false);
 			setUiContainerOn(true);
 		});
-	},[]);
+	}, []);
 
 	const history = createBrowserHistory();
 	const navigate = useNavigate();
@@ -45,11 +45,11 @@ function Room() {
 
 	const getWorld = (): World => {
 		return world;
-    }    
+	};
 
-	const test = () =>{
+	const test = () => {
 		screenfull.request();
-	}
+	};
 
 	return (
 		<>
@@ -91,9 +91,14 @@ function Room() {
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
 			<div id="remote-producer-container"></div>
-			<LoadingScreen isLoading={isLoading}/>
-			<UiContainer isLoading={isLoading} isUiContainerOn={isUiContainerOn}/>
-			<Footer isLoading={isLoading} getWorld={getWorld} isUiContainerOn={isUiContainerOn} setUiContainerOn={setUiContainerOn}/>
+			<LoadingScreen isLoading={isLoading} />
+			<UiContainer isLoading={isLoading} isUiContainerOn={isUiContainerOn} />
+			<Footer
+				isLoading={isLoading}
+				getWorld={getWorld}
+				isUiContainerOn={isUiContainerOn}
+				setUiContainerOn={setUiContainerOn}
+			/>
 		</>
 	);
 }

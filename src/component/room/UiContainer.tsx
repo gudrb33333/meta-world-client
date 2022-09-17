@@ -7,14 +7,20 @@ function UiContainer(props) {
 	const [isUiContainerOn, setIsUiContainerOn] = useState(props.isUiContainerOn);
 
 	useEffect(() => {
-    	setIsLoading(props.isLoading);
-		setIsUiContainerOn(props.isUiContainerOn)
-    }, [props.isLoading, props.isUiContainerOn]);
+		setIsLoading(props.isLoading);
+		setIsUiContainerOn(props.isUiContainerOn);
+	}, [props.isLoading, props.isUiContainerOn]);
 
 	return (
-		<div id={styles.uiContainer} style={{ display: !isLoading && isUiContainerOn? 'block' : 'none' }}>
+		<div
+			id={styles.uiContainer}
+			style={{ display: !isLoading && isUiContainerOn ? 'block' : 'none' }}
+		>
 			<div className={styles.leftPanel}>
-				<div id="controls" className={classNames([styles.panelSegment, styles.flexBottom])}></div>
+				<div
+					id="controls"
+					className={classNames([styles.panelSegment, styles.flexBottom])}
+				></div>
 				<h2 className={styles.controlsTitle}>Controls</h2>
 				<div className={styles.ctrlRow}>
 					<span className={styles.ctrlKey}>W</span>

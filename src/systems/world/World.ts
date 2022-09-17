@@ -31,25 +31,25 @@ import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import { Joystick } from '../core/Joystick';
 
 export class World {
-    private requestAnimationFrameId;
-    private renderer: THREE.WebGLRenderer;
-    private camera: THREE.PerspectiveCamera;
-    private cameraOperator: CameraOperator;
+	private requestAnimationFrameId;
+	private renderer: THREE.WebGLRenderer;
+	private camera: THREE.PerspectiveCamera;
+	private cameraOperator: CameraOperator;
 	private sky: Sky;
-    private composer: EffectComposer;
-    private graphicsWorld: THREE.Scene;
+	private composer: EffectComposer;
+	private graphicsWorld: THREE.Scene;
 	private physicsWorld: CANNON.World;
 	private physicsFrameRate: number;
 	private physicsFrameTime: number;
 	private physicsMaxPrediction: number;
-    private clock: THREE.Clock;
+	private clock: THREE.Clock;
 	private renderDelta: number;
 	private logicDelta: number;
 	private requestDelta: number;
 	private sinceLastFrame: number;
 	private justRendered: boolean;
-    private params: WorldParams;
-    private timeScaleTarget = 1;
+	private params: WorldParams;
+	private timeScaleTarget = 1;
 
 	private inputManager: InputManager;
 
@@ -102,40 +102,42 @@ export class World {
 		const maxResolution = {
 			width: screen.width * window.devicePixelRatio,
 			height: screen.height * window.devicePixelRatio,
-		}
+		};
 
-
-		function calculateRendererSize (canvasRect, maxResolution) {
- 			// canvasRect values are CSS pixels based while
- 			// maxResolution values are physical pixels based (CSS pixels * pixel ratio).
- 			// Convert maxResolution values to CSS pixels based.
- 			const pixelRatio = window.devicePixelRatio;
- 			const maxWidth = maxResolution.width / pixelRatio;
- 			const maxHeight = maxResolution.height / pixelRatio;
+		function calculateRendererSize(canvasRect, maxResolution) {
+			// canvasRect values are CSS pixels based while
+			// maxResolution values are physical pixels based (CSS pixels * pixel ratio).
+			// Convert maxResolution values to CSS pixels based.
+			const pixelRatio = window.devicePixelRatio;
+			const maxWidth = maxResolution.width / pixelRatio;
+			const maxHeight = maxResolution.height / pixelRatio;
 
 			if (canvasRect.width <= maxWidth && canvasRect.height <= maxHeight) {
 				return canvasRect;
 			}
-			
-			const conversionRatio = Math.min(maxWidth / canvasRect.width, maxHeight / canvasRect.height);
-			
+
+			const conversionRatio = Math.min(
+				maxWidth / canvasRect.width,
+				maxHeight / canvasRect.height,
+			);
+
 			return {
 				width: Math.round(canvasRect.width * conversionRatio),
-				height: Math.round(canvasRect.height * conversionRatio)
+				height: Math.round(canvasRect.height * conversionRatio),
 			};
 		}
 
-		const observer = new ResizeObserver(entries => {
+		const observer = new ResizeObserver((entries) => {
 			//TODO: 가로,세로 바꿀때 해상도 찌그러지는거 해결해야함.
 			this.stopRendering();
-			
+
 			const canvasRect = entries[0].contentRect;
 
 			const rendererSize = calculateRendererSize(canvasRect, maxResolution);
 
 			const canvas = document.getElementById('main-canvas');
-			canvas.style.width = canvasRect.width + "px";
-			canvas.style.height = canvasRect.height + "px";
+			canvas.style.width = canvasRect.width + 'px';
+			canvas.style.height = canvasRect.height + 'px';
 
 			scope.renderer.setSize(rendererSize.width, rendererSize.height, false);
 
@@ -148,11 +150,9 @@ export class World {
 			scope.camera.updateProjectionMatrix();
 
 			scope.render(this);
-
 		});
-		  
-		observer.observe(document.body);
 
+		observer.observe(document.body);
 
 		//window.addEventListener('resize', onWindowResize, false);
 
@@ -214,13 +214,13 @@ export class World {
 		this.sky = new Sky(this);
 		new Joystick(this, this.inputManager);
 
-        // Load scene if path is supplied
+		// Load scene if path is supplied
 		if (worldScenePath !== undefined) {
-            const loadingManager = new LoadingManager(this);
+			const loadingManager = new LoadingManager(this);
 			const avatarLoadingManager = new LoadingManager(this);
 
-            loadingManager.onFinishedCallback = async () => {
-                this.update(1, 1);
+			loadingManager.onFinishedCallback = async () => {
+				this.update(1, 1);
 				this.setTimeScale(1);
 
 				const profile = {
@@ -244,17 +244,17 @@ export class World {
 					this,
 					process.env.MEDIASOUP_SERVER_URL,
 				);
-            }
+			};
 
-            loadingManager.loadGLTF(worldScenePath, (gltf) => {
+			loadingManager.loadGLTF(worldScenePath, (gltf) => {
 				this.loadScene(loadingManager, gltf);
 			});
-        }
+		}
 
 		this.render(this);
-    }
+	}
 
-    public loadScene(loadingManager: LoadingManager, gltf: any): void {
+	public loadScene(loadingManager: LoadingManager, gltf: any): void {
 		gltf.scene.traverse((child) => {
 			if (child.hasOwnProperty('userData')) {
 				if (child.type === 'Mesh') {
@@ -299,24 +299,23 @@ export class World {
 							if (child.userData.hasOwnProperty('type')) {
 								sp.setType(child.userData.type);
 							}
-	
+
 							this.spawnPoints.push(sp);
 						} else if (child.userData.type === 'player') {
 							const sp = new AvatarSpawnPoint(child);
 							this.spawnPoints.push(sp);
 						}
 					}
-
 				}
 			}
 		});
-		
+
 		this.graphicsWorld.add(gltf.scene);
 
 		this.spawnPoints.forEach((sp) => {
 			sp.spawn(loadingManager, this);
 		});
-    }
+	}
 
 	public setTimeScale(value: number): void {
 		this.params.Time_Scale = value;
@@ -327,7 +326,6 @@ export class World {
 		worldEntity.addToWorld(this);
 		this.registerUpdatable(worldEntity);
 	}
-
 
 	public registerUpdatable(registree: IUpdatable): void {
 		this.updatables.push(registree);
@@ -439,38 +437,38 @@ export class World {
 		gui.open();
 	}
 
-	public getParams(): WorldParams{
+	public getParams(): WorldParams {
 		return this.params;
 	}
 
-	public getCamera(): THREE.PerspectiveCamera{
+	public getCamera(): THREE.PerspectiveCamera {
 		return this.camera;
 	}
 
-	public getCameraOperator(): CameraOperator{
+	public getCameraOperator(): CameraOperator {
 		return this.cameraOperator;
 	}
 
-	public getInputManager(): InputManager{
+	public getInputManager(): InputManager {
 		return this.inputManager;
 	}
 
-	public getPhysicsFrameRate(): number{
+	public getPhysicsFrameRate(): number {
 		return this.physicsFrameRate;
 	}
 
-	public getSky(): Sky{
+	public getSky(): Sky {
 		return this.sky;
 	}
 
-	public getGraphicsWorld(): THREE.Scene{
+	public getGraphicsWorld(): THREE.Scene {
 		return this.graphicsWorld;
 	}
 
-	public getPhysicsWorld(): CANNON.World{
+	public getPhysicsWorld(): CANNON.World {
 		return this.physicsWorld;
 	}
-	
+
 	public setUserAvatar(sessionId: string) {
 		this.userAvatar = this.avatars[0];
 		this.userAvatar.setSessionId(sessionId);
@@ -493,8 +491,7 @@ export class World {
 		return this.avatarMap.get(sessionId);
 	}
 
-
-	public getChairs(): Chair[]{
+	public getChairs(): Chair[] {
 		return this.chairs;
 	}
 

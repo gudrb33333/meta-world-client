@@ -4,7 +4,7 @@ import { World } from './World';
 import { IUpdatable } from '../interfaces/IUpdatable';
 import { default as CSM } from 'three-csm';
 
-export class Sky extends THREE.Object3D implements IUpdatable{
+export class Sky extends THREE.Object3D implements IUpdatable {
 	public updateOrder = 5;
 
 	public sunPosition: THREE.Vector3 = new THREE.Vector3();
@@ -127,7 +127,9 @@ export class Sky extends THREE.Object3D implements IUpdatable{
 			Math.cos((this._phi * Math.PI) / 180);
 
 		this.skyMaterial.uniforms.sunPosition.value.copy(this.sunPosition);
-		this.skyMaterial.uniforms.cameraPos.value.copy(this.world.getCamera().position);
+		this.skyMaterial.uniforms.cameraPos.value.copy(
+			this.world.getCamera().position,
+		);
 	}
 
 	public refreshHemiIntensity(): void {

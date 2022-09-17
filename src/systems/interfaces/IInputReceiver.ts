@@ -12,9 +12,8 @@ export interface IInputReceiver {
 	handleMouseMove(event: MouseEvent, deltaX: number, deltaY: number): void;
 	handleMouseWheel(event: WheelEvent, value: number): void;
 
-	
 	handleLeftJoystickEvent(
-		displacement: THREE.Vector3, 
+		displacement: THREE.Vector3,
 		code: string,
 		pressed: boolean,
 	): void;
@@ -22,7 +21,7 @@ export interface IInputReceiver {
 	handleRightJoystickEvent(
 		lookDx: number,
 		lookDy: number,
-		pressed: boolean
+		pressed: boolean,
 	): void;
 
 	inputReceiverInit(): void;

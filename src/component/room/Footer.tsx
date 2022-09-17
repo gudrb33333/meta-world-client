@@ -10,10 +10,9 @@ function Footer(props) {
 	const [isUiContainerOn, setIsUiContainerOn] = useState(props.isUiContainerOn);
 
 	useEffect(() => {
-    	setIsLoading(props.isLoading);
+		setIsLoading(props.isLoading);
 		setIsUiContainerOn(props.isUiContainerOn);
-    }, [props.isLoading, props.isUiContainerOn]);
-    
+	}, [props.isLoading, props.isUiContainerOn]);
 
 	useEffect(() => {
 		document.addEventListener('init-mic-event', function (event) {
@@ -34,13 +33,12 @@ function Footer(props) {
 				//world.mediasoupAdapter.disableShare();
 				setIsShareOn(false);
 			});
-		  }
+		};
 	}, []);
 
-	
 	const getWorldFromRoom = (): World => {
-        return props.getWorld();
-    }
+		return props.getWorld();
+	};
 
 	const micButtonClicked = () => {
 		const world = getWorldFromRoom();
@@ -68,15 +66,15 @@ function Footer(props) {
 
 	const shareButtonClicked = async () => {
 		const world = getWorldFromRoom();
-		const mediasoupAdapter = world.getMediasoupAdapter();;
+		const mediasoupAdapter = world.getMediasoupAdapter();
 		if (isShareOn) {
-			if(await mediasoupAdapter.disableShare()){
+			if (await mediasoupAdapter.disableShare()) {
 				setIsShareOn(false);
 			} else {
 				setIsShareOn(true);
 			}
 		} else {
-			if(await mediasoupAdapter.enableShare()) {
+			if (await mediasoupAdapter.enableShare()) {
 				setIsShareOn(true);
 			} else {
 				setIsShareOn(false);

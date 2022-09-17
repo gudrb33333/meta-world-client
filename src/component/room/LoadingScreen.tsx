@@ -6,9 +6,9 @@ function LoadingScreen(props) {
 	const [isLoading, setIsLoading] = useState(props.isLoading);
 
 	useEffect(() => {
-    	setIsLoading(props.isLoading);
-    }, [props.isLoading]);
-    
+		setIsLoading(props.isLoading);
+	}, [props.isLoading]);
+
 	return (
 		<div
 			id={styles.loadingScreen}
@@ -17,9 +17,15 @@ function LoadingScreen(props) {
 		>
 			<div className={styles.loadingScreenBackground}></div>
 			<div className={styles.kenburnsBottom}></div>
-			<div className={classNames([styles.loadingTitle, styles.textPopUpTop])}>Meta World</div>
+			<div className={classNames([styles.loadingTitle, styles.textPopUpTop])}>
+				Meta World
+			</div>
 
-			<div className={classNames([styles.loadingText, styles.trackingInContract])}>Loading...</div>
+			<div
+				className={classNames([styles.loadingText, styles.trackingInContract])}
+			>
+				Loading...
+			</div>
 		</div>
 	);
 }

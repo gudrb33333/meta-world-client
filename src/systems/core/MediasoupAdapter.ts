@@ -108,9 +108,9 @@ export class MediasoupAdapter implements IUpdatable {
 								const remoteWebcamInfo: RemoteWebcamInfo =
 									this.remoteWebcamMap.get(remoteProducerId);
 
-								this.world.getGraphicsWorld().remove(
-									remoteWebcamInfo.remoteWebcamScreen,
-								);
+								this.world
+									.getGraphicsWorld()
+									.remove(remoteWebcamInfo.remoteWebcamScreen);
 								this.remoteWebcamKeyList = this.remoteWebcamKeyList.filter(
 									(remoteWebcamKey) => remoteWebcamKey != remoteProducerId,
 								);
@@ -127,9 +127,9 @@ export class MediasoupAdapter implements IUpdatable {
 								const remoteShareInfo: RemoteShareInfo =
 									this.remoteShareMap.get(remoteProducerId);
 
-								this.world.getGraphicsWorld().remove(
-									remoteShareInfo.remoteShareScreen,
-								);
+								this.world
+									.getGraphicsWorld()
+									.remove(remoteShareInfo.remoteShareScreen);
 								this.remoteShareKeyList = this.remoteShareKeyList.filter(
 									(remoteShareKey) => remoteShareKey != remoteProducerId,
 								);
@@ -760,170 +760,181 @@ export class MediasoupAdapter implements IUpdatable {
 	};
 
 	public enableShare = async (): Promise<boolean> => {
-		return new Promise<boolean>((resolve:(value: boolean) => void, reject:(error:boolean) => void) => {
-			console.log('enableShare()');
-			if (this.shareProducer) return reject(false);
-			if (this.remoteShareKeyList.length > 0) return reject(false);
-			console.log(this.remoteShareKeyList.length)
+		return new Promise<boolean>(
+			(resolve: (value: boolean) => void, reject: (error: boolean) => void) => {
+				console.log('enableShare()');
+				if (this.shareProducer) return reject(false);
+				if (this.remoteShareKeyList.length > 0) return reject(false);
+				console.log(this.remoteShareKeyList.length);
 
-			// if (this.remoteShareKeyList.length > 1) {
-			// 	this.remoteShareKeyList.forEach(async (remoteShareKey) => {
-			// 		try {
-			// 			await this.mediasoupSocket.emit('closeProducer', {
-			// 				producerId: remoteShareKey,
-			// 			});
-			// 		} catch (error) {
-			// 			console.error(`Error closing server-side webcam Producer: ${error}`);
-			// 		}
-			// 	});
-			// }
-			// if (!this._mediasoupDevice.canProduce('video')) {
-			//     logger.error('enableWebcam() | cannot produce video');
-			//     return;
-			// }
-			// store.dispatch(stateActions.setWebcamInProgress(true));
-			//let stream;
-			try {
-				navigator.mediaDevices
-					.getDisplayMedia({
-						audio: false,
-						video: {
-							width: { max: 640 },
-							height: { max: 360 },
-							frameRate: { max: 30 },
-						},
-					})
-					.then(async (stream) => {
-						this.localShare = document.getElementById(
-							'local-share',
-						) as HTMLVideoElement;
-						this.localShare.srcObject = stream;
-
-						this.localShareImage = document.getElementById(
-							'local-share-image',
-						) as HTMLCanvasElement;
-						this.localShareImageContext = this.localShareImage.getContext('2d');
-
-						// background color if no video present
-						this.localShareImageContext.fillStyle = '#000000';
-						this.localShareImageContext.fillRect(
-							0,
-							0,
-							this.localShareImage.width,
-							this.localShareImage.height,
-						);
-
-						this.localShareTexture = new THREE.Texture(this.localShareImage);
-						this.localShareTexture.minFilter = THREE.LinearFilter;
-						this.localShareTexture.magFilter = THREE.LinearFilter;
-
-						const movieMaterial = new THREE.MeshBasicMaterial({
-							map: this.localShareTexture,
-							side: THREE.DoubleSide,
-						});
-						// the geometry on which the movie will be displayed;
-						// movie image will be scaled to fit these dimensions.
-						const movieGeometry = new THREE.PlaneGeometry(10.5, 3.8, 1, 1);
-						this.localShareScreen = new THREE.Mesh(movieGeometry, movieMaterial);
-						this.localShareScreen.position.set(-8.46, 12.8, -3.3);
-
-						this.localShareScreen.rotation.set(0.06, 0, 0);
-
-						this.world.getGraphicsWorld().add(this.localShareScreen);
-
-						this.shareParams = {
-							track: stream.getVideoTracks()[0],
-							...this.shareDefalutParams,
-						};
-
-						this.shareProducer = await this.producerTransport.produce(
-							this.shareParams,
-						);
-
-						this.shareProducer.on('transportclose', () => {
-							this.shareProducer = null;
-						});
-						this.shareProducer.on('trackended', () => {
-							console.log('share disconnected!');
-							document.dispatchEvent(new Event('stop-share-event'));
-						});
-
-						return resolve(true);
-					})
-					.catch((error) => {
-						console.log(error.message);
-						return reject(false);
-					});
-
-				// if (!this._externalVideo) {
-				//     stream = await this._worker.getUserMedia({
-				//         video: { source: 'device' }
-				//     });
+				// if (this.remoteShareKeyList.length > 1) {
+				// 	this.remoteShareKeyList.forEach(async (remoteShareKey) => {
+				// 		try {
+				// 			await this.mediasoupSocket.emit('closeProducer', {
+				// 				producerId: remoteShareKey,
+				// 			});
+				// 		} catch (error) {
+				// 			console.error(`Error closing server-side webcam Producer: ${error}`);
+				// 		}
+				// 	});
 				// }
-				// else {
-				//     stream = await this._worker.getUserMedia({
-				//         video: {
-				//             source: this._externalVideo.startsWith('http') ? 'url' : 'file',
-				//             file: this._externalVideo,
-				//             url: this._externalVideo
-				//         }
-				//     });
+				// if (!this._mediasoupDevice.canProduce('video')) {
+				//     logger.error('enableWebcam() | cannot produce video');
+				//     return;
 				// }
-				// TODO: For testing.
-				//global.videoStream = stream;
+				// store.dispatch(stateActions.setWebcamInProgress(true));
+				//let stream;
+				try {
+					navigator.mediaDevices
+						.getDisplayMedia({
+							audio: false,
+							video: {
+								width: { max: 640 },
+								height: { max: 360 },
+								frameRate: { max: 30 },
+							},
+						})
+						.then(async (stream) => {
+							this.localShare = document.getElementById(
+								'local-share',
+							) as HTMLVideoElement;
+							this.localShare.srcObject = stream;
 
-				//webcamProducer = await producerTransport.produce(webcamParams);
-				// TODO.
-				// const device = {
-				//     label: 'rear-xyz'
-				// };
-				// store.dispatch(stateActions.addProducer({
-				//     id: this._webcamProducer.id,
-				//     deviceLabel: device.label,
-				//     type: this._getWebcamType(device),
-				//     paused: this._webcamProducer.paused,
-				//     track: this._webcamProducer.track,
-				//     rtpParameters: this._webcamProducer.rtpParameters,
-				//     codec: this._webcamProducer.rtpParameters.codecs[0].mimeType.split('/')[1]
-				// }));
-				//webcamProducer.on('transportclose', () => {
-				//    webcamProducer = null;
-				//});
-				//webcamProducer.on('trackended', () => {
-				//    console.log('Webcam disconnected!');
-				// this.disableWebcam()
-				//     // eslint-disable-next-line @typescript-eslint/no-empty-function
-				//     .catch(() => { });
-				//});
-			} catch (error) {
-				console.error('enableWebcam() | failed:%o', error);
-				console.error('enabling Webcam!');
-				return reject(false);
-				// if (track)
-				//     track.stop();
-			}
-			//store.dispatch(stateActions.setWebcamInProgress(false));
-		});
+							this.localShareImage = document.getElementById(
+								'local-share-image',
+							) as HTMLCanvasElement;
+							this.localShareImageContext =
+								this.localShareImage.getContext('2d');
+
+							// background color if no video present
+							this.localShareImageContext.fillStyle = '#000000';
+							this.localShareImageContext.fillRect(
+								0,
+								0,
+								this.localShareImage.width,
+								this.localShareImage.height,
+							);
+
+							this.localShareTexture = new THREE.Texture(this.localShareImage);
+							this.localShareTexture.minFilter = THREE.LinearFilter;
+							this.localShareTexture.magFilter = THREE.LinearFilter;
+
+							const movieMaterial = new THREE.MeshBasicMaterial({
+								map: this.localShareTexture,
+								side: THREE.DoubleSide,
+							});
+							// the geometry on which the movie will be displayed;
+							// movie image will be scaled to fit these dimensions.
+							const movieGeometry = new THREE.PlaneGeometry(10.5, 3.8, 1, 1);
+							this.localShareScreen = new THREE.Mesh(
+								movieGeometry,
+								movieMaterial,
+							);
+							this.localShareScreen.position.set(-8.46, 12.8, -3.3);
+
+							this.localShareScreen.rotation.set(0.06, 0, 0);
+
+							this.world.getGraphicsWorld().add(this.localShareScreen);
+
+							this.shareParams = {
+								track: stream.getVideoTracks()[0],
+								...this.shareDefalutParams,
+							};
+
+							this.shareProducer = await this.producerTransport.produce(
+								this.shareParams,
+							);
+
+							this.shareProducer.on('transportclose', () => {
+								this.shareProducer = null;
+							});
+							this.shareProducer.on('trackended', () => {
+								console.log('share disconnected!');
+								document.dispatchEvent(new Event('stop-share-event'));
+							});
+
+							return resolve(true);
+						})
+						.catch((error) => {
+							console.log(error.message);
+							return reject(false);
+						});
+
+					// if (!this._externalVideo) {
+					//     stream = await this._worker.getUserMedia({
+					//         video: { source: 'device' }
+					//     });
+					// }
+					// else {
+					//     stream = await this._worker.getUserMedia({
+					//         video: {
+					//             source: this._externalVideo.startsWith('http') ? 'url' : 'file',
+					//             file: this._externalVideo,
+					//             url: this._externalVideo
+					//         }
+					//     });
+					// }
+					// TODO: For testing.
+					//global.videoStream = stream;
+
+					//webcamProducer = await producerTransport.produce(webcamParams);
+					// TODO.
+					// const device = {
+					//     label: 'rear-xyz'
+					// };
+					// store.dispatch(stateActions.addProducer({
+					//     id: this._webcamProducer.id,
+					//     deviceLabel: device.label,
+					//     type: this._getWebcamType(device),
+					//     paused: this._webcamProducer.paused,
+					//     track: this._webcamProducer.track,
+					//     rtpParameters: this._webcamProducer.rtpParameters,
+					//     codec: this._webcamProducer.rtpParameters.codecs[0].mimeType.split('/')[1]
+					// }));
+					//webcamProducer.on('transportclose', () => {
+					//    webcamProducer = null;
+					//});
+					//webcamProducer.on('trackended', () => {
+					//    console.log('Webcam disconnected!');
+					// this.disableWebcam()
+					//     // eslint-disable-next-line @typescript-eslint/no-empty-function
+					//     .catch(() => { });
+					//});
+				} catch (error) {
+					console.error('enableWebcam() | failed:%o', error);
+					console.error('enabling Webcam!');
+					return reject(false);
+					// if (track)
+					//     track.stop();
+				}
+				//store.dispatch(stateActions.setWebcamInProgress(false));
+			},
+		);
 	};
 
 	public disableShare = async () => {
-		return new Promise<boolean>(async (resolve:(value: boolean) => void, reject:(error:boolean) => void) => {
-			try {
-				console.log('disableShare()');
-				if (!this.shareProducer) return;
-				this.shareProducer.close();
+		return new Promise<boolean>(
+			async (
+				resolve: (value: boolean) => void,
+				reject: (error: boolean) => void,
+			) => {
+				try {
+					console.log('disableShare()');
+					if (!this.shareProducer) return;
+					this.shareProducer.close();
 
-				await this.mediasoupSocket.emit('closeProducer', {
-					producerId: this.shareProducer.id,
-				});
+					await this.mediasoupSocket.emit('closeProducer', {
+						producerId: this.shareProducer.id,
+					});
 
-				this.shareProducer = null;
-				resolve(true);
-			} catch (error) {
-				console.error(`Error closing server-side webcam Producer: ${error}`);
-				resolve(false);
-			}
-		})
+					this.shareProducer = null;
+					resolve(true);
+				} catch (error) {
+					console.error(`Error closing server-side webcam Producer: ${error}`);
+					resolve(false);
+				}
+			},
+		);
 	};
 
 	public update(timestep: number, unscaledTimeStep: number): void {

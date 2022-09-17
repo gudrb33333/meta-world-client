@@ -103,7 +103,7 @@ export class Chair
 	}
 
 	public handleLeftJoystickEvent(
-		displacement: THREE.Vector3, 
+		displacement: THREE.Vector3,
 		code: string,
 		pressed: boolean,
 	): void {
@@ -113,7 +113,7 @@ export class Chair
 	public handleRightJoystickEvent(
 		lookDx: number,
 		lookDy: number,
-		pressed: boolean
+		pressed: boolean,
 	): void {
 		//TODO: implement handleLeftJoystickEvent
 	}
@@ -144,11 +144,10 @@ export class Chair
 
 	public inputReceiverUpdate(timeStep: number): void {
 		// Position camera
-		this.world.getCameraOperator().getTarget().set(
-			this.position.x,
-			this.position.y + 5.5,
-			this.position.z,
-		);
+		this.world
+			.getCameraOperator()
+			.getTarget()
+			.set(this.position.x, this.position.y + 5.5, this.position.z);
 	}
 
 	public setPosition(x: number, y: number, z: number): void {
@@ -251,36 +250,35 @@ export class Chair
 		}
 	}
 
-
-	public getSpawnPoint(): THREE.Object3D{
+	public getSpawnPoint(): THREE.Object3D {
 		return this.spawnPoint;
 	}
 
-	public setSpawnPoint(spawnPoint: THREE.Object3D){
+	public setSpawnPoint(spawnPoint: THREE.Object3D) {
 		this.spawnPoint = spawnPoint;
 	}
 
-	public getCollision(): CANNON.Body{
+	public getCollision(): CANNON.Body {
 		return this.collision;
 	}
 
-	public getEntryPoints(): THREE.Object3D{
+	public getEntryPoints(): THREE.Object3D {
 		return this.entryPoints;
 	}
 
-	public getRayCastVehicle(): CANNON.RaycastVehicle{
+	public getRayCastVehicle(): CANNON.RaycastVehicle {
 		return this.rayCastVehicle;
 	}
 
-	public getSeatPointObject(): THREE.Object3D{
+	public getSeatPointObject(): THREE.Object3D {
 		return this.seatPointObject;
 	}
 
-	public getOccupiedBy(): Avatar{
+	public getOccupiedBy(): Avatar {
 		return this.occupiedBy;
 	}
 
-	public setOccupiedBy(avatar: Avatar){
+	public setOccupiedBy(avatar: Avatar) {
 		this.occupiedBy = avatar;
 	}
 }

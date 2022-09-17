@@ -32,9 +32,12 @@ export abstract class ExitingStateBase extends AvatarStateBase {
 		this.avatar.resetVelocity();
 		this.avatar.setPhysicsEnabled(true);
 		this.avatar.inputReceiverUpdate(0);
-		this.avatar.getAvatarCapsule().body.velocity.copy(
-			(this.chair as unknown as Chair).getRayCastVehicle().chassisBody.velocity,
-		);
+		this.avatar
+			.getAvatarCapsule()
+			.body.velocity.copy(
+				(this.chair as unknown as Chair).getRayCastVehicle().chassisBody
+					.velocity,
+			);
 		this.avatar.feetRaycast();
 	}
 

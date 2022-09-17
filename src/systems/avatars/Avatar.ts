@@ -284,7 +284,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		if (this.controlledObject !== undefined) {
 			this.controlledObject.handleKeyboardEvent(event, code, pressed);
 		} else {
-			const cameraOperator = this.world.getCameraOperator()
+			const cameraOperator = this.world.getCameraOperator();
 			// Free camera
 			if (code === 'KeyC' && pressed === true && event.shiftKey === true) {
 				this.resetControls();
@@ -304,10 +304,10 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	}
 
 	public handleLeftJoystickEvent(
-		displacement: THREE.Vector3, 
+		displacement: THREE.Vector3,
 		code: string,
 		pressed: boolean,
-	): void{
+	): void {
 		this.displacement = displacement;
 		for (const action in this.actions) {
 			if (this.actions.hasOwnProperty(action)) {
@@ -322,7 +322,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	public handleRightJoystickEvent(
 		lookDx: number,
 		lookDy: number,
-		pressed: boolean
+		pressed: boolean,
 	): void {
 		this.world.getCameraOperator().move(lookDx, lookDy);
 	}
@@ -570,7 +570,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	}
 
 	public getLocalMovementDirection(): THREE.Vector3 {
-		if(this.displacement !== undefined){
+		if (this.displacement !== undefined) {
 			return this.displacement.normalize();
 		} else {
 			const positiveX = this.actions.right.isPressed ? -1 : 0;
@@ -748,12 +748,9 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 			skipBackfaces: true /* ignore back faces */,
 		};
 		// Cast the ray
-		this.rayHasHit = this.world.getPhysicsWorld().raycastClosest(
-			start,
-			end,
-			rayCastOptions,
-			this.rayResult,
-		);
+		this.rayHasHit = this.world
+			.getPhysicsWorld()
+			.raycastClosest(start, end, rayCastOptions, this.rayResult);
 	}
 
 	public physicsPostStep(body: CANNON.Body, avatar: Avatar): void {
@@ -964,92 +961,91 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		}
 	}
 
-	public getWorld(): World{
+	public getWorld(): World {
 		return this.world;
 	}
 
 	public getSessionId(): string {
-		return this.sessionId
+		return this.sessionId;
 	}
 
-	public setSessionId(sessionId: string){
+	public setSessionId(sessionId: string) {
 		this.sessionId = sessionId;
 	}
 
-	public getCharState(): IAvatarState{
+	public getCharState(): IAvatarState {
 		return this.charState;
 	}
 
-	public setControlledObject(controllableObject: IControllable){
+	public setControlledObject(controllableObject: IControllable) {
 		this.controlledObject = controllableObject;
 	}
 
-	public getAvatarAnimationState(): string{
+	public getAvatarAnimationState(): string {
 		return this.avatarAnimationState;
 	}
 
-	public getAvatarCapsule(): CapsuleCollider{
+	public getAvatarCapsule(): CapsuleCollider {
 		return this.avatarCapsule;
 	}
 
-	
-	public getChairEntryInstance(): ChairEntryInstance{
+	public getChairEntryInstance(): ChairEntryInstance {
 		return this.chairEntryInstance;
 	}
 
-	public setChairEntryInstance(chairEntryInstance: ChairEntryInstance){
+	public setChairEntryInstance(chairEntryInstance: ChairEntryInstance) {
 		this.chairEntryInstance = chairEntryInstance;
 	}
 
-	public getVelocity(): THREE.Vector3{
+	public getVelocity(): THREE.Vector3 {
 		return this.velocity;
 	}
 
-	public getVelocitySimulator(): VectorSpringSimulator{
+	public getVelocitySimulator(): VectorSpringSimulator {
 		return this.velocitySimulator;
 	}
 
-	public getRotationSimulator(): RelativeSpringSimulator{
+	public getRotationSimulator(): RelativeSpringSimulator {
 		return this.rotationSimulator;
 	}
 
-	public setArcadeVelocityIsAdditive(arcadeVelocityIsAdditive : boolean){
+	public setArcadeVelocityIsAdditive(arcadeVelocityIsAdditive: boolean) {
 		this.arcadeVelocityIsAdditive = arcadeVelocityIsAdditive;
 	}
 
-	public getRayHasHit(): boolean{
+	public getRayHasHit(): boolean {
 		return this.rayHasHit;
 	}
 
-	public getRayResult(): CANNON.RaycastResult{
+	public getRayResult(): CANNON.RaycastResult {
 		return this.rayResult;
 	}
 
-	public getDefaultVelocitySimulatorDamping(): number{
+	public getDefaultVelocitySimulatorDamping(): number {
 		return this.defaultVelocitySimulatorDamping;
 	}
 
-	public getDefaultVelocitySimulatorMass(): number{
+	public getDefaultVelocitySimulatorMass(): number {
 		return this.defaultVelocitySimulatorMass;
 	}
 
-	public getDefaultRotationSimulatorDamping(): number{
+	public getDefaultRotationSimulatorDamping(): number {
 		return this.defaultRotationSimulatorDamping;
 	}
 
-	public getDefaultRotationSimulatorMass(): number{
+	public getDefaultRotationSimulatorMass(): number {
 		return this.defaultRotationSimulatorMass;
 	}
 
-	public getMixer(): THREE.AnimationMixer{
+	public getMixer(): THREE.AnimationMixer {
 		return this.mixer;
 	}
 
-	public getGroundImpactData(): GroundImpactData{
+	public getGroundImpactData(): GroundImpactData {
 		return this.groundImpactData;
 	}
 
-	public getRaycastBox(): THREE.Mesh{
+	public getRaycastBox(): THREE.Mesh {
 		return this.raycastBox;
 	}
 }
