@@ -1,5 +1,6 @@
-import './LoadingScreen.css';
+import styles from './LoadingScreen.module.css';
 import { useEffect, useState } from 'react';
+import classNames from 'classnames';
 
 function LoadingScreen(props) {
 	const [isLoading, setIsLoading] = useState(props.isLoading);
@@ -8,18 +9,17 @@ function LoadingScreen(props) {
     	setIsLoading(props.isLoading);
     }, [props.isLoading]);
     
-
 	return (
 		<div
-			id="loading-screen"
-			className="kenburns-bottom"
+			id={styles.loadingScreen}
+			className={styles.kenburnsBottom}
 			style={{ display: isLoading ? 'flex' : 'none' }}
 		>
-			<div className="loading-screen-background"></div>
-			<div className="kenburns-bottom"></div>
-			<div className="loading-title text-pop-up-top">Meta World</div>
+			<div className={styles.loadingScreenBackground}></div>
+			<div className={styles.kenburnsBottom}></div>
+			<div className={classNames([styles.loadingTitle, styles.textPopUpTop])}>Meta World</div>
 
-			<div className="loading-text tracking-in-contract">Loading...</div>
+			<div className={classNames([styles.loadingText, styles.trackingInContract])}>Loading...</div>
 		</div>
 	);
 }
