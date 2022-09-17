@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import '../../App.css';
-import './Avatar.css';
+import styles from './Avatar.module.css';
 import AvatarNameModal from './AvatarNameModal';
 
 function Avatar() {
@@ -72,11 +72,11 @@ function Avatar() {
 	};
 
 	return (
-		<div className="avatar">
+		<div className={styles.avatar}>
 			<iframe
 				allow="camera *; microphone *"
-				className="iFrame"
-				id="frame"
+				className={styles.iFrame}
+				id={styles.frame}
 				ref={iFrameRef}
 				style={{
 					display: `${showIFrame ? 'block' : 'none'}`,
