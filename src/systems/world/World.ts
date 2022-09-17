@@ -29,6 +29,7 @@ import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import { Joystick } from '../core/Joystick';
+import checkIsMobile from "../../utils/isMobile";
 
 export class World {
 	private requestAnimationFrameId;
@@ -212,7 +213,9 @@ export class World {
 			this.params.Mouse_Sensitivity,
 		);
 		this.sky = new Sky(this);
-		new Joystick(this, this.inputManager);
+		if(checkIsMobile()){
+			new Joystick(this, this.inputManager);
+		}
 
 		// Load scene if path is supplied
 		if (worldScenePath !== undefined) {

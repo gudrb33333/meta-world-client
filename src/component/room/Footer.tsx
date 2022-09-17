@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { World } from 'src/systems/world/World';
+import checkIsMobile from "../../utils/isMobile";
 import styles from './Footer.module.css';
 
 function Footer(props) {
@@ -234,7 +235,7 @@ function Footer(props) {
 							</svg>
 						</a>
 					</li>
-					<li>
+					<li style={{ display: checkIsMobile() ? 'none': 'inline'}}>
 						<a
 							id={styles.buttonShare}
 							onClick={shareButtonClicked}
@@ -296,7 +297,7 @@ function Footer(props) {
 							</svg>
 						</a>
 					</li>
-					<li>
+					<li style={{ display: checkIsMobile() ? 'none': 'inline'}}>
 						<a
 							id={styles.buttonControls}
 							onClick={controlsButtonClicked}

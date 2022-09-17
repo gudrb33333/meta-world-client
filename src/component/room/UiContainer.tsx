@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import styles from './UiContainer.module.css';
+import checkIsMobile from "../../utils/isMobile"
 
 function UiContainer(props) {
 	const [isLoading, setIsLoading] = useState(props.isLoading);
@@ -14,7 +15,7 @@ function UiContainer(props) {
 	return (
 		<div
 			id={styles.uiContainer}
-			style={{ display: !isLoading && isUiContainerOn ? 'block' : 'none' }}
+			style={{ display: !checkIsMobile() && !isLoading && isUiContainerOn ? 'block' : 'none' }}
 		>
 			<div className={styles.leftPanel}>
 				<div
