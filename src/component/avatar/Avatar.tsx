@@ -81,6 +81,21 @@ function Avatar() {
 
 	return (
 		<div className={styles.avatar}>
+			<div className={styles.guide} style={{ display: isOpenModal ? 'none' : 'block' }}> 
+				<table>
+					<thead>						
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<h3 className={styles.avatarGuideText}>Full-body 선택 / Half-body (지원 X)</h3>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			
+			
+			</div>
 			<iframe
 				allow="camera *; microphone *"
 				className={styles.iFrame}
