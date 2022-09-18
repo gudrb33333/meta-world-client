@@ -59,7 +59,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 	private rayResult: CANNON.RaycastResult = new CANNON.RaycastResult();
 	private rayHasHit = false;
 	private rayCastLength = 0.57;
-	private raySafeOffset = 0.03;
+	private raySafeOffset = 0.08;
 	private wantsToJump = false;
 	private initJumpSpeed = -1;
 	private groundImpactData: GroundImpactData = new GroundImpactData();
