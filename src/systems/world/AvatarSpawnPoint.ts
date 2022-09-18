@@ -13,7 +13,19 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 	}
 
 	public spawn(loadingManager: LoadingManager, world: World): void {
-		loadingManager.loadGLTF(localStorage.getItem('avatar_url'), (model) => {
+		const qs = new URLSearchParams(location.search);
+		let avatarPath:string;
+		let avatarName:string;
+
+		if(qs.get('user-type') === 'guest'){
+			avatarPath = '/assets/male/readyDefaultMaleAvatar.glb'
+			avatarName = '손님'
+		} else {
+			avatarPath = localStorage.getItem('avatar_url');
+			avatarName = localStorage.getItem('avatar_name');
+		}
+
+		loadingManager.loadGLTF(avatarPath, (model) => {
 			const mixer = new THREE.AnimationMixer(model.scene);
 			const animationClipArr = new Array<THREE.AnimationClip>();
 			const modelType = this.findAvatarType(model);
@@ -43,11 +55,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					model.animations = animationClipArr;
 					const player = new Avatar(model);
 
-					player.setAvatarName(localStorage.getItem('avatar_name'));
-					//const worldPos = new THREE.Vector3();
-					//this.object.getWorldPosition(worldPos);
-					//console.log(this.object.getWorldPosition(worldPos))
-					//player.setAvatarName()
+					player.setAvatarName(avatarName);
 					player.setPosition(
 						-0.08083007484674454,
 						2.3437719345092773,

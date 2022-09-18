@@ -25,13 +25,13 @@ function Home() {
 							<span className={styles.front}>아바타 만들기</span>
 						</button>
 					</Link>
-					<Link to="/avatar-list">
+					<Link to="/room?user-type=guest">
 						<button
 							className={classNames([styles.pushable, styles.slideInRight])}
 						>
 							<span className={styles.shadow}></span>
 							<span className={styles.edge}></span>
-							<span className={styles.front}>캐릭터 선택</span>
+							<span className={styles.front}>기본 캐릭터로 입장</span>
 						</button>
 					</Link>
 				</div>
