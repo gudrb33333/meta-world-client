@@ -145,27 +145,30 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 
 	private setFullBodyFemaleAnimationClip(loadingManager: LoadingManager) {
 		return Promise.all([
-			loadingManager.loadPromiseGLTF('/assets/female2/readyIdleFemale.glb'),
-			loadingManager.loadPromiseGLTF('/assets/female2/readyDropIdleFemale.glb'),
-			loadingManager.loadPromiseGLTF('/assets/female2/readyFastRunFemale.glb'),
-			loadingManager.loadPromiseGLTF('/assets/female2/readyJumpIdleFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readyIdleFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readyDropIdleFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readyFastRunFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readyJumpIdleFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readySittingIdleFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readySitDownRightFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readyStandUpFemale.glb'),
 			loadingManager.loadPromiseGLTF(
-				'/assets/female2/readyJumpingIdleFemale.glb',
+				'/assets/female/readyJumpingIdleFemale.glb',
 			),
 			loadingManager.loadPromiseGLTF(
-				'/assets/female2/readyJumpRunningFemale.glb',
+				'/assets/female/readyJumpRunningFemale.glb',
 			),
 			loadingManager.loadPromiseGLTF(
-				'/assets/female2/readyRunningDropFemale.glb',
+				'/assets/female/readyRunningDropFemale.glb',
 			),
 			loadingManager.loadPromiseGLTF(
-				'/assets/female2/readyRunToStopFemaleInPlace.glb',
+				'/assets/female/readyRunToStopFemaleInPlace.glb',
 			),
 			loadingManager.loadPromiseGLTF(
-				'/assets/female2/readySlowRunFemaleInPlace.glb',
+				'/assets/female/readySlowRunFemaleInPlace.glb',
 			),
 			loadingManager.loadPromiseGLTF(
-				'/assets/female2/readySprintingForwardRollFemaleOveride91.glb',
+				'/assets/female/readySprintingForwardRollFemaleOveride91.glb',
 			),
 		]);
 	}
