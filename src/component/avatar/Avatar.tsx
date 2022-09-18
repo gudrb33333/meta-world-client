@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import styles from './Avatar.module.css';
 import AvatarNameModal from './AvatarNameModal';
@@ -6,7 +7,7 @@ import AvatarNameModal from './AvatarNameModal';
 function Avatar() {
 	const subdomain = 'demo'; // See section about becoming a partner
 	const iFrameRef = useRef(null);
-	const [avatarUrl, setAvatarUrl] = useState('');
+	const navigate = useNavigate();
 	const [showIFrame, setShowIFrame] = useState(true);
 	const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -15,7 +16,7 @@ function Avatar() {
 		if (iFrame) {
 			iFrame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
 		}
-	});
+	},[]);
 	useEffect(() => {
 		window.addEventListener('message', subscribe);
 		document.addEventListener('message', subscribe);
@@ -47,16 +48,12 @@ function Avatar() {
 		}
 		// Get avatar GLB URL
 		if (json.eventName === 'v1.avatar.exported') {
-			console.log(`Avatar URL: ${json.data.url}`);
-			localStorage.setItem('avatar_url', json.data.url);
-			setAvatarUrl(json.data.url);
-			//setShowIFrame(false);
 			setIsOpenModal(true);
 		}
 		// Get user id
 		if (json.eventName === 'v1.user.set') {
 			console.log(`User with id ${json.data.id} set:
-    ${JSON.stringify(json)}`);
+    		${JSON.stringify(json)}`);
 		}
 	};
 	const parse = (event) => {
@@ -68,7 +65,7 @@ function Avatar() {
 	};
 
 	const closeModal = () => {
-		setIsOpenModal(false);
+		location.reload();
 	};
 
 	return (

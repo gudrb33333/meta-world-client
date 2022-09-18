@@ -1,0 +1,63 @@
+.avatar-name-modal {
+    inset: 38% 25%;
+}
+
+.avatar-set-info-table {
+    width: 100%;
+}
+
+.avatar-set-info-button {
+    height: 2.5rem;
+    color: #1d221c;
+    background-color: #00e8da;
+    border: none;
+    border-radius: 10px;
+    margin: 1%;
+}
+
+
+input {
+    width: 28%;
+    height: 32px;
+    font-size: 15px;
+    border: 0;
+    border-radius: 15px;
+    outline: none;
+    padding-left: 10px;
+    background-color: rgb(233, 233, 233);
+}
+
+
+@media (max-width:600px){
+    .avatar-name-modal {
+        inset: 38% 2%;
+    }
+
+    input {
+        width: 55%;
+        height: 32px;
+        font-size: 15px;
+        border: 0;
+        border-radius: 15px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
+    }
+}
+
+@media (max-height:450px){
+    .avatar-name-modal {
+        inset: 25% 27%;
+    }
+
+    input {
+        width: 70%;
+        height: 32px;
+        font-size: 15px;
+        border: 0;
+        border-radius: 15px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
+    }
+}
