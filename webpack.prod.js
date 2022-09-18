@@ -6,9 +6,5 @@ const path = require("path");
 module.exports = merge(common, {
     mode: 'production',
     plugins: [
-        // new webpack.BannerPlugin({
-        //   banner:
-        //   `Sketchbook 0.4 (https://github.com/swift502/Sketchbook)\nBuilt on three.js (https://github.com/mrdoob/three.js) and cannon.js (https://github.com/schteppe/cannon.js)`,
-        // }),
     ]
 });
