@@ -1,5 +1,5 @@
 .avatar-name-modal {
-    inset: 38% 25%;
+    inset: 12% 0%;
 }
 
 .avatar-set-info-table {
@@ -30,28 +30,11 @@ input {
 
 @media (max-width:600px){
     .avatar-name-modal {
-        inset: 38% 2%;
+        inset: 12% 0%;
     }
 
     input {
         width: 55%;
-        height: 32px;
-        font-size: 15px;
-        border: 0;
-        border-radius: 15px;
-        outline: none;
-        padding-left: 10px;
-        background-color: rgb(233, 233, 233);
-    }
-}
-
-@media (max-height:450px){
-    .avatar-name-modal {
-        inset: 25% 27%;
-    }
-
-    input {
-        width: 70%;
         height: 32px;
         font-size: 15px;
         border: 0;

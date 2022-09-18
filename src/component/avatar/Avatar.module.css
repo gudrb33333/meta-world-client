@@ -13,3 +13,11 @@
     width: 100%;
     height: calc(100vh);
 }
+
+@media only screen and (max-device-width: 640px){
+    .iFrame {
+        border: none;
+        width: 100%;
+        height: calc(var(--vh, 1vh) * 100);
+    }
+}

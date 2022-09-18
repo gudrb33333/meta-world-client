@@ -16,13 +16,24 @@ function Avatar() {
 		if (iFrame) {
 			iFrame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
 		}
+
+		const vh = window.innerHeight * 0.01;
+		document.documentElement.style.setProperty('--vh', `${vh}px`);
 	},[]);
 	useEffect(() => {
+
+		const resizeCallback = () => {
+			const vh = window.innerHeight * 0.01;
+			document.documentElement.style.setProperty('--vh', `${vh}px`);
+		}
+
 		window.addEventListener('message', subscribe);
 		document.addEventListener('message', subscribe);
+		window.addEventListener('resize', resizeCallback)
 		return () => {
 			window.removeEventListener('message', subscribe);
 			document.removeEventListener('message', subscribe);
+			window.removeEventListener('resize', resizeCallback)
 		};
 	});
 
