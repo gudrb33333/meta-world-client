@@ -37,7 +37,8 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			else if (modelType === 'full_body_male') {
 				animationClipGltfs = this.setFullBodyMaleAnimationClip(loadingManager);
 			} else {
-				animationClipGltfs = Promise.all([]);
+				alert('캐릭터 애니매이션 삽입에 실패하였습니다.\n캐릭터를 다시 생성해주세요.\n(vr전용 Half-body는 지원되지 않습니다.)')
+				window.history.back();
 			}
 
 			animationClipGltfs
