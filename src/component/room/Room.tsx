@@ -14,7 +14,7 @@ function Room() {
 	const [isUiContainerOn, setUiContainerOn] = useState(false);
 
 	useEffect(() => {
-		setWorld(new World('/assets/test22222.glb'));
+		setWorld(new World('/assets/building.glb'));
 
 		document.addEventListener('loading-screen-event', function (event) {
 			setIsLoading(false);
