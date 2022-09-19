@@ -29,7 +29,7 @@ import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import { Joystick } from '../core/Joystick';
-import checkIsMobile from "../../utils/isMobile";
+import checkIsMobile, { isIOS } from "../../utils/isMobile";
 
 export class World {
 	private requestAnimationFrameId;
@@ -100,10 +100,58 @@ export class World {
 			);
 		}
 
-		const maxResolution = {
+		let maxResolution = {
 			width: screen.width * window.devicePixelRatio,
 			height: screen.height * window.devicePixelRatio,
 		};
+
+
+		const isNaturalOrientation = () => {
+			return getAngle() % 180 === 0;
+		};
+
+		const getAngle = () => {
+			return typeof ScreenOrientation !== "undefined" ? screen.orientation.angle : window.orientation;
+		};
+
+		const getMaxResolutionWidth = () => {
+			const width = isNaturalOrientation() ? maxResolution.width : maxResolution.height;
+			return width !== undefined ? width : getDefaultMaxResolutionWidth();
+		};
+
+		const getDefaultMaxResolutionWidth = () => {
+			return getScreenWidth();
+		};
+
+		const getDefaultMaxResolutionHeight = () => {
+			return getScreenHeight();
+		};
+		  
+
+		const getMaxResolutionHeight = () => {
+			const height = isNaturalOrientation() ? maxResolution.height : maxResolution.width;
+			return height !== undefined ? height : getDefaultMaxResolutionHeight();
+		};
+
+		// Return the screen width in CSS pixels based on the current screen orientation
+		const getScreenWidth = () => {
+			// Is seems screen.width value is based on the natural screen orientation on iOS
+			// while it is based on the current screen orientation on Android (and other devices?).
+			if (isIOS) {
+			  return isNaturalOrientation() ? screen.width : screen.height;
+			}
+			return screen.width;
+		};
+  
+		const getScreenHeight = () => {
+			// Is seems screen.height value is based on the natural screen orientation on iOS
+			// while it is based on the current screen orientation on Android (and other devices?).
+			if (isIOS) {
+			  return isNaturalOrientation() ? screen.height : screen.width;
+			}
+			return screen.height;
+		};
+
 
 		function calculateRendererSize(canvasRect, maxResolution) {
 			// canvasRect values are CSS pixels based while
@@ -133,6 +181,9 @@ export class World {
 			this.stopRendering();
 
 			const canvasRect = entries[0].contentRect;
+
+			maxResolution.width = getMaxResolutionWidth();
+			maxResolution.height = getMaxResolutionHeight();
 
 			const rendererSize = calculateRendererSize(canvasRect, maxResolution);
 
