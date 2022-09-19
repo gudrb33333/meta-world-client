@@ -61,6 +61,7 @@ function Avatar() {
 		}
 		// Get avatar GLB URL
 		if (json.eventName === 'v1.avatar.exported') {
+			localStorage.setItem('avatar_url', json.data.url);
 			setIsNameModalOn(true);
 		}
 		// Get user id

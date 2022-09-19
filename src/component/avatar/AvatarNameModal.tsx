@@ -6,6 +6,9 @@ import styles from './AvatarNameModal.module.css';
 
 function AvatarNameModal(props) {
 	const [isNameModalOn, setIsNameModalOn] = useState(false);
+	const [info, setInfo] = useState({
+		name: '',
+	});
 
 	useEffect(() => {
 		setIsNameModalOn(props.isNameModalOn);
@@ -14,10 +17,6 @@ function AvatarNameModal(props) {
 
 	Modal.setAppElement('#root');
 	const navigate = useNavigate();
-
-	const [info, setInfo] = useState({
-		name: '',
-	});
 
 	const onChangeInfo = (e) => {
 		setInfo({
