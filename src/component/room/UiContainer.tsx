@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import styles from './UiContainer.module.css';
-import checkIsMobile from "../../utils/isMobile"
+import checkIsMobile from '../../utils/isMobile'
 
 function UiContainer(props) {
 	const [isLoading, setIsLoading] = useState(props.isLoading);
@@ -19,7 +19,7 @@ function UiContainer(props) {
 		>
 			<div className={styles.leftPanel}>
 				<div
-					id="controls"
+					id='controls'
 					className={classNames([styles.panelSegment, styles.flexBottom])}
 				></div>
 				<h2 className={styles.controlsTitle}>Controls</h2>
