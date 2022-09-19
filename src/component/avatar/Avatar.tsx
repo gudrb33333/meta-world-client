@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import styles from './Avatar.module.css';
+import AvatarGuideModal from './AvatarGuideModal';
 import AvatarNameModal from './AvatarNameModal';
 
 function Avatar() {
@@ -9,7 +10,8 @@ function Avatar() {
 	const iFrameRef = useRef(null);
 	const navigate = useNavigate();
 	const [showIFrame, setShowIFrame] = useState(true);
-	const [isOpenModal, setIsOpenModal] = useState(false);
+	const [isOpenNameModal, setIsOpenNameModal] = useState(false);
+	const [isGuideModalOn, setIsGuideModalOn] = useState(true);
 
 	useEffect(() => {
 		const iFrame = iFrameRef.current;
@@ -59,7 +61,7 @@ function Avatar() {
 		}
 		// Get avatar GLB URL
 		if (json.eventName === 'v1.avatar.exported') {
-			setIsOpenModal(true);
+			setIsOpenNameModal(true);
 		}
 		// Get user id
 		if (json.eventName === 'v1.user.set') {
@@ -75,26 +77,24 @@ function Avatar() {
 		}
 	};
 
-	const closeModal = () => {
+	const closeNameModal = () => {
 		location.reload();
 	};
 
+	const openGuideModal = () => {
+		setIsGuideModalOn(true);
+	}
+
+	const closeGuideModal = () => {
+		setIsGuideModalOn(false);
+	}
+
 	return (
 		<div className={styles.avatar}>
-			<div className={styles.guide} style={{ display: isOpenModal ? 'none' : 'block' }}> 
-				<table>
-					<thead>						
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<h3 className={styles.avatarGuideText}>Full-body 선택 / Half-body (지원 X)</h3>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			
-			
+			<div className={styles.guide} style={{ display: isOpenNameModal ? 'none' : 'block' }}> 
+				<button className={styles.avatarGuideInfoButton} onClick={openGuideModal} >
+					가이드 열기
+				</button>			
 			</div>
 			<iframe
 				allow="camera *; microphone *"
@@ -106,7 +106,8 @@ function Avatar() {
 				}}
 				title={'Ready Player Me'}
 			/>
-			<AvatarNameModal isOpenModal={isOpenModal} close={closeModal} />
+			<AvatarNameModal isOpenNameModal={isOpenNameModal} close={closeNameModal} />
+			<AvatarGuideModal isGuideModalOn={isGuideModalOn} close={closeGuideModal}/>
 		</div>
 	);
 }
