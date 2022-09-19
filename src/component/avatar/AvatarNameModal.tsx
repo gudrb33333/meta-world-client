@@ -1,15 +1,19 @@
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import styles from './AvatarNameModal.module.css';
-import checkIsMobile from "../../utils/isMobile";
 
 function AvatarNameModal(props) {
-	Modal.setAppElement('#root');
+	const [isNameModalOn, setIsNameModalOn] = useState(false);
 
+	useEffect(() => {
+		setIsNameModalOn(props.isNameModalOn);
+	}, [props.isNameModalOn]);
+
+
+	Modal.setAppElement('#root');
 	const navigate = useNavigate();
-	const { isOpenModal, close } = props;
 
 	const [info, setInfo] = useState({
 		name: '',
@@ -36,7 +40,7 @@ function AvatarNameModal(props) {
 
 	return (
 		<Modal
-			isOpen={isOpenModal}
+			isOpen={isNameModalOn}
 			className={styles.avatarNameModal}
 			style={{
 				overlay: {
@@ -88,7 +92,7 @@ function AvatarNameModal(props) {
 							<button className={classNames([styles.enterRoom, styles.avatarSetInfoButton])} onClick={enterRoom}>
 								공간으로 입장
 							</button>
-							<button className={classNames([styles.close, styles.avatarSetInfoButton])} onClick={close}>
+							<button className={classNames([styles.close, styles.avatarSetInfoButton])} onClick={props.close}>
 								아바타 다시 선택
 							</button>
 						</td>

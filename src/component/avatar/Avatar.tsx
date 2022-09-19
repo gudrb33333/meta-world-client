@@ -10,7 +10,7 @@ function Avatar() {
 	const iFrameRef = useRef(null);
 	const navigate = useNavigate();
 	const [showIFrame, setShowIFrame] = useState(true);
-	const [isOpenNameModal, setIsOpenNameModal] = useState(false);
+	const [isNameModalOn, setIsNameModalOn] = useState(false);
 	const [isGuideModalOn, setIsGuideModalOn] = useState(true);
 
 	useEffect(() => {
@@ -61,7 +61,7 @@ function Avatar() {
 		}
 		// Get avatar GLB URL
 		if (json.eventName === 'v1.avatar.exported') {
-			setIsOpenNameModal(true);
+			setIsNameModalOn(true);
 		}
 		// Get user id
 		if (json.eventName === 'v1.user.set') {
@@ -91,7 +91,7 @@ function Avatar() {
 
 	return (
 		<div className={styles.avatar}>
-			<div className={styles.guide} style={{ display: isOpenNameModal ? 'none' : 'block' }}> 
+			<div className={styles.guide} style={{ display: isNameModalOn ? 'none' : 'block' }}> 
 				<button className={styles.avatarGuideInfoButton} onClick={openGuideModal} >
 					가이드 열기
 				</button>			
@@ -106,7 +106,7 @@ function Avatar() {
 				}}
 				title={'Ready Player Me'}
 			/>
-			<AvatarNameModal isOpenNameModal={isOpenNameModal} close={closeNameModal} />
+			<AvatarNameModal isNameModalOn={isNameModalOn} close={closeNameModal} />
 			<AvatarGuideModal isGuideModalOn={isGuideModalOn} close={closeGuideModal}/>
 		</div>
 	);
