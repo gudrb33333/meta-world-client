@@ -1,7 +1,12 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import * as THREE from 'three';
 import { LoadingTrackerEntry } from './LoadingTrackerEntry';
 import { UIManager } from './UIManager';
+//import { Scenario } from '../world/Scenario';
+import Swal from 'sweetalert2';
 import { World } from '../world/World';
+import LoadingScreen from 'src/component/room/LoadingScreen';
 
 export class LoadingManager {
 	public firstLoad = true;
@@ -9,11 +14,18 @@ export class LoadingManager {
 
 	private world: World;
 	private gltfLoader: GLTFLoader;
+	private dracoLoader: DRACOLoader;
 	private loadingTracker: LoadingTrackerEntry[] = [];
 
 	constructor(world: World) {
 		this.world = world;
 		this.gltfLoader = new GLTFLoader();
+
+		this.dracoLoader = new DRACOLoader();
+		this.dracoLoader.setDecoderPath('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/libs/draco/');
+		this.dracoLoader.setDecoderConfig({type: 'js'});
+
+		this.gltfLoader.setDRACOLoader(this.dracoLoader)
 
 		this.world.setTimeScale(0);
 		UIManager.setUserInterfaceVisible(false);
