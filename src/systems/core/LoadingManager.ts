@@ -1,4 +1,6 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import * as THREE from 'three';
 import { LoadingTrackerEntry } from './LoadingTrackerEntry';
 import { UIManager } from './UIManager';
 //import { Scenario } from '../world/Scenario';
@@ -12,11 +14,16 @@ export class LoadingManager {
 
 	private world: World;
 	private gltfLoader: GLTFLoader;
+	private dracoLoader: DRACOLoader;
 	private loadingTracker: LoadingTrackerEntry[] = [];
 
 	constructor(world: World) {
 		this.world = world;
 		this.gltfLoader = new GLTFLoader();
+
+		this.dracoLoader = new DRACOLoader();
+		this.dracoLoader.setDecoderPath('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/libs/draco/');
+		this.dracoLoader.setDecoderConfig({type: 'js'});
 
 		this.world.setTimeScale(0);
 		UIManager.setUserInterfaceVisible(false);
@@ -25,6 +32,8 @@ export class LoadingManager {
 
 	public loadGLTF(path: string, onLoadingFinished: (gltf: any) => void): void {
 		const trackerEntry = this.addLoadingEntry(path);
+
+		this.gltfLoader.setDRACOLoader(this.dracoLoader)
 
 		this.gltfLoader.load(
 			path,
