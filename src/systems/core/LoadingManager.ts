@@ -20,6 +20,7 @@ export class LoadingManager {
 	constructor(world: World) {
 		this.world = world;
 		this.gltfLoader = new GLTFLoader();
+		this.gltfLoader.setDRACOLoader(this.dracoLoader)
 
 		this.dracoLoader = new DRACOLoader();
 		this.dracoLoader.setDecoderPath('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/libs/draco/');
@@ -32,8 +33,6 @@ export class LoadingManager {
 
 	public loadGLTF(path: string, onLoadingFinished: (gltf: any) => void): void {
 		const trackerEntry = this.addLoadingEntry(path);
-
-		this.gltfLoader.setDRACOLoader(this.dracoLoader)
 
 		this.gltfLoader.load(
 			path,
