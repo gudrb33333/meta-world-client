@@ -276,11 +276,20 @@ export class World {
 			loadingManager.onFinishedCallback = async () => {
 				this.update(1, 1);
 				this.setTimeScale(1);
-
-				const profile = {
-					avatar_url: localStorage.getItem('avatar_url'),
-					avatar_name: localStorage.getItem('avatar_name'),
+				const qs = new URLSearchParams(location.search);
+				let profile = {
+					avatar_url: '',
+					avatar_name: '',
 				};
+
+				if(qs.get('user-type') === 'guest'){
+					profile.avatar_url = '/assets/male/readyDefaultMaleAvatar.glb'
+					profile.avatar_name = '손님'
+				} else {
+					profile.avatar_url = localStorage.getItem('avatar_url');
+					profile.avatar_name = localStorage.getItem('avatar_name');
+				}
+
 				this.phoenixAdapter = new PhoenixAdapter(
 					this,
 					process.env.PHOENIX_SERVER_URL,
