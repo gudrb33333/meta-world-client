@@ -71,9 +71,8 @@ export class PhoenixAdapter implements IUpdatable {
 					this.world.setUserAvatar(this.sessionId);
 
 					this.channel.on('networkedData', this.handleNetworkedData);
-					//TODO: networkedDataInVehicle -> networkedDataInChair 로 수정
 					this.channel.on(
-						'networkedDataInVehicle',
+						'networkedDataInChair',
 						this.handleNetworkedDataInChair,
 					);
 
@@ -134,48 +133,51 @@ export class PhoenixAdapter implements IUpdatable {
 
 	public handleNetworkedData = (data) => {
 		const targetAvatar: Avatar = this.world.getAvatarMap().get(data.sessionId);
-
-		targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
-		targetAvatar.setAnimation2(
-			this.animationMap.get(data.animation)[0],
-			this.animationMap.get(data.animation)[1],
-		);
-		targetAvatar.rotation.x = data.rotationX;
-		targetAvatar.rotation.y = data.rotationY;
-		targetAvatar.rotation.z = data.rotationZ;
+		if(targetAvatar){
+			targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
+			targetAvatar.setOtherAvatarAnimation(
+				this.animationMap.get(data.animation)[0],
+				this.animationMap.get(data.animation)[1],
+			);
+			targetAvatar.rotation.x = data.rotationX;
+			targetAvatar.rotation.y = data.rotationY;
+			targetAvatar.rotation.z = data.rotationZ;
+		}
 	};
 
 	public handleNetworkedDataInChair = (data) => {
 		const targetAvatar: Avatar = this.world.getAvatarMap().get(data.sessionId);
 
-		targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
-		targetAvatar.setAnimation2(
-			this.animationMap.get(data.animation)[0],
-			this.animationMap.get(data.animation)[1],
-		);
-		targetAvatar.rotation.x = data.vehicleRotationX;
-		targetAvatar.rotation.y = data.vehicleRotationY;
-		targetAvatar.rotation.z = data.vehicleRotationZ;
+		if(targetAvatar){
+			targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
+			targetAvatar.setOtherAvatarAnimation(
+				this.animationMap.get(data.animation)[0],
+				this.animationMap.get(data.animation)[1],
+			);
+			targetAvatar.rotation.x = data.chairRotationX;
+			targetAvatar.rotation.y = data.chairRotationY;
+			targetAvatar.rotation.z = data.chairRotationZ;
+		}
 	};
 
 	public update(timestep: number, unscaledTimeStep: number): void {
 		const userAvatar = this.world.getUserAvatar();
 		const chairs = this.world.getChairs();
-		const userEnteredVehicle = chairs.filter(
+		const userEnteredChair = chairs.filter(
 			(chair) => chair.children.length > 1,
 		);
 
-		if (userAvatar != null && userEnteredVehicle[0] != null) {
-			this.channel.push('networkedDataInVehicle', {
+		if (userAvatar != null && userEnteredChair[0] != null) {
+			this.channel.push('networkedDataInChair', {
 				sessionId: userAvatar.getSessionId(),
-				positionX: userEnteredVehicle[0].position.x,
-				positionY: userEnteredVehicle[0].position.y + 0.5,
-				positionZ: userEnteredVehicle[0].position.z,
+				positionX: userEnteredChair[0].position.x,
+				positionY: userEnteredChair[0].position.y + 0.5,
+				positionZ: userEnteredChair[0].position.z,
 				animation: userAvatar.getAvatarAnimationState(),
-				vehicleRotationX: userEnteredVehicle[0].rotation.x,
-				vehicleRotationY: userEnteredVehicle[0].rotation.y,
-				vehicleRotationZ: userEnteredVehicle[0].rotation.z,
-				vehicleSpawnName: userEnteredVehicle[0].getSpawnPoint().name,
+				chairRotationX: userEnteredChair[0].rotation.x,
+				chairRotationY: userEnteredChair[0].rotation.y,
+				chairRotationZ: userEnteredChair[0].rotation.z,
+				vehicleSpawnName: userEnteredChair[0].getSpawnPoint().name,
 			});
 		} else if (userAvatar != null) {
 			this.channel.push('networkedData', {
@@ -189,34 +191,5 @@ export class PhoenixAdapter implements IUpdatable {
 				rotationZ: userAvatar.rotation.z,
 			});
 		}
-
-		// if(userAvatar != null){
-		//     this.channel.push("networkedData", {
-		//         "sessionId" : userAvatar.sessionId,
-		//         "positionX" : userAvatar.position.x,
-		//         "positionY" : userAvatar.position.y,
-		//         "positionZ" : userAvatar.position.z,
-		//         "animation" : userAvatar.avatarAnimationState,
-		//         "orientationX" : userAvatar.orientation.x,
-		//         "orientationY" : userAvatar.orientation.y,
-		//         "orientationZ" : userAvatar.orientation.z,
-		//     })
-		//this.idleState ++;
-		//console.log("idleState:",this.idleState)
-		// }else if(userAvatar != null && userAvatar.avatarAnimationState !='idle'){
-		//     this.channel.push("naf", {
-		//         "sessionId" : userAvatar.sessionId,
-		//         "positionX" : userAvatar.position.x,
-		//         "positionY" : userAvatar.position.y,
-		//         "positionZ" : userAvatar.position.z,
-		//         "animation" : userAvatar.avatarAnimationState,
-		//         "orientationX" : userAvatar.orientation.x,
-		//         "orientationY" : userAvatar.orientation.y,
-		//         "orientationZ" : userAvatar.orientation.z,
-		//     })
-		//     this.idleState = 0
-		//     //console.log("idleState:",this.idleState)
-		// }
-		// }
 	}
 }
