@@ -520,7 +520,7 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		}
 	}
 
-	public setAnimation2(clipName: string, fadeIn: number): number {
+	public setOtherAvatarAnimation(clipName: string, fadeIn: number): number {
 		if (this.mixer !== undefined) {
 			// gltf
 			const clip = THREE.AnimationClip.findByName(this.animations, clipName);
