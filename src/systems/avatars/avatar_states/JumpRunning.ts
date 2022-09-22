@@ -2,7 +2,7 @@ import { AvatarStateBase, Falling } from './_stateLibrary';
 import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
 
-export class JumpRunning extends AvatarStateBase implements IAvatarState {
+export class JumpRunning extends AvatarStateBase {
 	private alreadyJumped: boolean;
 
 	constructor(avatar: Avatar) {

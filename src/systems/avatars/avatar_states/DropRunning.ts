@@ -8,7 +8,7 @@ import {
 import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
 
-export class DropRunning extends AvatarStateBase implements IAvatarState {
+export class DropRunning extends AvatarStateBase {
 	constructor(avatar: Avatar) {
 		super(avatar);
 

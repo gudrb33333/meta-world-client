@@ -2,7 +2,7 @@ import { AvatarStateBase, Idle, JumpIdle, Sprint, Walk } from './_stateLibrary';
 import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
 
-export class EndWalk extends AvatarStateBase implements IAvatarState {
+export class EndWalk extends AvatarStateBase {
 	constructor(avatar: Avatar) {
 		super(avatar);
 

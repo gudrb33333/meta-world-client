@@ -2,7 +2,7 @@ import { AvatarStateBase } from './_stateLibrary';
 import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
 
-export class Falling extends AvatarStateBase implements IAvatarState {
+export class Falling extends AvatarStateBase {
 	constructor(avatar: Avatar) {
 		super(avatar);
 
