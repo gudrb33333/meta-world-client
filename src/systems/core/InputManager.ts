@@ -6,19 +6,21 @@ export class InputManager implements IUpdatable {
 	public updateOrder = 3;
 
 	private world: World;
-	private domElement: any;
-	private pointerLock: any;
+	private domElement: HTMLElement;
+	private pointerLock: boolean;
 	private isLocked: boolean;
 	private inputReceiver: IInputReceiver;
 
-	public boundOnMouseDown: (evt: any) => void;
-	public boundOnMouseMove: (evt: any) => void;
-	public boundOnMouseUp: (evt: any) => void;
-	public boundOnMouseWheelMove: (evt: any) => void;
-	public boundOnPointerlockChange: (evt: any) => void;
-	public boundOnPointerlockError: (evt: any) => void;
-	public boundOnKeyDown: (evt: any) => void;
-	public boundOnKeyUp: (evt: any) => void;
+	private boundOnMouseDown: (evt: MouseEvent) => void;
+	private boundOnMouseMove: (evt: MouseEvent) => void;
+	private boundOnMouseUp: (evt: MouseEvent) => void;
+	private boundOnMouseWheelMove: (evt: WheelEvent) => void;
+	private boundOnPointerlockChange: (evt: PointerEvent) => void;
+	private boundOnPointerlockError: (evt: PointerEvent) => void;
+	private boundOnKeyDown: (evt: KeyboardEvent) => void;
+	private boundOnKeyUp: (evt: KeyboardEvent) => void;
+	private boundOnDomElementFocus: (evt: FocusEvent) => void;
+	private boundOnDomElementBlur: (evt: FocusEvent) => void;
 
 	constructor(world: World, domElement: HTMLElement) {
 		this.world = world;
@@ -28,18 +30,22 @@ export class InputManager implements IUpdatable {
 
 		// Bindings for later event use
 		// Mouse
-		this.boundOnMouseDown = (evt) => this.onMouseDown(evt);
-		this.boundOnMouseMove = (evt) => this.onMouseMove(evt);
-		this.boundOnMouseUp = (evt) => this.onMouseUp(evt);
-		this.boundOnMouseWheelMove = (evt) => this.onMouseWheelMove(evt);
+		this.boundOnMouseDown = (evt: MouseEvent) => this.onMouseDown(evt);
+		this.boundOnMouseMove = (evt: MouseEvent) => this.onMouseMove(evt);
+		this.boundOnMouseUp = (evt: MouseEvent) => this.onMouseUp(evt);
+		this.boundOnMouseWheelMove = (evt: WheelEvent) => this.onMouseWheelMove(evt);
 
 		// Pointer lock
-		this.boundOnPointerlockChange = (evt) => this.onPointerlockChange(evt);
-		this.boundOnPointerlockError = (evt) => this.onPointerlockError(evt);
+		this.boundOnPointerlockChange = (evt: PointerEvent) => this.onPointerlockChange(evt);
+		this.boundOnPointerlockError = (evt: PointerEvent) => this.onPointerlockError(evt);
 
 		// Keys
-		this.boundOnKeyDown = (evt) => this.onKeyDown(evt);
-		this.boundOnKeyUp = (evt) => this.onKeyUp(evt);
+		this.boundOnKeyDown = (evt: KeyboardEvent) => this.onKeyDown(evt);
+		this.boundOnKeyUp = (evt: KeyboardEvent) => this.onKeyUp(evt);
+
+		// focus
+		this.boundOnDomElementFocus = (evt: FocusEvent) => this.domElementFocus(evt);
+		this.boundOnDomElementBlur = (evt: FocusEvent) => this.domElementBlur(evt);
 
 		// Init event listeners
 		// Mouse
@@ -59,6 +65,10 @@ export class InputManager implements IUpdatable {
 		// Keys
 		document.addEventListener('keydown', this.boundOnKeyDown, false);
 		document.addEventListener('keyup', this.boundOnKeyUp, false);
+
+		// focus
+		domElement.addEventListener('focus', this.boundOnDomElementFocus)
+		domElement.addEventListener('blur', this.boundOnDomElementBlur)
 
 		world.registerUpdatable(this);
 	}
@@ -225,4 +235,13 @@ export class InputManager implements IUpdatable {
 			this.inputReceiver.handleMouseWheel(event, event.deltaY);
 		}
 	}
+
+	public domElementFocus(evt: FocusEvent): void {
+		throw new Error('Method not implemented.');
+	}
+
+	public domElementBlur(evt: FocusEvent): void {
+		throw new Error('Method not implemented.');
+	}
+
 }
