@@ -102,22 +102,6 @@ export class Chair
 		}
 	}
 
-	public handleLeftJoystickEvent(
-		displacement: THREE.Vector3,
-		code: string,
-		pressed: boolean,
-	): void {
-		//TODO: implement handleLeftJoystickEvent
-	}
-
-	public handleRightJoystickEvent(
-		lookDx: number,
-		lookDy: number,
-		pressed: boolean,
-	): void {
-		//TODO: implement handleLeftJoystickEvent
-	}
-
 	public handleMouseButton(
 		event: MouseEvent,
 		code: string,

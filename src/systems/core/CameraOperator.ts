@@ -140,22 +140,6 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		}
 	}
 
-	public handleLeftJoystickEvent(
-		displacement: THREE.Vector3,
-		code: string,
-		pressed: boolean,
-	): void {
-		//TODO: implement handleLeftJoystickEvent
-	}
-
-	public handleRightJoystickEvent(
-		lookDx: number,
-		lookDy: number,
-		pressed: boolean,
-	): void {
-		//TODO: implement handleRightJoystickEvent
-	}
-
 	public handleMouseWheel(event: WheelEvent, value: number): void {
 		//this.world.scrollTheTimeScale(value);
 	}
