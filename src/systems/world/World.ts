@@ -83,6 +83,7 @@ export class World {
 
 		// Canvas
 		this.renderer.domElement.id = 'main-canvas';
+		this.renderer.domElement.tabIndex = 1;
 		document.body.appendChild(this.renderer.domElement);
 
 		// Auto window resize
