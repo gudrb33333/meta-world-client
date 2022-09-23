@@ -22,8 +22,9 @@ import { GroundImpactData } from './GroundImpactData';
 import { ClosestObjectFinder } from '../core/ClosestObjectFinder';
 import { FontLoader, Object3D, TextGeometry } from 'three';
 import { EntityType } from '../enums/EntityType';
+import { IInputReceiver } from '../interfaces/IInputReceiver';
 
-export class Avatar extends THREE.Object3D implements IWorldEntity {
+export class Avatar extends THREE.Object3D implements IInputReceiver, IWorldEntity {
 	public updateOrder = 1;
 	public entityType: EntityType = EntityType.Avatar;
 	public actions: { [action: string]: KeyBinding };
@@ -365,6 +366,14 @@ export class Avatar extends THREE.Object3D implements IWorldEntity {
 		} else {
 			//this.world.scrollTheTimeScale(value);
 		}
+	}
+
+	public handleDomElementBlurEvent(event: FocusEvent): void {
+		this.triggerAction('up',false);
+		this.triggerAction('down',false);
+		this.triggerAction('left',false);
+		this.triggerAction('right',false);
+		this.triggerAction('run',false);
 	}
 
 	public triggerAction(actionName: string, value: boolean): void {
