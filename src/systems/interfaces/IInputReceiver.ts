@@ -24,6 +24,8 @@ export interface IInputReceiver {
 		pressed: boolean,
 	): void;
 
+	handleDomElementBlurEvent?(event: FocusEvent): void;
+
 	inputReceiverInit(): void;
 	inputReceiverUpdate(timeStep: number): void;
 }
