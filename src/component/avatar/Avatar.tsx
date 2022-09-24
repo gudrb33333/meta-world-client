@@ -8,7 +8,6 @@ import AvatarNameModal from './AvatarNameModal';
 function Avatar() {
 	const subdomain = 'demo'; // See section about becoming a partner
 	const iFrameRef = useRef(null);
-	const navigate = useNavigate();
 	const [showIFrame, setShowIFrame] = useState(true);
 	const [isNameModalOn, setIsNameModalOn] = useState(false);
 	const [isGuideModalOn, setIsGuideModalOn] = useState(true);
@@ -21,21 +20,20 @@ function Avatar() {
 
 		const vh = window.innerHeight * 0.01;
 		document.documentElement.style.setProperty('--vh', `${vh}px`);
-	},[]);
+	}, []);
 	useEffect(() => {
-
 		const resizeCallback = () => {
 			const vh = window.innerHeight * 0.01;
 			document.documentElement.style.setProperty('--vh', `${vh}px`);
-		}
+		};
 
 		window.addEventListener('message', subscribe);
 		document.addEventListener('message', subscribe);
-		window.addEventListener('resize', resizeCallback)
+		window.addEventListener('resize', resizeCallback);
 		return () => {
 			window.removeEventListener('message', subscribe);
 			document.removeEventListener('message', subscribe);
-			window.removeEventListener('resize', resizeCallback)
+			window.removeEventListener('resize', resizeCallback);
 		};
 	});
 
@@ -84,18 +82,24 @@ function Avatar() {
 
 	const openGuideModal = () => {
 		setIsGuideModalOn(true);
-	}
+	};
 
 	const closeGuideModal = () => {
 		setIsGuideModalOn(false);
-	}
+	};
 
 	return (
 		<div className={styles.avatar}>
-			<div className={styles.guide} style={{ display: isNameModalOn ? 'none' : 'block' }}> 
-				<button className={styles.avatarGuideInfoButton} onClick={openGuideModal} >
+			<div
+				className={styles.guide}
+				style={{ display: isNameModalOn ? 'none' : 'block' }}
+			>
+				<button
+					className={styles.avatarGuideInfoButton}
+					onClick={openGuideModal}
+				>
 					가이드 열기
-				</button>			
+				</button>
 			</div>
 			<iframe
 				allow="camera *; microphone *"
@@ -108,7 +112,10 @@ function Avatar() {
 				title={'Ready Player Me'}
 			/>
 			<AvatarNameModal isNameModalOn={isNameModalOn} close={closeNameModal} />
-			<AvatarGuideModal isGuideModalOn={isGuideModalOn} close={closeGuideModal}/>
+			<AvatarGuideModal
+				isGuideModalOn={isGuideModalOn}
+				close={closeGuideModal}
+			/>
 		</div>
 	);
 }

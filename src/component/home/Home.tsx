@@ -12,7 +12,7 @@ function Home() {
 					Meta World
 				</div>
 				<div className={styles.homeButtonContainer}>
-					<Link to='/avatar'>
+					<Link to="/avatar">
 						<button
 							className={classNames([
 								styles.homeCreateAvatarButton,
@@ -25,7 +25,7 @@ function Home() {
 							<span className={styles.front}>아바타 만들기</span>
 						</button>
 					</Link>
-					<Link to='/room?user-type=guest'>
+					<Link to="/room?user-type=guest">
 						<button
 							className={classNames([styles.pushable, styles.slideInRight])}
 						>

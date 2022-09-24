@@ -133,7 +133,7 @@ export class PhoenixAdapter implements IUpdatable {
 
 	public handleNetworkedData = (data) => {
 		const targetAvatar: Avatar = this.world.getAvatarMap().get(data.sessionId);
-		if(targetAvatar){
+		if (targetAvatar) {
 			targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
 			targetAvatar.setOtherAvatarAnimation(
 				this.animationMap.get(data.animation)[0],
@@ -148,7 +148,7 @@ export class PhoenixAdapter implements IUpdatable {
 	public handleNetworkedDataInChair = (data) => {
 		const targetAvatar: Avatar = this.world.getAvatarMap().get(data.sessionId);
 
-		if(targetAvatar){
+		if (targetAvatar) {
 			targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
 			targetAvatar.setOtherAvatarAnimation(
 				this.animationMap.get(data.animation)[0],

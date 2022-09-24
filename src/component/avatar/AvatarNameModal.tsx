@@ -14,7 +14,6 @@ function AvatarNameModal(props) {
 		setIsNameModalOn(props.isNameModalOn);
 	}, [props.isNameModalOn]);
 
-
 	Modal.setAppElement('#root');
 	const navigate = useNavigate();
 
@@ -57,7 +56,7 @@ function AvatarNameModal(props) {
 					WebkitOverflowScrolling: 'touch',
 					outline: 'none',
 					padding: '2px',
-					fontFamily:  'Poppins, sans-serif',
+					fontFamily: 'Poppins, sans-serif',
 					color: '#f3f0ef',
 					borderRadius: '12px',
 					backgroundColor: '#2a2d44',
@@ -67,8 +66,7 @@ function AvatarNameModal(props) {
 			}}
 		>
 			<table className={styles.avatarSetInfoTable}>
-				<thead>
-  				</thead>
+				<thead></thead>
 				<tbody>
 					<tr>
 						<td>
@@ -76,22 +74,34 @@ function AvatarNameModal(props) {
 						</td>
 					</tr>
 					<tr>
-						<td>			
+						<td>
 							<input
-								id='name'
-								name='name'
-								placeholder='홍길동'
-								type='text'
+								id="name"
+								name="name"
+								placeholder="홍길동"
+								type="text"
 								onChange={onChangeInfo}
 							/>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<button className={classNames([styles.enterRoom, styles.avatarSetInfoButton])} onClick={enterRoom}>
+							<button
+								className={classNames([
+									styles.enterRoom,
+									styles.avatarSetInfoButton,
+								])}
+								onClick={enterRoom}
+							>
 								공간으로 입장
 							</button>
-							<button className={classNames([styles.close, styles.avatarSetInfoButton])} onClick={props.close}>
+							<button
+								className={classNames([
+									styles.close,
+									styles.avatarSetInfoButton,
+								])}
+								onClick={props.close}
+							>
 								아바타 다시 선택
 							</button>
 						</td>

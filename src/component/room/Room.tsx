@@ -16,7 +16,7 @@ function Room() {
 	useEffect(() => {
 		setWorld(new World('/assets/building_comp.glb'));
 
-		document.addEventListener('loading-screen-event', function (event) {
+		document.addEventListener('loading-screen-event', function () {
 			setIsLoading(false);
 			setUiContainerOn(true);
 		});
@@ -54,43 +54,43 @@ function Room() {
 	return (
 		<>
 			<audio
-				id='local-audio'
+				id="local-audio"
 				autoPlay
 				className={styles.audio}
 				style={{ display: 'none' }}
 				muted
 			></audio>
 			<video
-				id='local-webcam'
+				id="local-webcam"
 				autoPlay
 				className={styles.video}
-				width='640'
-				height='360'
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 				muted
 			></video>
 			<canvas
-				id='local-webcam-image'
-				width='640'
-				height='360'
+				id="local-webcam-image"
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
 			<video
-				id='local-share'
+				id="local-share"
 				autoPlay
 				className={styles.video}
-				width='640'
-				height='360'
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 				muted
 			></video>
 			<canvas
-				id='local-share-image'
-				width='640'
-				height='360'
+				id="local-share-image"
+				width="640"
+				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
-			<div id='remote-producer-container'></div>
+			<div id="remote-producer-container"></div>
 			<LoadingScreen isLoading={isLoading} />
 			<UiContainer isLoading={isLoading} isUiContainerOn={isUiContainerOn} />
 			<Footer

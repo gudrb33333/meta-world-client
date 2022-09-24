@@ -22,10 +22,12 @@ export class LoadingManager {
 		this.gltfLoader = new GLTFLoader();
 
 		this.dracoLoader = new DRACOLoader();
-		this.dracoLoader.setDecoderPath('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/libs/draco/');
-		this.dracoLoader.setDecoderConfig({type: 'js'});
+		this.dracoLoader.setDecoderPath(
+			'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/libs/draco/',
+		);
+		this.dracoLoader.setDecoderConfig({ type: 'js' });
 
-		this.gltfLoader.setDRACOLoader(this.dracoLoader)
+		this.gltfLoader.setDRACOLoader(this.dracoLoader);
 
 		this.world.setTimeScale(0);
 		UIManager.setUserInterfaceVisible(false);

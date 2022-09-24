@@ -14,12 +14,12 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 
 	public spawn(loadingManager: LoadingManager, world: World): void {
 		const qs = new URLSearchParams(location.search);
-		let avatarPath:string;
-		let avatarName:string;
+		let avatarPath: string;
+		let avatarName: string;
 
-		if(qs.get('user-type') === 'guest'){
-			avatarPath = '/assets/male/readyDefaultMaleAvatar.glb'
-			avatarName = '손님'
+		if (qs.get('user-type') === 'guest') {
+			avatarPath = '/assets/male/readyDefaultMaleAvatar.glb';
+			avatarName = '손님';
 		} else {
 			avatarPath = localStorage.getItem('avatar_url');
 			avatarName = localStorage.getItem('avatar_name');
@@ -37,7 +37,9 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			else if (modelType === 'full_body_male') {
 				animationClipGltfs = this.setFullBodyMaleAnimationClip(loadingManager);
 			} else {
-				alert('캐릭터 애니매이션 삽입에 실패하였습니다.\n캐릭터를 다시 생성해주세요.\n(vr전용 Half-body는 지원되지 않습니다.)')
+				alert(
+					'캐릭터 애니매이션 삽입에 실패하였습니다.\n캐릭터를 다시 생성해주세요.\n(vr전용 Half-body는 지원되지 않습니다.)',
+				);
 				window.history.back();
 			}
 
@@ -158,8 +160,12 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			loadingManager.loadPromiseGLTF('/assets/female/readyDropIdleFemale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/female/readyFastRunFemale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/female/readyJumpIdleFemale.glb'),
-			loadingManager.loadPromiseGLTF('/assets/female/readySittingIdleFemale.glb'),
-			loadingManager.loadPromiseGLTF('/assets/female/readySitDownRightFemale.glb'),
+			loadingManager.loadPromiseGLTF(
+				'/assets/female/readySittingIdleFemale.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/female/readySitDownRightFemale.glb',
+			),
 			loadingManager.loadPromiseGLTF('/assets/female/readyStandUpFemale.glb'),
 			loadingManager.loadPromiseGLTF(
 				'/assets/female/readyJumpingIdleFemale.glb',

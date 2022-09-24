@@ -32,11 +32,14 @@ export class InputManager implements IUpdatable {
 		this.boundOnMouseDown = (evt: MouseEvent) => this.onMouseDown(evt);
 		this.boundOnMouseMove = (evt: MouseEvent) => this.onMouseMove(evt);
 		this.boundOnMouseUp = (evt: MouseEvent) => this.onMouseUp(evt);
-		this.boundOnMouseWheelMove = (evt: WheelEvent) => this.onMouseWheelMove(evt);
+		this.boundOnMouseWheelMove = (evt: WheelEvent) =>
+			this.onMouseWheelMove(evt);
 
 		// Pointer lock
-		this.boundOnPointerlockChange = (evt: PointerEvent) => this.onPointerlockChange(evt);
-		this.boundOnPointerlockError = (evt: PointerEvent) => this.onPointerlockError(evt);
+		this.boundOnPointerlockChange = (evt: PointerEvent) =>
+			this.onPointerlockChange(evt);
+		this.boundOnPointerlockError = (evt: PointerEvent) =>
+			this.onPointerlockError(evt);
 
 		// Keys
 		this.boundOnKeyDown = (evt: KeyboardEvent) => this.onKeyDown(evt);
@@ -65,8 +68,10 @@ export class InputManager implements IUpdatable {
 		document.addEventListener('keyup', this.boundOnKeyUp, false);
 
 		// focus
-		domElement.addEventListener('focus', () => {console.log('canvas focused')})
-		domElement.addEventListener('blur', this.boundOnDomElementBlur)
+		domElement.addEventListener('focus', () => {
+			console.log('canvas focused');
+		});
+		domElement.addEventListener('blur', this.boundOnDomElementBlur);
 
 		world.registerUpdatable(this);
 	}
@@ -239,5 +244,4 @@ export class InputManager implements IUpdatable {
 			this.inputReceiver.handleDomElementBlurEvent(event);
 		}
 	}
-
 }

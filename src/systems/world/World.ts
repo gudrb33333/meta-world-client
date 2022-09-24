@@ -29,7 +29,7 @@ import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import { Joystick } from '../core/Joystick';
-import checkIsMobile, { isIOS } from "../../utils/isMobile";
+import checkIsMobile, { isIOS } from '../../utils/isMobile';
 
 export class World {
 	private requestAnimationFrameId;
@@ -101,22 +101,25 @@ export class World {
 			);
 		}
 
-		let maxResolution = {
+		const maxResolution = {
 			width: screen.width * window.devicePixelRatio,
 			height: screen.height * window.devicePixelRatio,
 		};
-
 
 		const isNaturalOrientation = () => {
 			return getAngle() % 180 === 0;
 		};
 
 		const getAngle = () => {
-			return typeof ScreenOrientation !== "undefined" ? screen.orientation.angle : window.orientation;
+			return typeof ScreenOrientation !== 'undefined'
+				? screen.orientation.angle
+				: window.orientation;
 		};
 
 		const getMaxResolutionWidth = () => {
-			const width = isNaturalOrientation() ? maxResolution.width : maxResolution.height;
+			const width = isNaturalOrientation()
+				? maxResolution.width
+				: maxResolution.height;
 			return width !== undefined ? width : getDefaultMaxResolutionWidth();
 		};
 
@@ -127,10 +130,11 @@ export class World {
 		const getDefaultMaxResolutionHeight = () => {
 			return getScreenHeight();
 		};
-		  
 
 		const getMaxResolutionHeight = () => {
-			const height = isNaturalOrientation() ? maxResolution.height : maxResolution.width;
+			const height = isNaturalOrientation()
+				? maxResolution.height
+				: maxResolution.width;
 			return height !== undefined ? height : getDefaultMaxResolutionHeight();
 		};
 
@@ -139,20 +143,19 @@ export class World {
 			// Is seems screen.width value is based on the natural screen orientation on iOS
 			// while it is based on the current screen orientation on Android (and other devices?).
 			if (isIOS) {
-			  return isNaturalOrientation() ? screen.width : screen.height;
+				return isNaturalOrientation() ? screen.width : screen.height;
 			}
 			return screen.width;
 		};
-  
+
 		const getScreenHeight = () => {
 			// Is seems screen.height value is based on the natural screen orientation on iOS
 			// while it is based on the current screen orientation on Android (and other devices?).
 			if (isIOS) {
-			  return isNaturalOrientation() ? screen.height : screen.width;
+				return isNaturalOrientation() ? screen.height : screen.width;
 			}
 			return screen.height;
 		};
-
 
 		function calculateRendererSize(canvasRect, maxResolution) {
 			// canvasRect values are CSS pixels based while
@@ -265,7 +268,7 @@ export class World {
 			this.params.Mouse_Sensitivity,
 		);
 		this.sky = new Sky(this);
-		if(checkIsMobile()){
+		if (checkIsMobile()) {
 			new Joystick(this, this.inputManager);
 		}
 
@@ -278,14 +281,14 @@ export class World {
 				this.update(1, 1);
 				this.setTimeScale(1);
 				const qs = new URLSearchParams(location.search);
-				let profile = {
+				const profile = {
 					avatar_url: '',
 					avatar_name: '',
 				};
 
-				if(qs.get('user-type') === 'guest'){
-					profile.avatar_url = '/assets/male/readyDefaultMaleAvatar.glb'
-					profile.avatar_name = '손님'
+				if (qs.get('user-type') === 'guest') {
+					profile.avatar_url = '/assets/male/readyDefaultMaleAvatar.glb';
+					profile.avatar_name = '손님';
 				} else {
 					profile.avatar_url = localStorage.getItem('avatar_url');
 					profile.avatar_name = localStorage.getItem('avatar_name');
@@ -320,6 +323,13 @@ export class World {
 
 	public loadScene(loadingManager: LoadingManager, gltf: any): void {
 		gltf.scene.traverse((child) => {
+			if(child.material){
+				if(child.material.name === 'pink_bloom'){
+					console.log(child.material)
+				}
+			}
+
+
 			if (child.hasOwnProperty('userData')) {
 				if (child.type === 'Mesh') {
 					Utils.setupMeshProperties(child);

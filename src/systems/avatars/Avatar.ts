@@ -20,11 +20,15 @@ import { CapsuleCollider } from '../physics/colliders/CapsuleCollider';
 import { ChairEntryInstance } from './ChairEntryInstance';
 import { GroundImpactData } from './GroundImpactData';
 import { ClosestObjectFinder } from '../core/ClosestObjectFinder';
-import { FontLoader, Object3D, TextGeometry } from 'three';
+import { Object3D } from 'three';
 import { EntityType } from '../enums/EntityType';
 import { IInputReceiver } from '../interfaces/IInputReceiver';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
-export class Avatar extends THREE.Object3D implements IInputReceiver, IWorldEntity {
+export class Avatar
+	extends THREE.Object3D
+	implements IInputReceiver, IWorldEntity
+{
 	public updateOrder = 1;
 	public entityType: EntityType = EntityType.Avatar;
 	public actions: { [action: string]: KeyBinding };
@@ -81,7 +85,7 @@ export class Avatar extends THREE.Object3D implements IInputReceiver, IWorldEnti
 	private avatarAnimationState: string = null;
 	private displacement: THREE.Vector3;
 
-	constructor(gltf: any) {
+	constructor(gltf: GLTF) {
 		super();
 
 		this.readAvatarData(gltf);
@@ -169,7 +173,7 @@ export class Avatar extends THREE.Object3D implements IInputReceiver, IWorldEnti
 		this.setState(new Idle(this));
 	}
 
-	public setAnimations(animations: []): void {
+	public setAnimations(animations: THREE.AnimationClip[]): void {
 		this.animations = animations;
 	}
 
@@ -369,11 +373,11 @@ export class Avatar extends THREE.Object3D implements IInputReceiver, IWorldEnti
 	}
 
 	public handleDomElementBlurEvent(event: FocusEvent): void {
-		this.triggerAction('up',false);
-		this.triggerAction('down',false);
-		this.triggerAction('left',false);
-		this.triggerAction('right',false);
-		this.triggerAction('run',false);
+		this.triggerAction('up', false);
+		this.triggerAction('down', false);
+		this.triggerAction('left', false);
+		this.triggerAction('right', false);
+		this.triggerAction('run', false);
 	}
 
 	public triggerAction(actionName: string, value: boolean): void {
