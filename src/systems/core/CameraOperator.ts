@@ -106,7 +106,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 			this.camera.position.y = newPos.y;
 			this.camera.position.z = newPos.z;
 		} else {
-			this.target.y += 0.8;
+			this.target.y += 0.6;
 			this.radius = THREE.MathUtils.lerp(this.radius, this.targetRadius, 0.1);
 			this.camera.position.x =
 				this.target.x +
