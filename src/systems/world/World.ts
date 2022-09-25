@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
+import Swal from 'sweetalert2';
 
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
@@ -29,7 +30,10 @@ import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import { Joystick } from '../core/Joystick';
+import screenfull from 'screenfull';
 import checkIsMobile, { isIOS } from '../../utils/isMobile';
+
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 export class World {
 	private requestAnimationFrameId;
@@ -38,7 +42,7 @@ export class World {
 	private cameraOperator: CameraOperator;
 	private sky: Sky;
 	private composer: EffectComposer;
-	private graphicsWorld: THREE.Scene;
+	private graphicsWorld: any;
 	private physicsWorld: CANNON.World;
 	private physicsFrameRate: number;
 	private physicsFrameTime: number;
@@ -69,24 +73,130 @@ export class World {
 
 	public updatables: IUpdatable[] = [];
 
+	private bloomLayer;
+	private materials;
+	private darkMaterial;
+	private bloomComposer;
+	private finalComposer;
+
+	private listener;
+	private analyser;
+
 	constructor(worldScenePath?: string) {
 		const scope = this;
 
+		this.bloomLayer = new THREE.Layers();
+		this.bloomLayer.set( 1 );
+
 		// Renderer
-		this.renderer = new THREE.WebGLRenderer();
+		this.renderer = new THREE.WebGLRenderer({ antialias: true });
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-		this.renderer.toneMappingExposure = 1.0;
-		this.renderer.shadowMap.enabled = true;
-		this.renderer.shadowMap.type = THREE.BasicShadowMap;
+		//this.renderer.toneMappingExposure = 1.0;
+		//this.renderer.shadowMap.enabled = true;
+		//this.renderer.shadowMap.type = THREE.BasicShadowMap;
 
 		// Canvas
 		this.renderer.domElement.id = 'main-canvas';
 		this.renderer.domElement.tabIndex = 1;
 		document.body.appendChild(this.renderer.domElement);
 
-		// Auto window resize
+		console.log(checkIsMobile())
+
+		if(checkIsMobile()){
+			const maxResolution = {
+				width: screen.width * window.devicePixelRatio,
+				height: screen.height * window.devicePixelRatio,
+			};
+	
+			const isNaturalOrientation = () => {
+				return getAngle() % 180 === 0;
+			};
+	
+			const getAngle = () => {
+				return typeof ScreenOrientation !== 'undefined'
+					? screen.orientation.angle
+					: window.orientation;
+			};
+	
+			const getMaxResolutionWidth = () => {
+				const width = isNaturalOrientation()
+					? maxResolution.width
+					: maxResolution.height;
+				return width !== undefined ? width : getDefaultMaxResolutionWidth();
+			};
+	
+			const getDefaultMaxResolutionWidth = () => {
+				return getScreenWidth();
+			};
+	
+			const getDefaultMaxResolutionHeight = () => {
+				return getScreenHeight();
+			};
+	
+			const getMaxResolutionHeight = () => {
+				const height = isNaturalOrientation()
+					? maxResolution.height
+					: maxResolution.width;
+				return height !== undefined ? height : getDefaultMaxResolutionHeight();
+			};
+	
+			// Return the screen width in CSS pixels based on the current screen orientation
+			const getScreenWidth = () => {
+				// Is seems screen.width value is based on the natural screen orientation on iOS
+				// while it is based on the current screen orientation on Android (and other devices?).
+				if (isIOS) {
+					return isNaturalOrientation() ? screen.width : screen.height;
+				}
+				return screen.width;
+			};
+	
+			const getScreenHeight = () => {
+				// Is seems screen.height value is based on the natural screen orientation on iOS
+				// while it is based on the current screen orientation on Android (and other devices?).
+				if (isIOS) {
+					return isNaturalOrientation() ? screen.height : screen.width;
+				}
+				return screen.height;
+			};
+	
+			const observer = new ResizeObserver((entries) => {
+				//TODO: 가로,세로 바꿀때 해상도 찌그러지는거 해결해야함.
+				this.stopRendering();
+	
+				const canvasRect = entries[0].contentRect;
+	
+				maxResolution.width = getMaxResolutionWidth();
+				maxResolution.height = getMaxResolutionHeight();
+	
+				const rendererSize = calculateRendererSize(canvasRect, maxResolution);
+	
+				const canvas = document.getElementById('main-canvas');
+				canvas.style.width = canvasRect.width + 'px';
+				canvas.style.height = canvasRect.height + 'px';
+	
+				scope.renderer.setSize(rendererSize.width, rendererSize.height, false);
+	
+				fxaaPass.uniforms['resolution'].value.set(
+					1 / (window.innerWidth * pixelRatio),
+					1 / (window.innerHeight * pixelRatio),
+				);
+	
+				scope.camera.aspect = rendererSize.width / rendererSize.height;
+				scope.camera.updateProjectionMatrix();
+	
+				scope.render(this);
+			});
+	
+			observer.observe(document.body);
+			console.log('333333333333333')
+		} else {
+			console.log('222222222222222')
+			// Auto window resize
+			window.addEventListener('resize', onWindowResize, false);
+		}
+
 		function onWindowResize(): void {
 			scope.camera.aspect = window.innerWidth / window.innerHeight;
 			scope.camera.updateProjectionMatrix();
@@ -100,62 +210,6 @@ export class World {
 				window.innerHeight * pixelRatio,
 			);
 		}
-
-		const maxResolution = {
-			width: screen.width * window.devicePixelRatio,
-			height: screen.height * window.devicePixelRatio,
-		};
-
-		const isNaturalOrientation = () => {
-			return getAngle() % 180 === 0;
-		};
-
-		const getAngle = () => {
-			return typeof ScreenOrientation !== 'undefined'
-				? screen.orientation.angle
-				: window.orientation;
-		};
-
-		const getMaxResolutionWidth = () => {
-			const width = isNaturalOrientation()
-				? maxResolution.width
-				: maxResolution.height;
-			return width !== undefined ? width : getDefaultMaxResolutionWidth();
-		};
-
-		const getDefaultMaxResolutionWidth = () => {
-			return getScreenWidth();
-		};
-
-		const getDefaultMaxResolutionHeight = () => {
-			return getScreenHeight();
-		};
-
-		const getMaxResolutionHeight = () => {
-			const height = isNaturalOrientation()
-				? maxResolution.height
-				: maxResolution.width;
-			return height !== undefined ? height : getDefaultMaxResolutionHeight();
-		};
-
-		// Return the screen width in CSS pixels based on the current screen orientation
-		const getScreenWidth = () => {
-			// Is seems screen.width value is based on the natural screen orientation on iOS
-			// while it is based on the current screen orientation on Android (and other devices?).
-			if (isIOS) {
-				return isNaturalOrientation() ? screen.width : screen.height;
-			}
-			return screen.width;
-		};
-
-		const getScreenHeight = () => {
-			// Is seems screen.height value is based on the natural screen orientation on iOS
-			// while it is based on the current screen orientation on Android (and other devices?).
-			if (isIOS) {
-				return isNaturalOrientation() ? screen.height : screen.width;
-			}
-			return screen.height;
-		};
 
 		function calculateRendererSize(canvasRect, maxResolution) {
 			// canvasRect values are CSS pixels based while
@@ -179,38 +233,6 @@ export class World {
 				height: Math.round(canvasRect.height * conversionRatio),
 			};
 		}
-
-		const observer = new ResizeObserver((entries) => {
-			//TODO: 가로,세로 바꿀때 해상도 찌그러지는거 해결해야함.
-			this.stopRendering();
-
-			const canvasRect = entries[0].contentRect;
-
-			maxResolution.width = getMaxResolutionWidth();
-			maxResolution.height = getMaxResolutionHeight();
-
-			const rendererSize = calculateRendererSize(canvasRect, maxResolution);
-
-			const canvas = document.getElementById('main-canvas');
-			canvas.style.width = canvasRect.width + 'px';
-			canvas.style.height = canvasRect.height + 'px';
-
-			scope.renderer.setSize(rendererSize.width, rendererSize.height, false);
-
-			fxaaPass.uniforms['resolution'].value.set(
-				1 / (window.innerWidth * pixelRatio),
-				1 / (window.innerHeight * pixelRatio),
-			);
-
-			scope.camera.aspect = rendererSize.width / rendererSize.height;
-			scope.camera.updateProjectionMatrix();
-
-			scope.render(this);
-		});
-
-		observer.observe(document.body);
-
-		//window.addEventListener('resize', onWindowResize, false);
 
 		// Three.js scene
 		this.graphicsWorld = new THREE.Scene();
@@ -236,6 +258,68 @@ export class World {
 		this.composer = new EffectComposer(this.renderer);
 		this.composer.addPass(renderPass);
 		this.composer.addPass(fxaaPass);
+
+
+		
+		const params = {
+			exposure: 0,
+			bloomStrength: 1.2,
+			bloomThreshold: 0,
+			bloomRadius: 0,
+		};
+
+		this.darkMaterial = new THREE.MeshBasicMaterial( { color: 'black' } );
+		this.materials = {};
+
+		let bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
+		bloomPass.threshold = params.bloomThreshold;
+		bloomPass.strength = params.bloomStrength;
+		bloomPass.radius = params.bloomRadius;
+
+		this.bloomComposer = new EffectComposer( this.renderer );
+		this.bloomComposer.renderToScreen = false;
+		this.bloomComposer.addPass( renderPass );
+		this.bloomComposer.addPass( bloomPass );
+
+
+		let finalPass = new ShaderPass(
+			new THREE.ShaderMaterial( {
+				uniforms: {
+					baseTexture: { value: null },
+					bloomTexture: { value: this.bloomComposer.renderTarget2.texture }
+				},
+				vertexShader: `
+					varying vec2 vUv;
+
+					void main() {
+					
+						vUv = uv;
+					
+						gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+	
+					}
+				`,
+				fragmentShader: `
+					uniform sampler2D baseTexture;
+					uniform sampler2D bloomTexture;
+					
+					varying vec2 vUv;
+					
+					void main() {
+					
+						gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
+					
+					}	
+				`,
+				defines: {}
+			} ), 'baseTexture'
+		);
+		finalPass.needsSwap = true;
+
+		this.finalComposer = new EffectComposer( this.renderer );
+		this.finalComposer.addPass( renderPass );
+		this.finalComposer.addPass( finalPass );
+
 
 		// Physics
 		this.physicsWorld = new CANNON.World();
@@ -267,10 +351,8 @@ export class World {
 			this.camera,
 			this.params.Mouse_Sensitivity,
 		);
-		this.sky = new Sky(this);
-		if (checkIsMobile()) {
-			new Joystick(this, this.inputManager);
-		}
+		//this.sky = new Sky(this);
+		this.graphicsWorld.add( new THREE.AmbientLight( 0x404040 ) );
 
 		// Load scene if path is supplied
 		if (worldScenePath !== undefined) {
@@ -311,6 +393,39 @@ export class World {
 					this,
 					process.env.MEDIASOUP_SERVER_URL,
 				);
+
+				Swal.fire({
+					icon: 'info',
+					html:
+					'<h3>확인을 누르면 음악이 시작됩니다.</h3>'+
+					'볼륨을 체크해 주세요.',
+					showCloseButton: true,
+					confirmButtonText: '확인',
+					onClose: () => {
+
+						if (checkIsMobile()) {
+							new Joystick(this, this.inputManager);
+							screenfull.request();
+						}
+
+						this.listener = new THREE.AudioListener();
+						const sound = new THREE.Audio( this.listener );
+				
+						// load a sound and set it as the Audio object's buffer
+						const audioLoader = new THREE.AudioLoader();
+						audioLoader.load( '/assets/Hot_Minute_Interlude.mp3', function( buffer ) {
+							sound.setBuffer( buffer );
+							sound.setLoop(true);
+							sound.setVolume(0.5);
+				
+							sound.play();
+						});
+				
+						// create an AudioAnalyser, passing in the sound and desired fftSize
+						this.analyser = new THREE.AudioAnalyser( sound, 32 );
+					}
+				});
+
 			};
 
 			loadingManager.loadGLTF(worldScenePath, (gltf) => {
@@ -323,9 +438,18 @@ export class World {
 
 	public loadScene(loadingManager: LoadingManager, gltf: any): void {
 		gltf.scene.traverse((child) => {
-			if(child.material){
-				if(child.material.name === 'pink_bloom'){
-					console.log(child.material)
+			if ( child.material ) {
+				if( child.material.name === 'pink_bloom' || 
+				child.material.name === 'iceblue_bloom'|| 
+				child.material.name === 'yellow_bloom_highyy' ||
+				child.material.name === 'yellow_bloom_low' ||
+				child.material.name === 'turkuaz_bloom'||
+				child.material.name === 'orange_bloom' ||
+				child.material.name === 'purple_bloom' ||
+				child.material.name === 'yellow_bloom_high'){
+					child.layers.enable( 1 );
+				}else{
+					child.material.dispose();
 				}
 			}
 
@@ -333,7 +457,7 @@ export class World {
 			if (child.hasOwnProperty('userData')) {
 				if (child.type === 'Mesh') {
 					Utils.setupMeshProperties(child);
-					this.sky.csm.setupMaterial(child.material);
+					//this.sky.csm.setupMaterial(child.material);
 				}
 
 				if (child.userData.hasOwnProperty('data')) {
@@ -470,17 +594,17 @@ export class World {
 		// Input
 		const settingsFolder = gui.addFolder('Settings');
 		settingsFolder.add(this.params, 'FXAA');
-		settingsFolder.add(this.params, 'Shadows').onChange((enabled) => {
-			if (enabled) {
-				this.sky.csm.lights.forEach((light) => {
-					light.castShadow = true;
-				});
-			} else {
-				this.sky.csm.lights.forEach((light) => {
-					light.castShadow = false;
-				});
-			}
-		});
+		// settingsFolder.add(this.params, 'Shadows').onChange((enabled) => {
+		// 	if (enabled) {
+		// 		this.sky.csm.lights.forEach((light) => {
+		// 			light.castShadow = true;
+		// 		});
+		// 	} else {
+		// 		this.sky.csm.lights.forEach((light) => {
+		// 			light.castShadow = false;
+		// 		});
+		// 	}
+		// });
 		settingsFolder.add(this.params, 'Pointer_Lock').onChange((enabled) => {
 			scope.inputManager.setPointerLock(enabled);
 		});
@@ -634,6 +758,18 @@ export class World {
 	 * @param {World} world
 	 */
 	public render(world: World): void {
+
+		if(this.analyser){
+			let data = this.analyser.getAverageFrequency();
+			data = ((data/ 40) - 2.2)
+
+			if(data < 0.3){
+				data = 0.3
+			}
+
+			this.renderer.toneMappingExposure = data
+		}
+
 		this.requestDelta = this.clock.getDelta();
 
 		this.requestAnimationFrameId = requestAnimationFrame(() => {
@@ -662,9 +798,35 @@ export class World {
 		this.stats.end();
 		this.stats.begin();
 
+
 		// Actual rendering with a FXAA ON/OFF switch
 		if (this.params.FXAA) this.composer.render();
 		else this.renderer.render(this.graphicsWorld, this.camera);
+
+
+		
+		this.graphicsWorld.traverse( (obj)=>{
+			if ( obj.isMesh && this.bloomLayer.test( obj.layers ) === false ) {
+				this.materials[ obj.uuid ] = obj.material;
+				obj.material = this.darkMaterial;
+
+			}
+		});
+
+
+		this.bloomComposer.render();
+		this.graphicsWorld.traverse( (obj)=>{
+			if ( this.materials[ obj.uuid ] ) {
+
+				obj.material = this.materials[ obj.uuid ];
+				delete this.materials[ obj.uuid ];
+
+			}
+		});
+
+		// render the entire scene, then render bloom scene on top
+		this.finalComposer.render();
+		
 
 		// Measuring render time
 		this.renderDelta = this.clock.getDelta();
