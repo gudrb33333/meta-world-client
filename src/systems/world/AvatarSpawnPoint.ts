@@ -57,11 +57,12 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 
 					model.animations = animationClipArr;
 					const player = new Avatar(model);
+					player.scale.set(0.6, 0.6, 0.6);
 
 					player.setAvatarName(avatarName);
 					player.setPosition(
 						-0.08083007484674454,
-						2.3437719345092773,
+						1.3437719345092773,
 						-0.27053260803222656,
 					);
 
@@ -112,6 +113,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 
 					model.animations = animationClipArr;
 					const player = new Avatar(model);
+					player.scale.set(0.6, 0.6, 0.6);
 					player.setSessionId(sessionId);
 					player.setAvatarName(profile.avatar_name);
 					const worldPos = new THREE.Vector3();
@@ -135,18 +137,12 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 	private findAvatarType(model): string {
 		if (
 			model.parser.json.nodes[4].name === 'Neck' &&
-			model.parser.json.nodes[4].rotation[0] === 0.20306852459907532 &&
-			model.parser.json.nodes[4].rotation[1] === 6.304728117356717e-8 &&
-			model.parser.json.nodes[4].rotation[2] === 1.1067206884263214e-7 &&
-			model.parser.json.nodes[4].rotation[3] === 0.9791645407676697
+			Number(model.parser.json.nodes[4].rotation[0].toFixed(3)) === 0.203
 		) {
 			return 'full_body_male';
 		} else if (
 			model.parser.json.nodes[4].name === 'Neck' &&
-			model.parser.json.nodes[4].rotation[0] === 0.1396459937095642 &&
-			model.parser.json.nodes[4].rotation[1] === 1.7396249774037642e-8 &&
-			model.parser.json.nodes[4].rotation[2] === -1.1523127341206418e-7 &&
-			model.parser.json.nodes[4].rotation[3] === 0.9902015328407288
+			Number(model.parser.json.nodes[4].rotation[0].toFixed(3)) === 0.140
 		) {
 			return 'full_body_female';
 		} else {
