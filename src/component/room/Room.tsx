@@ -5,7 +5,6 @@ import LoadingScreen from './LoadingScreen';
 import UiContainer from './UiContainer';
 import { createBrowserHistory } from 'history';
 import { useNavigate } from 'react-router-dom';
-import screenfull from 'screenfull';
 import { useEffect, useState } from 'react';
 
 function Room() {
@@ -14,7 +13,7 @@ function Room() {
 	const [isUiContainerOn, setUiContainerOn] = useState(false);
 
 	useEffect(() => {
-		setWorld(new World('/assets/building_comp.glb'));
+		setWorld(new World('/assets/metaverse_afterparty_comp.glb'));
 
 		document.addEventListener('loading-screen-event', function () {
 			setIsLoading(false);
@@ -45,10 +44,6 @@ function Room() {
 
 	const getWorld = (): World => {
 		return world;
-	};
-
-	const test = () => {
-		screenfull.request();
 	};
 
 	return (
