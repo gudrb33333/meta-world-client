@@ -50,7 +50,7 @@ export class Avatar
 	private defaultVelocitySimulatorDamping = 0.8;
 	private defaultVelocitySimulatorMass = 50;
 	private velocitySimulator: VectorSpringSimulator;
-	private moveSpeed = 4;
+	private moveSpeed = 3;
 	private angularVelocity = 0;
 	private orientation: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
 	private orientationTarget: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
@@ -63,8 +63,8 @@ export class Avatar
 	// Ray casting
 	private rayResult: CANNON.RaycastResult = new CANNON.RaycastResult();
 	private rayHasHit = false;
-	private rayCastLength = 0.57;
-	private raySafeOffset = 0.08;
+	private rayCastLength = 0.2;
+	private raySafeOffset = 0.03;
 	private wantsToJump = false;
 	private initJumpSpeed = -1;
 	private groundImpactData: GroundImpactData = new GroundImpactData();
@@ -97,7 +97,7 @@ export class Avatar
 
 		// Model container is used to reliably ground the avatar, as animation can alter the position of the model itself
 		this.modelContainer = new THREE.Group();
-		this.modelContainer.position.y = -0.57;
+		this.modelContainer.position.y = -0.27;
 		this.tiltContainer.add(this.modelContainer);
 		this.modelContainer.add(gltf.scene);
 
@@ -134,10 +134,10 @@ export class Avatar
 		this.avatarCapsule = new CapsuleCollider({
 			mass: 1,
 			position: new CANNON.Vec3(),
-			height: 1,
-			radius: 0.3,
+			height: 0.7,
+			radius: 0.15,
 			segments: 8,
-			friction: 0.0,
+			friction: 0.0
 		});
 		// capsulePhysics.physical.collisionFilterMask = ~CollisionGroups.Trimesh;
 		this.avatarCapsule.body.shapes.forEach((shape) => {
@@ -199,7 +199,7 @@ export class Avatar
 		charaterNameText.scale.set(1 / 200, 1 / 200, 1);
 		charaterNameText.position.set(
 			this.position.x,
-			this.position.y + 1.35,
+			this.position.y + 1.75,
 			this.position.z,
 		);
 		this.add(charaterNameText);
@@ -459,7 +459,7 @@ export class Avatar
 			return;
 		}
 		const cameraOperator = this.world.getCameraOperator();
-		cameraOperator.setRadius(2, true);
+		cameraOperator.setRadius(1.2, true);
 		cameraOperator.setFollowMode(false);
 		// this.world.dirLight.target = this;
 
@@ -916,7 +916,7 @@ export class Avatar
 			}
 
 			// Add positive vertical velocity
-			body.velocity.y += 4;
+			body.velocity.y += 3;
 			// Move above ground by 2x safe offset value
 			body.position.y += avatar.raySafeOffset * 2;
 			// Reset flag
@@ -942,9 +942,9 @@ export class Avatar
 			world.getGraphicsWorld().add(this.raycastBox);
 
 			// Shadow cascades
-			this.materials.forEach((mat) => {
-				world.getSky().csm.setupMaterial(mat);
-			});
+			// this.materials.forEach((mat) => {
+			// 	world.getSky().csm.setupMaterial(mat);
+			// });
 		}
 	}
 
