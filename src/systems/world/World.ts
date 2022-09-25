@@ -190,9 +190,7 @@ export class World {
 			});
 	
 			observer.observe(document.body);
-			console.log('333333333333333')
 		} else {
-			console.log('222222222222222')
 			// Auto window resize
 			window.addEventListener('resize', onWindowResize, false);
 		}
@@ -362,37 +360,6 @@ export class World {
 			loadingManager.onFinishedCallback = async () => {
 				this.update(1, 1);
 				this.setTimeScale(1);
-				const qs = new URLSearchParams(location.search);
-				const profile = {
-					avatar_url: '',
-					avatar_name: '',
-				};
-
-				if (qs.get('user-type') === 'guest') {
-					profile.avatar_url = '/assets/male/readyDefaultMaleAvatar.glb';
-					profile.avatar_name = '손님';
-				} else {
-					profile.avatar_url = localStorage.getItem('avatar_url');
-					profile.avatar_name = localStorage.getItem('avatar_name');
-				}
-
-				this.phoenixAdapter = new PhoenixAdapter(
-					this,
-					process.env.PHOENIX_SERVER_URL,
-					process.env.PHOENIX_CHANNER_TOPIC,
-					profile,
-				);
-				await this.phoenixAdapter.phoenixSocketConnect();
-				await this.phoenixAdapter.phoenixChannelJoin();
-
-				this.phoenixAdapter.onJoin(avatarLoadingManager);
-				this.phoenixAdapter.onLeave();
-				this.phoenixAdapter.onSync();
-
-				this.mediasoupAdapter = new MediasoupAdapter(
-					this,
-					process.env.MEDIASOUP_SERVER_URL,
-				);
 
 				Swal.fire({
 					icon: 'info',
@@ -401,12 +368,7 @@ export class World {
 					'볼륨을 체크해 주세요.',
 					showCloseButton: true,
 					confirmButtonText: '확인',
-					onClose: () => {
-
-						if (checkIsMobile()) {
-							new Joystick(this, this.inputManager);
-							screenfull.request();
-						}
+					onClose: async () => {
 
 						this.listener = new THREE.AudioListener();
 						const sound = new THREE.Audio( this.listener );
@@ -420,12 +382,51 @@ export class World {
 				
 							sound.play();
 						});
+
+						
+						if (checkIsMobile()) {
+							new Joystick(this, this.inputManager);
+							screenfull.request();
+						}
+
+						screenfull.request();
 				
 						// create an AudioAnalyser, passing in the sound and desired fftSize
 						this.analyser = new THREE.AudioAnalyser( sound, 32 );
+
+						const qs = new URLSearchParams(location.search);
+						const profile = {
+							avatar_url: '',
+							avatar_name: '',
+						};
+		
+						if (qs.get('user-type') === 'guest') {
+							profile.avatar_url = '/assets/male/readyDefaultMaleAvatar.glb';
+							profile.avatar_name = '손님';
+						} else {
+							profile.avatar_url = localStorage.getItem('avatar_url');
+							profile.avatar_name = localStorage.getItem('avatar_name');
+						}
+		
+						this.phoenixAdapter = new PhoenixAdapter(
+							this,
+							process.env.PHOENIX_SERVER_URL,
+							process.env.PHOENIX_CHANNER_TOPIC,
+							profile,
+						);
+						await this.phoenixAdapter.phoenixSocketConnect();
+						await this.phoenixAdapter.phoenixChannelJoin();
+		
+						this.phoenixAdapter.onJoin(avatarLoadingManager);
+						this.phoenixAdapter.onLeave();
+						this.phoenixAdapter.onSync();
+		
+						this.mediasoupAdapter = new MediasoupAdapter(
+							this,
+							process.env.MEDIASOUP_SERVER_URL,
+						);
 					}
 				});
-
 			};
 
 			loadingManager.loadGLTF(worldScenePath, (gltf) => {
