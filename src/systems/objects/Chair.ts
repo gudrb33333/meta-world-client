@@ -152,9 +152,9 @@ export class Chair
 			world.getGraphicsWorld().add(this);
 			this.rayCastVehicle.addToWorld(world.getPhysicsWorld());
 
-			this.materials.forEach((mat) => {
-				world.getSky().csm.setupMaterial(mat);
-			});
+			// this.materials.forEach((mat) => {
+			// 	world.getSky().csm.setupMaterial(mat);
+			// });
 		}
 	}
 
