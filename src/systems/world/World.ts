@@ -20,7 +20,6 @@ import { ISpawnPoint } from '../interfaces/ISpawnPoint';
 import { Chair } from '../objects/Chair';
 import { Avatar } from '../avatars/Avatar';
 import { IWorldEntity } from '../interfaces/IWorldEntity';
-import { Detector } from '../../lib/utils/Detector';
 import { Stats } from '../../lib/utils/Stats';
 import * as GUI from '../../lib/utils/dat.gui';
 import { CannonDebugRenderer } from '../../lib/cannon/CannonDebugRenderer';
@@ -79,8 +78,12 @@ export class World {
 	private bloomComposer;
 	private finalComposer;
 
-	private listener;
 	private analyser;
+	private localVideo: HTMLMediaElement;
+	private localVideoImage: HTMLCanvasElement;
+	private localVideoImageContext: any;
+	private localVideoTexture: THREE.Texture;
+	private frequencyData: Uint8Array;
 
 	constructor(worldScenePath?: string) {
 		const scope = this;
@@ -257,8 +260,6 @@ export class World {
 		this.composer.addPass(renderPass);
 		this.composer.addPass(fxaaPass);
 
-
-		
 		const params = {
 			exposure: 0,
 			bloomStrength: 1.4,
@@ -370,29 +371,61 @@ export class World {
 					confirmButtonText: '확인',
 					onClose: async () => {
 
-						this.listener = new THREE.AudioListener();
-						const sound = new THREE.Audio( this.listener );
-				
-						// load a sound and set it as the Audio object's buffer
-						const audioLoader = new THREE.AudioLoader();
-						audioLoader.load( '/assets/NewJeans.mp3', function( buffer ) {
-							sound.setBuffer( buffer );
-							sound.setLoop(true);
-							sound.setVolume(0.5);
-				
-							sound.play();
-						});
+						this.localVideo = document.getElementById(
+							'local-video',
+						) as HTMLMediaElement;
+						this.localVideo.src = '/assets/NewJeans.mp4';
+						this.localVideoImage = document.getElementById(
+							'local-video-image',
+						) as HTMLCanvasElement;
+						this.localVideoImageContext =
+							this.localVideoImage.getContext('2d');
 
+						// background color if no video present
+						this.localVideoImageContext.fillStyle = '#000000';
+						this.localVideoImageContext.fillRect(
+							0,
+							0,
+							this.localVideoImage.width,
+							this.localVideoImage.height,
+						);
+
+						this.localVideoTexture = new THREE.Texture(this.localVideoImage);
+						this.localVideoTexture.minFilter = THREE.LinearFilter;
+						this.localVideoTexture.magFilter = THREE.LinearFilter;
+
+						const movieMaterial = new THREE.MeshBasicMaterial({
+							map: this.localVideoTexture,
+							side: THREE.DoubleSide,
+						});
+						// the geometry on which the movie will be displayed;
+						// movie image will be scaled to fit these dimensions.
+						const movieGeometry = new THREE.PlaneGeometry(7, 3, 1, 1);
+						const localVideoScreen = new THREE.Mesh(
+							movieGeometry,
+							movieMaterial,
+						);
+						localVideoScreen.position.set(6.72, 3.12, -0.2);
+
+						localVideoScreen.rotation.set(0, -1.57, 0);
+
+						this.getGraphicsWorld().add(localVideoScreen);
+
+
+						// initialize the audioContext
+						var audioContext = new AudioContext();
+						this.analyser = audioContext.createAnalyser();
+						var mediaSource = audioContext.createMediaElementSource(this.localVideo);
+
+						mediaSource.connect(this.analyser);
+						this.analyser.connect(audioContext.destination);	
+						this.analyser.fftSize = 32;
+						this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
 						
 						if (checkIsMobile()) {
 							new Joystick(this, this.inputManager);
 							screenfull.request();
 						}
-
-						screenfull.request();
-				
-						// create an AudioAnalyser, passing in the sound and desired fftSize
-						this.analyser = new THREE.AudioAnalyser( sound, 32 );
 
 						const qs = new URLSearchParams(location.search);
 						const profile = {
@@ -760,18 +793,36 @@ export class World {
 	 */
 	public render(world: World): void {
 
+		if (this.localVideo && this.localVideo.readyState === this.localVideo.HAVE_ENOUGH_DATA ) 
+		{
+			this.localVideoImageContext.drawImage( this.localVideo, 0, 0 );
+			if ( this.localVideoTexture ) 
+				this.localVideoTexture.needsUpdate = true;
+		}
+
+
 		if(this.analyser){
-			let data = this.analyser.getAverageFrequency();
+			
+			this.analyser.getByteFrequencyData(this.frequencyData);
 
-			data = ((data - 10)/ 200);
+			this.frequencyData[0] -= 200;
+			this.frequencyData[1] -= 100;
+			this.frequencyData[2] -= 50;
 
-			console.log(data)
+			let sumOfFrequencyData = 0;
+			this.frequencyData.forEach((frequencyData) => {
+				sumOfFrequencyData += frequencyData;
+			})
 
-			if(data < 0.2){
-				data = 0.2
+			sumOfFrequencyData = ((sumOfFrequencyData)/ 1400) - 0.4;
+
+			console.log(sumOfFrequencyData)
+
+			if(sumOfFrequencyData < 0.2){
+				sumOfFrequencyData = 0.2
 			}
-
-			this.renderer.toneMappingExposure = data
+			
+			this.renderer.toneMappingExposure = sumOfFrequencyData
 		}
 
 		this.requestDelta = this.clock.getDelta();

@@ -5,6 +5,7 @@ import LoadingScreen from './LoadingScreen';
 import UiContainer from './UiContainer';
 import { createBrowserHistory } from 'history';
 import { useNavigate } from 'react-router-dom';
+import screenfull from 'screenfull';
 import { useEffect, useState } from 'react';
 
 function Room() {
@@ -46,6 +47,10 @@ function Room() {
 		return world;
 	};
 
+	const test = () => {
+		screenfull.request();
+	};
+
 	return (
 		<>
 			<audio
@@ -83,6 +88,20 @@ function Room() {
 				id="local-share-image"
 				width="640"
 				height="360"
+				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
+			></canvas>
+			<video
+				id="local-video"
+				className={styles.video}
+				autoPlay
+				width="1280"
+				height="720"
+				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
+			></video>
+			<canvas
+				id="local-video-image"
+				width="1280"
+				height="720"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
 			<div id="remote-producer-container"></div>
