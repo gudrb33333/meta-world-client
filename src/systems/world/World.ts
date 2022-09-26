@@ -261,7 +261,7 @@ export class World {
 		
 		const params = {
 			exposure: 0,
-			bloomStrength: 1.2,
+			bloomStrength: 1.4,
 			bloomThreshold: 0,
 			bloomRadius: 0,
 		};
@@ -375,7 +375,7 @@ export class World {
 				
 						// load a sound and set it as the Audio object's buffer
 						const audioLoader = new THREE.AudioLoader();
-						audioLoader.load( '/assets/Hot_Minute_Interlude.mp3', function( buffer ) {
+						audioLoader.load( '/assets/NewJeans.mp3', function( buffer ) {
 							sound.setBuffer( buffer );
 							sound.setLoop(true);
 							sound.setVolume(0.5);
@@ -762,10 +762,13 @@ export class World {
 
 		if(this.analyser){
 			let data = this.analyser.getAverageFrequency();
-			data = ((data/ 40) - 2.2)
 
-			if(data < 0.3){
-				data = 0.3
+			data = ((data - 10)/ 200);
+
+			console.log(data)
+
+			if(data < 0.2){
+				data = 0.2
 			}
 
 			this.renderer.toneMappingExposure = data
