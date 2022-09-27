@@ -97,6 +97,7 @@ function Room() {
 				width="1280"
 				height="720"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
+				playsInline
 			></video>
 			<canvas
 				id="local-video-image"
