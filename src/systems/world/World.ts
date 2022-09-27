@@ -814,12 +814,12 @@ export class World {
 				sumOfFrequencyData += frequencyData;
 			})
 
-			sumOfFrequencyData = ((sumOfFrequencyData)/ 1400) - 0.4;
+			sumOfFrequencyData = ((sumOfFrequencyData)/ 1600) - 0.3;
 
 			console.log(sumOfFrequencyData)
 
-			if(sumOfFrequencyData < 0.2){
-				sumOfFrequencyData = 0.2
+			if(sumOfFrequencyData < 0.3){
+				sumOfFrequencyData = 0.3
 			}
 			
 			this.renderer.toneMappingExposure = sumOfFrequencyData
