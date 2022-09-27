@@ -413,6 +413,7 @@ export class World {
 
 
 						// initialize the audioContext
+						const AudioContext = window.AudioContext  || (window as any).webkitAudioContext; 
 						var audioContext = new AudioContext();
 						this.analyser = audioContext.createAnalyser();
 						var mediaSource = audioContext.createMediaElementSource(this.localVideo);
