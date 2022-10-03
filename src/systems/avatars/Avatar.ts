@@ -135,7 +135,7 @@ export class Avatar
 			mass: 1,
 			position: new CANNON.Vec3(),
 			height: 1,
-			radius: 0.3,
+			radius: 0.25,
 			segments: 8,
 			friction: 0.0,
 		});
@@ -942,9 +942,9 @@ export class Avatar
 			world.getGraphicsWorld().add(this.raycastBox);
 
 			// Shadow cascades
-			this.materials.forEach((mat) => {
-				world.getSky().csm.setupMaterial(mat);
-			});
+			// this.materials.forEach((mat) => {
+			// 	world.getSky().csm.setupMaterial(mat);
+			// });
 		}
 	}
 
