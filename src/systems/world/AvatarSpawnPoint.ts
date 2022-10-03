@@ -57,16 +57,14 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 
 					model.animations = animationClipArr;
 					const player = new Avatar(model);
-
 					player.setAvatarName(avatarName);
-					player.setPosition(
-						-0.08083007484674454,
-						2.3437719345092773,
-						-0.27053260803222656,
-					);
 
-					const forward = Utils.getForward(this.object);
-					player.setOrientation(forward, true);
+					let worldPos = new THREE.Vector3();
+					this.object.getWorldPosition(worldPos);
+					player.setPosition(worldPos.x, worldPos.y, worldPos.z);
+					
+					let back = Utils.getBack(this.object);
+					player.setOrientation(back, true);
 
 					world.add(player);
 					player.takeControl();
