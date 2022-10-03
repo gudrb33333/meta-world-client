@@ -563,15 +563,14 @@ export class MediasoupAdapter implements IUpdatable {
 						map: remoteShareTexture,
 						side: THREE.DoubleSide,
 					});
-					const movieGeometry = new THREE.PlaneGeometry(10.5, 3.8, 1, 1);
+					const movieGeometry = new THREE.PlaneGeometry(3.25, 1.5, 1, 1);
 					const remoteShareScreen = new THREE.Mesh(
 						movieGeometry,
 						movieMaterial,
 					);
 
-					remoteShareScreen.position.set(-8.46, 12.8, -3.3);
-
-					remoteShareScreen.rotation.set(0.06, 0, 0);
+					remoteShareScreen.position.set(0, 1.6, -1.325);
+					remoteShareScreen.rotation.set(0, 3.145, 0);
 
 					this.world.getGraphicsWorld().add(remoteShareScreen);
 
@@ -764,7 +763,10 @@ export class MediasoupAdapter implements IUpdatable {
 			(resolve: (value: boolean) => void, reject: (error: boolean) => void) => {
 				console.log('enableShare()');
 				if (this.shareProducer) return reject(false);
-				if (this.remoteShareKeyList.length > 0) return reject(false);
+				if (this.remoteShareKeyList.length > 0) {
+					alert('이미 다른사람이 화면공유 중 입니다.');
+					return reject(false);
+				}
 
 				// if (this.remoteShareKeyList.length > 1) {
 				// 	this.remoteShareKeyList.forEach(async (remoteShareKey) => {
