@@ -126,7 +126,8 @@ export class Avatar
 			jump: new KeyBinding('Space'),
 			use: new KeyBinding('KeyE'),
 			enter: new KeyBinding('KeyF'),
-			enter_passenger: new KeyBinding('KeyP')
+			enter_passenger: new KeyBinding('KeyP'),
+			stand_clap: new KeyBinding('Digit1')
 		};
 
 		// Physics

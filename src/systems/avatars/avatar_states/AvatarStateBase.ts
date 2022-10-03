@@ -89,6 +89,12 @@ export abstract class AvatarStateBase implements IAvatarState {
 		);
 	}
 
+	public isStandClapPressed(): boolean {
+		return (
+			this.avatar.actions.stand_clap.isPressed
+		);
+	}
+
 	public fallInAir(): void {
 		if (!this.avatar.getRayHasHit()) {
 			this.avatar.setState(new Falling(this.avatar));
