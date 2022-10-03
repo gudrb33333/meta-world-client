@@ -14,7 +14,7 @@ function Room() {
 	const [isUiContainerOn, setUiContainerOn] = useState(false);
 
 	useEffect(() => {
-		setWorld(new World('/assets/building_comp.glb'));
+		setWorld(new World('/assets/virtual_reality_space_mountain_view_room.glb'));
 
 		document.addEventListener('loading-screen-event', function () {
 			setIsLoading(false);
@@ -79,8 +79,8 @@ function Room() {
 				id="local-share"
 				autoPlay
 				className={styles.video}
-				width="640"
-				height="360"
+				width="1600"
+				height="900"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 				muted
 			></video>
