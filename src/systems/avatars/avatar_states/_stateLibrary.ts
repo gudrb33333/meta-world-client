@@ -9,3 +9,5 @@ export * from './JumpIdle';
 export * from './JumpRunning';
 export * from './Sprint';
 export * from './Walk';
+export * from './StandClap';
+export * from './StandWave';
