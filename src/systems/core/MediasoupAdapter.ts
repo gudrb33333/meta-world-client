@@ -788,8 +788,8 @@ export class MediasoupAdapter implements IUpdatable {
 						.getDisplayMedia({
 							audio: false,
 							video: {
-								width: { max: 640 },
-								height: { max: 360 },
+								width: { max: 1600 },
+								height: { max: 900 },
 								frameRate: { max: 30 },
 							},
 						})
@@ -824,14 +824,14 @@ export class MediasoupAdapter implements IUpdatable {
 							});
 							// the geometry on which the movie will be displayed;
 							// movie image will be scaled to fit these dimensions.
-							const movieGeometry = new THREE.PlaneGeometry(10.5, 3.8, 1, 1);
+							const movieGeometry = new THREE.PlaneGeometry(3.25, 1.5, 1, 1);
 							this.localShareScreen = new THREE.Mesh(
 								movieGeometry,
 								movieMaterial,
 							);
-							this.localShareScreen.position.set(-8.46, 12.8, -3.3);
+							this.localShareScreen.position.set(0, 1.6, -1.325);
 
-							this.localShareScreen.rotation.set(0.06, 0, 0);
+							this.localShareScreen.rotation.set(0, 3.145, 0);
 
 							this.world.getGraphicsWorld().add(this.localShareScreen);
 
