@@ -131,7 +131,6 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 	}
 
 	private findAvatarType(model): string {
-		console.log(model)
 		if (
 			model.parser.json.nodes[4].name === 'Neck' &&
 			model.parser.json.nodes[4].rotation[1] === 6.802843444120299e-8
@@ -213,6 +212,15 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			loadingManager.loadPromiseGLTF('/assets/male/readySittingIdleMale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/male/readyStandUpMale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/male/readyStandUpLeftMale.glb'),
+			loadingManager.loadPromiseGLTF(
+				'/assets/male/readyStandClapMale.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/male/readyStandWaveMale.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/male/readyStandDanceMale.glb',
+			),
 		]);
 	}
 }
