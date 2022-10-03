@@ -131,20 +131,15 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 	}
 
 	private findAvatarType(model): string {
+		console.log(model)
 		if (
 			model.parser.json.nodes[4].name === 'Neck' &&
-			model.parser.json.nodes[4].rotation[0] === 0.20306852459907532 &&
-			model.parser.json.nodes[4].rotation[1] === 6.304728117356717e-8 &&
-			model.parser.json.nodes[4].rotation[2] === 1.1067206884263214e-7 &&
-			model.parser.json.nodes[4].rotation[3] === 0.9791645407676697
+			model.parser.json.nodes[4].rotation[1] === 6.802843444120299e-8
 		) {
 			return 'full_body_male';
 		} else if (
 			model.parser.json.nodes[4].name === 'Neck' &&
-			model.parser.json.nodes[4].rotation[0] === 0.1396459937095642 &&
-			model.parser.json.nodes[4].rotation[1] === 1.7396249774037642e-8 &&
-			model.parser.json.nodes[4].rotation[2] === -1.1523127341206418e-7 &&
-			model.parser.json.nodes[4].rotation[3] === 0.9902015328407288
+			model.parser.json.nodes[4].rotation[1] === 4.327869973508314e-8
 		) {
 			return 'full_body_female';
 		} else {
