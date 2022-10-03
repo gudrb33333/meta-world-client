@@ -45,6 +45,22 @@ function UiContainer(props) {
 					<span className={styles.ctrlKey}>F</span>
 					<span className={styles.ctrlDesc}>의자 앉기/일어나기</span>
 				</div>
+				<div className={styles.ctrlRow}>
+					<span className={styles.ctrlKey}>1</span>
+					<span className={styles.ctrlDesc}>박수</span>
+				</div>
+				<div className={styles.ctrlRow}>
+					<span className={styles.ctrlKey}>2</span>
+					<span className={styles.ctrlDesc}>손 흔들기</span>
+				</div>
+				<div className={styles.ctrlRow}>
+					<span className={styles.ctrlKey}>3</span>
+					<span className={styles.ctrlDesc}>춤 추기</span>
+				</div>
+				<div className={styles.ctrlRow}>
+					<span className={styles.ctrlKey}>`</span>
+					<span className={styles.ctrlDesc}>소셜 취소</span>
+				</div>
 			</div>
 		</div>
 	);
