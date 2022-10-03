@@ -30,6 +30,7 @@ import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import { Joystick } from '../core/Joystick';
 import checkIsMobile, { isIOS } from '../../utils/isMobile';
+import { DirectionalLight, HemisphereLight } from 'three';
 
 export class World {
 	private requestAnimationFrameId;
@@ -77,8 +78,8 @@ export class World {
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-		this.renderer.toneMappingExposure = 1.0;
-		this.renderer.shadowMap.enabled = true;
+		this.renderer.toneMappingExposure = 1;
+		this.renderer.shadowMap.enabled = false;
 		this.renderer.shadowMap.type = THREE.BasicShadowMap;
 
 		// Canvas
@@ -267,7 +268,44 @@ export class World {
 			this.camera,
 			this.params.Mouse_Sensitivity,
 		);
-		this.sky = new Sky(this);
+
+		// this.sky = new Sky(this);
+		// const light = new THREE.AmbientLight( 0xffffff ); // soft white light
+		// light.intensity = 1;
+		// this.graphicsWorld.add( light );
+
+		const ambientLight = new HemisphereLight(
+			'white', // bright sky color
+			'darkslategrey', // dim ground color
+			2, // intensity
+		);
+		this.graphicsWorld.add(ambientLight)
+
+		const mainLight = new DirectionalLight('white', 2);
+		mainLight.position.set(10, 10, 10);
+		this.graphicsWorld.add(mainLight)
+
+		const loader = new THREE.TextureLoader();
+		const texture = loader.load(
+		  'assets/AdobeStock_191213422_11zon.jpeg',
+		);
+		texture.magFilter = THREE.LinearFilter;
+		texture.minFilter = THREE.LinearFilter;
+	
+		const shader = THREE.ShaderLib.equirect;
+		const material = new THREE.ShaderMaterial({
+		  fragmentShader: shader.fragmentShader,
+		  vertexShader: shader.vertexShader,
+		  uniforms: shader.uniforms,
+		  depthWrite: false,
+		  side: THREE.BackSide,
+		});
+		material.uniforms.tEquirect.value = texture;
+		const sphere = new THREE.SphereBufferGeometry(100, 100, 100);
+		const bgMesh = new THREE.Mesh(sphere, material);
+		bgMesh.position.set(0, 0, 0)
+		this.graphicsWorld.add(bgMesh);
+
 		if (checkIsMobile()) {
 			new Joystick(this, this.inputManager);
 		}
@@ -333,7 +371,7 @@ export class World {
 			if (child.hasOwnProperty('userData')) {
 				if (child.type === 'Mesh') {
 					Utils.setupMeshProperties(child);
-					this.sky.csm.setupMaterial(child.material);
+					//this.sky.csm.setupMaterial(child.material);
 				}
 
 				if (child.userData.hasOwnProperty('data')) {
@@ -470,17 +508,17 @@ export class World {
 		// Input
 		const settingsFolder = gui.addFolder('Settings');
 		settingsFolder.add(this.params, 'FXAA');
-		settingsFolder.add(this.params, 'Shadows').onChange((enabled) => {
-			if (enabled) {
-				this.sky.csm.lights.forEach((light) => {
-					light.castShadow = true;
-				});
-			} else {
-				this.sky.csm.lights.forEach((light) => {
-					light.castShadow = false;
-				});
-			}
-		});
+		// settingsFolder.add(this.params, 'Shadows').onChange((enabled) => {
+		// 	if (enabled) {
+		// 		this.sky.csm.lights.forEach((light) => {
+		// 			light.castShadow = true;
+		// 		});
+		// 	} else {
+		// 		this.sky.csm.lights.forEach((light) => {
+		// 			light.castShadow = false;
+		// 		});
+		// 	}
+		// });
 		settingsFolder.add(this.params, 'Pointer_Lock').onChange((enabled) => {
 			scope.inputManager.setPointerLock(enabled);
 		});
