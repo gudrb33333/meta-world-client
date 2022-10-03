@@ -13,6 +13,9 @@ function Room() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isUiContainerOn, setUiContainerOn] = useState(false);
 
+	const history = createBrowserHistory();
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		setWorld(new World('/assets/virtual_reality_space_mountain_view_room.glb'));
 
@@ -20,27 +23,16 @@ function Room() {
 			setIsLoading(false);
 			setUiContainerOn(true);
 		});
+
+		history.listen(({ action }) => {
+			if (action === 'POP') {
+				listenBackEvent();
+			}
+		});
 	}, []);
 
-	const history = createBrowserHistory();
-	const navigate = useNavigate();
-
-	const unlistenHistoryEvent = history.listen(({ action }) => {
-		if (action === 'POP') {
-			listenBackEvent();
-		}
-	});
-
 	const listenBackEvent = () => {
-		//world.stopRendering();
-		//world.disconnectPhoenixAdapter();
-
-		const canvas = document.getElementsByTagName(
-			'canvas',
-		)[0] as HTMLCanvasElement;
-		if (canvas) canvas.parentNode.removeChild(canvas);
-
-		navigate('/');
+		window.location.replace('/');
 	};
 
 	const getWorld = (): World => {
