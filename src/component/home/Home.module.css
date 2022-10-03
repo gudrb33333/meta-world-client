@@ -1,5 +1,5 @@
 .home{
-	background-image: url(../../../public/building.png);
+	background-image: url(../../../public/room_background_comp.png);
 	background-repeat: no-repeat;
 	background-position: top center;
 	background-size: cover;
@@ -26,7 +26,7 @@
 .home-title {
 	margin-left: 3%;
 	font-weight: 400;
-	font-size: 90px;
+	font-size: 110px;
 	font-family: 'Alfa Slab One', cursive;
 }
 
