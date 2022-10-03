@@ -213,6 +213,15 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			loadingManager.loadPromiseGLTF('/assets/male/readySittingIdleMale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/male/readyStandUpMale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/male/readyStandUpLeftMale.glb'),
+			loadingManager.loadPromiseGLTF(
+				'/assets/male/readyStandClapMale.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/male/readyStandWaveMale.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/male/readyStandDanceMale.glb',
+			),
 		]);
 	}
 }
