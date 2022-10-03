@@ -127,7 +127,9 @@ export class Avatar
 			use: new KeyBinding('KeyE'),
 			enter: new KeyBinding('KeyF'),
 			enter_passenger: new KeyBinding('KeyP'),
-			stand_clap: new KeyBinding('Digit1')
+			quit_social_animation: new KeyBinding('Backquote'),
+			stand_clap: new KeyBinding('Digit1'),
+			stand_wave: new KeyBinding('Digit2')
 		};
 
 		// Physics

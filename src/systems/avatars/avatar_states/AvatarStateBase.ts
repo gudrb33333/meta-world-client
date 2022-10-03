@@ -89,9 +89,21 @@ export abstract class AvatarStateBase implements IAvatarState {
 		);
 	}
 
+	public isQuitSociaAnimation(): boolean {
+		return (
+			this.avatar.actions.quit_social_animation.isPressed
+		);
+	}
+
 	public isStandClapPressed(): boolean {
 		return (
 			this.avatar.actions.stand_clap.isPressed
+		);
+	}
+
+	public isStandWavePressed(): boolean {
+		return (
+			this.avatar.actions.stand_wave.isPressed
 		);
 	}
 

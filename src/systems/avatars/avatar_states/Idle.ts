@@ -1,7 +1,6 @@
-import { AvatarStateBase, JumpIdle, Walk } from './_stateLibrary';
+import { AvatarStateBase, JumpIdle, Walk, StandClap, StandWave } from './_stateLibrary';
 import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
-import { StandClap } from './StandClap';
 
 export class Idle extends AvatarStateBase {
 	constructor(avatar: Avatar) {
@@ -37,6 +36,10 @@ export class Idle extends AvatarStateBase {
 
 		if (this.isStandClapPressed()) {
 			this.avatar.setState(new StandClap(this.avatar));
+		}
+
+		if (this.isStandWavePressed()) {
+			this.avatar.setState(new StandWave(this.avatar));
 		}
 	}
 }
