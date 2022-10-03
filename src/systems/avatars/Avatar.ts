@@ -71,7 +71,7 @@ export class Avatar
 	private raycastBox: THREE.Mesh;
 
 	private world: World;
-	private charState: IAvatarState;
+	private avatarState: IAvatarState;
 
 	//chairs
 	private controlledObject: IControllable;
@@ -126,7 +126,7 @@ export class Avatar
 			jump: new KeyBinding('Space'),
 			use: new KeyBinding('KeyE'),
 			enter: new KeyBinding('KeyF'),
-			enter_passenger: new KeyBinding('KeyG'),
+			enter_passenger: new KeyBinding('KeyP')
 		};
 
 		// Physics
@@ -210,8 +210,8 @@ export class Avatar
 	 * @param {function} State
 	 */
 	public setState(state: IAvatarState): void {
-		this.charState = state;
-		this.charState.onInputChange();
+		this.avatarState = state;
+		this.avatarState.onInputChange();
 	}
 
 	public setPosition(x: number, y: number, z: number): void {
@@ -396,7 +396,7 @@ export class Avatar
 			else action.justReleased = true;
 
 			// Tell player to handle states according to new input
-			this.charState.onInputChange();
+			this.avatarState.onInputChange();
 
 			// Reset the 'just' attributes
 			action.justPressed = false;
@@ -425,7 +425,7 @@ export class Avatar
 	public update(timeStep: number): void {
 		this.chairEntryInstance?.update(timeStep);
 		// console.log(this.occupyingSeat);
-		this.charState?.update(timeStep);
+		this.avatarState?.update(timeStep);
 
 		// this.visuals.position.copy(this.modelOffset);
 		if (this.physicsEnabled) this.springMovement(timeStep);
@@ -640,7 +640,7 @@ export class Avatar
 		const worldPos = new THREE.Vector3();
 
 		// Find best chair
-		const chairFinder = new ClosestObjectFinder<Chair>(this.position, 1);
+		const chairFinder = new ClosestObjectFinder<Chair>(this.position, 2);
 		this.world.getChairs().forEach((chair) => {
 			chairFinder.consider(chair, chair.position);
 		});
@@ -986,8 +986,8 @@ export class Avatar
 		this.sessionId = sessionId;
 	}
 
-	public getCharState(): IAvatarState {
-		return this.charState;
+	public getAvatarState(): IAvatarState {
+		return this.avatarState;
 	}
 
 	public setControlledObject(controllableObject: IControllable) {
