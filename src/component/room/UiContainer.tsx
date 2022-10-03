@@ -42,8 +42,8 @@ function UiContainer(props) {
 					<span className={styles.ctrlDesc}>점프</span>
 				</div>
 				<div className={styles.ctrlRow}>
-					<span className={styles.ctrlKey}>G</span>
 					<span className={styles.ctrlKey}>F</span>
+					<span className={styles.ctrlKey}>G</span>
 					<span className={styles.ctrlDesc}>의자 앉기/일어나기</span>
 				</div>
 			</div>
