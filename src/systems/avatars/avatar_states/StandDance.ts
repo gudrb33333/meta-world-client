@@ -1,13 +1,13 @@
 import { Avatar } from "../Avatar";
 import { AvatarStateBase } from "./AvatarStateBase";
-import { Idle, JumpIdle, Walk, StandClap, StandDance } from "./_stateLibrary";
+import { Idle, JumpIdle, StandClap, StandWave, Walk } from "./_stateLibrary";
 
-export class StandWave extends AvatarStateBase {
+export class StandDance extends AvatarStateBase {
     constructor(avatar: Avatar){
         super(avatar);
 
         this.avatar.setArcadeVelocityTarget(0);
-        this.playAnimation('stand_wave', 0.3);
+        this.playAnimation('stand_dance', 0.3);
     }
 
     public onInputChange(): void {
@@ -33,8 +33,8 @@ export class StandWave extends AvatarStateBase {
             this.avatar.setState(new StandClap(this.avatar));
         }
 
-        if (this.isStandDancePressed()){
-            this.avatar.setState(new StandDance(this.avatar));
+        if (this.isStandWavePressed()){
+            this.avatar.setState(new StandWave(this.avatar));
         }
 	}
 }

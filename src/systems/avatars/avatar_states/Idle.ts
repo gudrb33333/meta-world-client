@@ -1,4 +1,4 @@
-import { AvatarStateBase, JumpIdle, Walk, StandClap, StandWave } from './_stateLibrary';
+import { AvatarStateBase, JumpIdle, Walk, StandClap, StandWave, StandDance } from './_stateLibrary';
 import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
 
@@ -40,6 +40,10 @@ export class Idle extends AvatarStateBase {
 
 		if (this.isStandWavePressed()) {
 			this.avatar.setState(new StandWave(this.avatar));
+		}
+
+		if (this.isStandDancePressed()) {
+			this.avatar.setState(new StandDance(this.avatar));
 		}
 	}
 }

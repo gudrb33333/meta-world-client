@@ -47,6 +47,8 @@ export class PhoenixAdapter implements IUpdatable {
 		this.animationMap.set('stand_up_right', ['stand_up_right', 0.1]);
 		this.animationMap.set('sitting', ['sitting', 0.1]);
 		this.animationMap.set('stand_clap',['stand_clap', 0.3]);
+		this.animationMap.set('stand_wave',['stand_wave', 0.3]);
+		this.animationMap.set('stand_dance',['stand_dance', 0.3]);
 
 		world.registerUpdatable(this);
 	}

@@ -11,3 +11,4 @@ export * from './Sprint';
 export * from './Walk';
 export * from './StandClap';
 export * from './StandWave';
+export * from './StandDance';

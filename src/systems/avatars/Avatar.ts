@@ -129,7 +129,8 @@ export class Avatar
 			enter_passenger: new KeyBinding('KeyP'),
 			quit_social_animation: new KeyBinding('Backquote'),
 			stand_clap: new KeyBinding('Digit1'),
-			stand_wave: new KeyBinding('Digit2')
+			stand_wave: new KeyBinding('Digit2'),
+			stand_dance: new KeyBinding('Digit3')
 		};
 
 		// Physics

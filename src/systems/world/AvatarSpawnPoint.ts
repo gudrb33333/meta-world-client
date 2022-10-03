@@ -184,6 +184,9 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			loadingManager.loadPromiseGLTF(
 				'/assets/female/readyStandWaveFemale.glb',
 			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/female/readyStandDanceFemale.glb',
+			),
 		]);
 	}
 
