@@ -77,7 +77,7 @@ export class World {
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+		this.renderer.toneMapping = THREE.ReinhardToneMapping;
 		this.renderer.toneMappingExposure = 1;
 		this.renderer.shadowMap.enabled = false;
 		this.renderer.shadowMap.type = THREE.BasicShadowMap;
@@ -277,11 +277,11 @@ export class World {
 		const ambientLight = new HemisphereLight(
 			'white', // bright sky color
 			'darkslategrey', // dim ground color
-			2, // intensity
+			5, // intensity
 		);
 		this.graphicsWorld.add(ambientLight)
 
-		const mainLight = new DirectionalLight('white', 2);
+		const mainLight = new DirectionalLight('white', 5);
 		mainLight.position.set(10, 10, 10);
 		this.graphicsWorld.add(mainLight)
 
@@ -609,6 +609,10 @@ export class World {
 
 	public getMediasoupAdapter() {
 		return this.mediasoupAdapter;
+	}
+
+	public disconnectPhoenixAdapter(): void{
+		this.phoenixAdapter.disconnect();
 	}
 
 	// Update
