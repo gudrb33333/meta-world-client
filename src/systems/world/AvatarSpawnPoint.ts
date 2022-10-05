@@ -81,24 +81,16 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 		sessionId: string,
 		profile: Profile,
 	): void {
-		loadingManager.loadGLTF(profile.avatar_url, (model) => {
+
+		loadingManager.loadGLTF('/assets/loading-avatar/loadingAvatar.glb', (model) => {
+
 			const mixer = new THREE.AnimationMixer(model.scene);
 			const animationClipArr = new Array<THREE.AnimationClip>();
 			const modelType = this.findAvatarType(model);
-			let animationClipGltfs;
-
-			if (modelType === 'full_body_female')
-				animationClipGltfs =
-					this.setFullBodyFemaleAnimationClip(loadingManager);
-			else if (modelType === 'full_body_male') {
-				animationClipGltfs = this.setFullBodyMaleAnimationClip(loadingManager);
-			} else {
-				animationClipGltfs = Promise.all([]);
-			}
+			const animationClipGltfs = this.setFullBodyLoadingAvatarAnimationClip(loadingManager);
 
 			animationClipGltfs
 				.then((results) => {
-					// here the models are returned in deterministic order
 					results.forEach((gltf) => {
 						const animationAction = mixer.clipAction(
 							(gltf as any).animations[0],
@@ -109,24 +101,65 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					});
 
 					model.animations = animationClipArr;
-					const player = new Avatar(model);
+					let player = new Avatar(model);
 					player.setSessionId(sessionId);
 					player.setAvatarName(profile.avatar_name);
-					const worldPos = new THREE.Vector3();
-					//this.object.getWorldPosition(worldPos);
-					//console.log(this.object.getWorldPosition(worldPos))
-					//player.setPosition(-0.08083007484674454, 2.3437719345092773, -0.27053260803222656);
-
+		
 					const forward = Utils.getForward(this.object);
 					player.setOrientation(forward, false);
 					world.add(player);
 					const avatarMap = world.getAvatarMap();
 					avatarMap.set(sessionId, player);
 					player.setPhysicsEnabled(false);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
+
+					loadingManager.loadGLTF(profile.avatar_url, (model) => {
+						world.remove(player);
+						const mixer = new THREE.AnimationMixer(model.scene);
+						const animationClipArr = new Array<THREE.AnimationClip>();
+						const modelType = this.findAvatarType(model);
+						let animationClipGltfs;
+			
+						if (modelType === 'full_body_female')
+							animationClipGltfs =
+								this.setFullBodyFemaleAnimationClip(loadingManager);
+						else if (modelType === 'full_body_male') {
+							animationClipGltfs = this.setFullBodyMaleAnimationClip(loadingManager);
+						} else {
+							animationClipGltfs = Promise.all([]);
+						}
+			
+						animationClipGltfs
+							.then((results) => {
+								// here the models are returned in deterministic order
+								results.forEach((gltf) => {
+									const animationAction = mixer.clipAction(
+										(gltf as any).animations[0],
+									);
+									animationAction.getClip().name =
+										gltf.scene.children[0].userData.name;
+									animationClipArr.push(animationAction.getClip());
+								});
+			
+								model.animations = animationClipArr;
+								player = new Avatar(model);
+								player.setSessionId(sessionId);
+								player.setAvatarName(profile.avatar_name);
+								const worldPos = new THREE.Vector3();
+								//this.object.getWorldPosition(worldPos);
+								//console.log(this.object.getWorldPosition(worldPos))
+								//player.setPosition(-0.08083007484674454, 2.3437719345092773, -0.27053260803222656);
+			
+								const forward = Utils.getForward(this.object);
+								player.setOrientation(forward, false);
+								world.add(player);
+								avatarMap.set(sessionId, player);
+								player.setPhysicsEnabled(false);
+							})
+							.catch((err) => {
+								console.log(err);
+							});
+					});
+			});
 		});
 	}
 
@@ -144,6 +177,39 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 		} else {
 			return 'half_body';
 		}
+	}
+
+	private setFullBodyLoadingAvatarAnimationClip(loadingManager: LoadingManager) {
+		return Promise.all([
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarIdle.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarDropIdle.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarFastRun.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarJumpIdle.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarJumpingIdle.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarJumpRunning.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarRunningDrop.glb'),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarRunToStopInPlace.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarRun.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/male/readySprintingForwardRollMale.glb',
+			),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarSitDownRight.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarSittingIdle.glb'),
+			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarStandUp.glb'),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarStandClap.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarStandWave.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarStandDance.glb',
+			),
+		]);
 	}
 
 	private setFullBodyFemaleAnimationClip(loadingManager: LoadingManager) {
