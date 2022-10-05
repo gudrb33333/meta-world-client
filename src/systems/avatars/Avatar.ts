@@ -64,7 +64,7 @@ export class Avatar
 	private rayResult: CANNON.RaycastResult = new CANNON.RaycastResult();
 	private rayHasHit = false;
 	private rayCastLength = 0.57;
-	private raySafeOffset = 0.08;
+	private raySafeOffset = 0.06;
 	private wantsToJump = false;
 	private initJumpSpeed = -1;
 	private groundImpactData: GroundImpactData = new GroundImpactData();
@@ -197,7 +197,7 @@ export class Avatar
 		const charaterNameText = new SpriteText2D(avatarName, {
 			align: textAlign.center,
 			font: '20px Arial',
-			fillStyle: '#000000',
+			fillStyle: '#ffffff',
 			antialias: true,
 		});
 		charaterNameText.scale.set(1 / 200, 1 / 200, 1);
