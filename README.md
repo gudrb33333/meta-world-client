@@ -5,10 +5,10 @@
 자신의 사진으로 아바타를 만들어 보세요!
 
 ![309988073_1270783497013122_7119301059007356851_n](https://user-images.githubusercontent.com/59630175/194330165-40f8e98a-a3ee-491b-9528-6e2888fa9d59.jpg)
-
 <div>
-<img src="https://user-images.githubusercontent.com/59630175/194332668-73f5f88c-2dfb-4309-9278-fe224a72ffed.gif" width="300" height="450"/>
-<img src="https://user-images.githubusercontent.com/59630175/194331199-8c45e5ac-600f-4cc9-bce3-fc7dbb6d34e6.gif" width="300" height="450"/>
+  <img src="https://user-images.githubusercontent.com/59630175/194341546-a529c2c0-e7ca-424e-ac2f-cbff8eb4e0f0.gif" width="300" height="450"/>
+  <img src="https://user-images.githubusercontent.com/59630175/194332668-73f5f88c-2dfb-4309-9278-fe224a72ffed.gif" width="300" height="450"/>
+  <img src="https://user-images.githubusercontent.com/59630175/194331199-8c45e5ac-600f-4cc9-bce3-fc7dbb6d34e6.gif" width="300" height="450"/>
 </div>
 
 ## DEMO
