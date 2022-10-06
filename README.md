@@ -1,46 +1,37 @@
-# Getting Started with Create React App
+# META WORLD CLIENT
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[Ready Player Me](https://readyplayer.me/)의 아바타 생성 기능에서 영감을 받은 가상공간 회의 프로젝트.
+
+자신의 사진으로 아바타를 만들어 보세요!
+
+![309988073_1270783497013122_7119301059007356851_n](https://user-images.githubusercontent.com/59630175/194330165-40f8e98a-a3ee-491b-9528-6e2888fa9d59.jpg)
+
+<div>
+<img src="https://user-images.githubusercontent.com/59630175/194332668-73f5f88c-2dfb-4309-9278-fe224a72ffed.gif" width="300" height="450"/>
+<img src="https://user-images.githubusercontent.com/59630175/194331199-8c45e5ac-600f-4cc9-bce3-fc7dbb6d34e6.gif" width="300" height="450"/>
+</div>
+
+### DEMO
+모바일 기기별로 모두 테스트 되지않아, PC에서 접속해주세요.
+
+아바타 생성 없이 공간 접속 : [https://meta-world.gudrb33333.click/room?user-type=guest](https://meta-world.gudrb33333.click/room?user-type=guest)
+
+아바타 만들기 : [https://meta-world.gudrb33333.click/avatar](https://meta-world.gudrb33333.click/avatar)
 
 ## Available Scripts
 
-In the project directory, you can run:
+프로젝트 디렉토리에서 실행할 수 있습니다.
 
-### `npm start`
+### `npm run dev`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+개발모드로 앱을 실행시키세요.
+[http://localhost:8080](http://localhost:8080)로 브라우저에서 볼 수 있습니다.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+주의! 화상회의 기능이나 멀티접속 기능을 이용하려면 다음의 프로젝트들을 서버에서 실행시켜야합니다.\
+[meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의 기능\
+[meta_world_server](https://github.com/gudrb33333/meta_world_server.git) : 멀티접속 기능
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Notice
+프로젝트 내의 GLB 맵 자산과 배경 사진은 다음 사이트들에서 라이센스 구매한 후 사용하였습니다.\
+[Virtual Reality Space Mountain View Room](https://sketchfab.com/3d-models/virtual-reality-space-mountain-view-room-695833e5854d4ed5922daf53011e2d4a)\
+[Aerial spherical panorama of Downtown Miami at night](https://stock.adobe.com/kr/search?load_type=search&is_recent_search=&search_type=usertyped&k=Aerial+spherical+panorama+of+Downtown+Miami+at+night&native_visual_search=&similar_content_id=&asset_id=191213422)
