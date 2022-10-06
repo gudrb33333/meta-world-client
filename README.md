@@ -34,7 +34,7 @@
 ## Notice
 프로젝트 내의 GLB 맵 자산과 배경 사진은 다음 사이트들에서 라이센스 구매한 후 사용하였습니다.\
 [Virtual Reality Space Mountain View Room](https://sketchfab.com/3d-models/virtual-reality-space-mountain-view-room-695833e5854d4ed5922daf53011e2d4a)\
-[Aerial spherical panorama of Downtown Miami at night](https://stock.adobe.com/kr/search?load_type=search&is_recent_search=&search_type=usertyped&k=Aerial+spherical+panorama+of+Downtown+Miami+at+night&native_visual_search=&similar_content_id=&asset_id=191213422)\
+[Aerial spherical panorama of Downtown Miami at night](https://stock.adobe.com/kr/search?load_type=search&is_recent_search=&search_type=usertyped&k=Aerial+spherical+panorama+of+Downtown+Miami+at+night&native_visual_search=&similar_content_id=&asset_id=191213422)
 
 Ready Player Me의 데모 버전을 사용하였습니다.\
 [Ready Player Me Demo Web](https://docs.readyplayer.me/ready-player-me/integration-guides/web)
