@@ -1,9 +1,9 @@
+/* eslint-disable */
+
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import * as _ from 'lodash';
 import { SimulationFrame } from '../physics/spring_simulation/SimulationFrame';
-import { World } from '../world/World';
-import { Object3D } from 'three';
 import { Space } from '../enums/Space';
 
 export function createCapsuleGeometry(
