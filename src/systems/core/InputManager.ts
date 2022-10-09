@@ -50,7 +50,11 @@ export class InputManager implements IUpdatable {
 
 		// Init event listeners
 		// Mouse
-		this._domElement.addEventListener('mousedown', this._boundOnMouseDown, false);
+		this._domElement.addEventListener(
+			'mousedown',
+			this._boundOnMouseDown,
+			false,
+		);
 		document.addEventListener('wheel', this._boundOnMouseWheelMove, false);
 		document.addEventListener(
 			'pointerlockchange',
@@ -144,7 +148,11 @@ export class InputManager implements IUpdatable {
 		}
 
 		if (this._inputReceiver !== undefined) {
-			this._inputReceiver.handleMouseButton(event, 'mouse' + event.button, true);
+			this._inputReceiver.handleMouseButton(
+				event,
+				'mouse' + event.button,
+				true,
+			);
 		}
 	}
 

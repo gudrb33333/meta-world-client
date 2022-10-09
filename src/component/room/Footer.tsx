@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { World } from 'src/systems/world/World';
 import checkIsMobile from '../../utils/isMobile';
 import styles from './Footer.module.css';
 

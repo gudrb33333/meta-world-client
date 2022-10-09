@@ -12,7 +12,7 @@ export interface RemoteWebcamInfo {
 	remoteWebcamImageContext: CanvasRenderingContext2D;
 	remoteWebcamTexture: THREE.Texture;
 	remoteWebcamScreen: THREE.Mesh;
-};
+}
 
 export interface RemoteShareInfo {
 	remoteShareSocketId: string;
@@ -21,7 +21,7 @@ export interface RemoteShareInfo {
 	remoteShareImageContext: CanvasRenderingContext2D;
 	remoteShareTexture: THREE.Texture;
 	remoteShareScreen: THREE.Mesh;
-};
+}
 
 export class MediasoupAdapter implements IUpdatable {
 	public updateOrder = 7;
@@ -108,9 +108,9 @@ export class MediasoupAdapter implements IUpdatable {
 								const remoteWebcamInfo: RemoteWebcamInfo =
 									this._remoteWebcamMap.get(remoteProducerId);
 
-								this._world
-									.graphicsWorld
-									.remove(remoteWebcamInfo.remoteWebcamScreen);
+								this._world.graphicsWorld.remove(
+									remoteWebcamInfo.remoteWebcamScreen,
+								);
 								this._remoteWebcamKeyList = this._remoteWebcamKeyList.filter(
 									(remoteWebcamKey) => remoteWebcamKey != remoteProducerId,
 								);
@@ -127,9 +127,9 @@ export class MediasoupAdapter implements IUpdatable {
 								const remoteShareInfo: RemoteShareInfo =
 									this._remoteShareMap.get(remoteProducerId);
 
-								this._world
-									.graphicsWorld
-									.remove(remoteShareInfo.remoteShareScreen);
+								this._world.graphicsWorld.remove(
+									remoteShareInfo.remoteShareScreen,
+								);
 								this._remoteShareKeyList = this._remoteShareKeyList.filter(
 									(remoteShareKey) => remoteShareKey != remoteProducerId,
 								);
@@ -681,7 +681,8 @@ export class MediasoupAdapter implements IUpdatable {
 					this._localWebcamImage = document.getElementById(
 						'local-webcam-image',
 					) as HTMLCanvasElement;
-					this._localWebcamImageContext = this._localWebcamImage.getContext('2d');
+					this._localWebcamImageContext =
+						this._localWebcamImage.getContext('2d');
 
 					// background color if no video present
 					this._localWebcamImageContext.fillStyle = '#000000';
@@ -703,7 +704,10 @@ export class MediasoupAdapter implements IUpdatable {
 					// the geometry on which the movie will be displayed;
 					// movie image will be scaled to fit these dimensions.
 					const movieGeometry = new THREE.PlaneGeometry(1, 0.5, 0.1, 0.1);
-					this._localWebcamScreen = new THREE.Mesh(movieGeometry, movieMaterial);
+					this._localWebcamScreen = new THREE.Mesh(
+						movieGeometry,
+						movieMaterial,
+					);
 					const avatar = this._world.userAvatar;
 					this._localWebcamScreen.position.set(
 						avatar.position.x,
@@ -816,7 +820,9 @@ export class MediasoupAdapter implements IUpdatable {
 								this._localShareImage.height,
 							);
 
-							this._localShareTexture = new THREE.Texture(this._localShareImage);
+							this._localShareTexture = new THREE.Texture(
+								this._localShareImage,
+							);
 							this._localShareTexture.minFilter = THREE.LinearFilter;
 							this._localShareTexture.magFilter = THREE.LinearFilter;
 

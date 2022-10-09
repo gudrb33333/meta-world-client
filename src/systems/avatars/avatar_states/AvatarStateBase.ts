@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-import * as Utils from '../../core/FunctionLibrary';
 import {
 	DropIdle,
 	DropRolling,
@@ -55,10 +53,7 @@ export abstract class AvatarStateBase implements IAvatarState {
 			this.avatar.actions.enter_passenger.justPressed
 		) {
 			this.avatar.findChairToEnter(false);
-		} else if (
-			this.canEnterChairs &&
-			this.avatar.chairEntryInstance !== null
-		) {
+		} else if (this.canEnterChairs && this.avatar.chairEntryInstance !== null) {
 			if (
 				this.avatar.actions.up.justPressed ||
 				this.avatar.actions.down.justPressed ||
@@ -90,27 +85,19 @@ export abstract class AvatarStateBase implements IAvatarState {
 	}
 
 	public isQuitSociaAnimation(): boolean {
-		return (
-			this.avatar.actions.quit_social_animation.isPressed
-		);
+		return this.avatar.actions.quit_social_animation.isPressed;
 	}
 
 	public isStandClapPressed(): boolean {
-		return (
-			this.avatar.actions.stand_clap.isPressed
-		);
+		return this.avatar.actions.stand_clap.isPressed;
 	}
 
 	public isStandWavePressed(): boolean {
-		return (
-			this.avatar.actions.stand_wave.isPressed
-		);
+		return this.avatar.actions.stand_wave.isPressed;
 	}
 
 	public isStandDancePressed(): boolean {
-		return (
-			this.avatar.actions.stand_dance.isPressed
-		);
+		return this.avatar.actions.stand_dance.isPressed;
 	}
 
 	public fallInAir(): void {

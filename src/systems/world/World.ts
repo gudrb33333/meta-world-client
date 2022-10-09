@@ -253,7 +253,9 @@ export class World {
 		// Physics
 		this._physicsWorld = new CANNON.World();
 		this._physicsWorld.gravity.set(0, -9.81, 0);
-		this._physicsWorld.broadphase = new CANNON.SAPBroadphase(this._physicsWorld);
+		this._physicsWorld.broadphase = new CANNON.SAPBroadphase(
+			this._physicsWorld,
+		);
 		this._physicsWorld.solver.iterations = 10;
 		this._physicsWorld.allowSleep = true;
 
@@ -291,31 +293,29 @@ export class World {
 			'darkslategrey', // dim ground color
 			5, // intensity
 		);
-		this._graphicsWorld.add(ambientLight)
+		this._graphicsWorld.add(ambientLight);
 
 		const mainLight = new DirectionalLight('white', 5);
 		mainLight.position.set(10, 10, 10);
-		this._graphicsWorld.add(mainLight)
+		this._graphicsWorld.add(mainLight);
 
 		const loader = new THREE.TextureLoader();
-		const texture = loader.load(
-		  'assets/AdobeStock_191213422_11zon.jpeg',
-		);
+		const texture = loader.load('assets/AdobeStock_191213422_11zon.jpeg');
 		texture.magFilter = THREE.LinearFilter;
 		texture.minFilter = THREE.LinearFilter;
-	
+
 		const shader = THREE.ShaderLib.equirect;
 		const material = new THREE.ShaderMaterial({
-		  fragmentShader: shader.fragmentShader,
-		  vertexShader: shader.vertexShader,
-		  uniforms: shader.uniforms,
-		  depthWrite: false,
-		  side: THREE.BackSide,
+			fragmentShader: shader.fragmentShader,
+			vertexShader: shader.vertexShader,
+			uniforms: shader.uniforms,
+			depthWrite: false,
+			side: THREE.BackSide,
 		});
 		material.uniforms.tEquirect.value = texture;
 		const sphere = new THREE.SphereBufferGeometry(100, 100, 100);
 		const bgMesh = new THREE.Mesh(sphere, material);
-		bgMesh.position.set(0, 0, 0)
+		bgMesh.position.set(0, 0, 0);
 		this._graphicsWorld.add(bgMesh);
 
 		if (checkIsMobile()) {
@@ -373,12 +373,11 @@ export class World {
 
 	public loadScene(loadingManager: LoadingManager, gltf: any): void {
 		gltf.scene.traverse((child) => {
-			if(child.material){
-				if(child.material.name === 'pink_bloom'){
-					console.log(child.material)
+			if (child.material) {
+				if (child.material.name === 'pink_bloom') {
+					console.log(child.material);
 				}
 			}
-
 
 			if (child.hasOwnProperty('userData')) {
 				if (child.type === 'Mesh') {
@@ -445,7 +444,7 @@ export class World {
 		this._params.Time_Scale = value;
 		this._timeScaleTarget = value;
 	}
-	
+
 	public setUserAvatarAndAvatarMap(sessionId: string) {
 		this._userAvatar = this.avatars[0];
 		this._userAvatar.sessionId = sessionId;
@@ -571,7 +570,7 @@ export class World {
 		return this._avatarMap.get(sessionId);
 	}
 
-	public disconnectPhoenixAdapter(): void{
+	public disconnectPhoenixAdapter(): void {
 		this._phoenixAdapter.disconnect();
 	}
 

@@ -127,9 +127,7 @@ export class Sky extends THREE.Object3D implements IUpdatable {
 			Math.cos((this._phi * Math.PI) / 180);
 
 		this.skyMaterial.uniforms.sunPosition.value.copy(this.sunPosition);
-		this.skyMaterial.uniforms.cameraPos.value.copy(
-			this.world.camera.position,
-		);
+		this.skyMaterial.uniforms.cameraPos.value.copy(this.world.camera.position);
 	}
 
 	public refreshHemiIntensity(): void {

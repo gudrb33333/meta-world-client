@@ -112,7 +112,8 @@ export class Joystick implements IUpdatable {
 
 	private onFirstInteraction(): void {
 		if (this._leftStick) this._leftStick.off('start', this.onFirstInteraction);
-		if (this._rightStick) this._rightStick.off('start', this.onFirstInteraction);
+		if (this._rightStick)
+			this._rightStick.off('start', this.onFirstInteraction);
 		this._mockJoystickContainer.parentNode &&
 			this._mockJoystickContainer.parentNode.removeChild(
 				this._mockJoystickContainer,
@@ -128,13 +129,21 @@ export class Joystick implements IUpdatable {
 		this._displacement.x = -this._displacement.x;
 		this._displacement.z = -this._displacement.z;
 		this._moving = true;
-		this._inputManager.onLeftJoysickDown(this._displacement, 'KeyW', this._moving);
+		this._inputManager.onLeftJoysickDown(
+			this._displacement,
+			'KeyW',
+			this._moving,
+		);
 	}
 
 	private onMoveJoystickEnd(): void {
 		this._moving = false;
 		this._displacement.set(0, 0, 0);
-		this._inputManager.onLeftJoysickUp(this._displacement, 'KeyW', this._moving);
+		this._inputManager.onLeftJoysickUp(
+			this._displacement,
+			'KeyW',
+			this._moving,
+		);
 	}
 
 	private onLookJoystickChanged(event, joystick) {

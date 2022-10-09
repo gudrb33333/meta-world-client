@@ -14,7 +14,6 @@ function Room() {
 	const [isUiContainerOn, setUiContainerOn] = useState(false);
 
 	const history = createBrowserHistory();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		setWorld(new World('/assets/virtual_reality_space_mountain_view_room.glb'));
@@ -37,10 +36,6 @@ function Room() {
 
 	const getWorld = (): World => {
 		return world;
-	};
-
-	const test = () => {
-		screenfull.request();
 	};
 
 	return (

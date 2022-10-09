@@ -1,16 +1,16 @@
-import { Avatar } from "../Avatar";
-import { AvatarStateBase } from "./AvatarStateBase";
-import { Idle, JumpIdle, Walk, StandClap, StandDance } from "./_stateLibrary";
+import { Avatar } from '../Avatar';
+import { AvatarStateBase } from './AvatarStateBase';
+import { Idle, JumpIdle, Walk, StandClap, StandDance } from './_stateLibrary';
 
 export class StandWave extends AvatarStateBase {
-    constructor(avatar: Avatar){
-        super(avatar);
+	constructor(avatar: Avatar) {
+		super(avatar);
 
-        this.avatar.setArcadeVelocityTarget(0);
-        this.playAnimation('stand_wave', 0.3);
-    }
+		this.avatar.setArcadeVelocityTarget(0);
+		this.playAnimation('stand_wave', 0.3);
+	}
 
-    public onInputChange(): void {
+	public onInputChange(): void {
 		super.onInputChange();
 
 		if (this.avatar.actions.jump.justPressed) {
@@ -25,16 +25,16 @@ export class StandWave extends AvatarStateBase {
 			}
 		}
 
-        if(this.isQuitSociaAnimation()){
-            this.avatar.setState(new Idle(this.avatar));
-        }
+		if (this.isQuitSociaAnimation()) {
+			this.avatar.setState(new Idle(this.avatar));
+		}
 
-        if (this.isStandClapPressed()){
-            this.avatar.setState(new StandClap(this.avatar));
-        }
+		if (this.isStandClapPressed()) {
+			this.avatar.setState(new StandClap(this.avatar));
+		}
 
-        if (this.isStandDancePressed()){
-            this.avatar.setState(new StandDance(this.avatar));
-        }
+		if (this.isStandDancePressed()) {
+			this.avatar.setState(new StandDance(this.avatar));
+		}
 	}
 }

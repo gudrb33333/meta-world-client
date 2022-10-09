@@ -38,7 +38,7 @@ export class Avatar
 	private _modelContainer: THREE.Group;
 	private _materials: THREE.Material[] = [];
 	private _mixer: THREE.AnimationMixer;
-	private _animations: any[];
+	private _animations: THREE.AnimationClip[];
 
 	// Movement
 	private _acceleration: THREE.Vector3 = new THREE.Vector3();
@@ -130,7 +130,7 @@ export class Avatar
 			quit_social_animation: new KeyBinding('Backquote'),
 			stand_clap: new KeyBinding('Digit1'),
 			stand_wave: new KeyBinding('Digit2'),
-			stand_dance: new KeyBinding('Digit3')
+			stand_dance: new KeyBinding('Digit3'),
 		};
 
 		// Physics
@@ -765,9 +765,12 @@ export class Avatar
 			skipBackfaces: true /* ignore back faces */,
 		};
 		// Cast the ray
-		this._rayHasHit = this._world
-			.physicsWorld
-			.raycastClosest(start, end, rayCastOptions, this._rayResult);
+		this._rayHasHit = this._world.physicsWorld.raycastClosest(
+			start,
+			end,
+			rayCastOptions,
+			this._rayResult,
+		);
 	}
 
 	public physicsPostStep(body: CANNON.Body, avatar: Avatar): void {

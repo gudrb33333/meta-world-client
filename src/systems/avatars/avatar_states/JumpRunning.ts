@@ -1,5 +1,4 @@
 import { AvatarStateBase, Falling } from './_stateLibrary';
-import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
 
 export class JumpRunning extends AvatarStateBase {

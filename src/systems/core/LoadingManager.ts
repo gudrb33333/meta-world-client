@@ -1,12 +1,8 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import * as THREE from 'three';
 import { LoadingTrackerEntry } from './LoadingTrackerEntry';
 import { UIManager } from './UIManager';
-//import { Scenario } from '../world/Scenario';
-import Swal from 'sweetalert2';
 import { World } from '../world/World';
-import LoadingScreen from 'src/component/room/LoadingScreen';
 
 export class LoadingManager {
 	public firstLoad = true;

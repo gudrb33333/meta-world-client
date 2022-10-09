@@ -64,11 +64,11 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					const player = new Avatar(model);
 					player.setAvatarName(avatarName);
 
-					let worldPos = new THREE.Vector3();
+					const worldPos = new THREE.Vector3();
 					this._object.getWorldPosition(worldPos);
 					player.setPosition(worldPos.x, worldPos.y, worldPos.z);
-					
-					let back = Utils.getBack(this._object);
+
+					const back = Utils.getBack(this._object);
 					player.setOrientation(back, true);
 
 					world.add(player);
@@ -83,19 +83,19 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 	public spawnOtherAvatar(
 		loadingManager: LoadingManager,
 		world: World,
-		sessionId:string,
+		sessionId: string,
 		profile: Profile,
 	): void {
+		loadingManager.loadGLTF(
+			'/assets/loading-avatar/loadingAvatar.glb',
+			(model) => {
+				const mixer = new THREE.AnimationMixer(model.scene);
+				const animationClipArr = new Array<THREE.AnimationClip>();
+				const modelType = this.findAvatarType(model);
+				const animationClipGltfs =
+					this.setFullBodyLoadingAvatarAnimationClip(loadingManager);
 
-		loadingManager.loadGLTF('/assets/loading-avatar/loadingAvatar.glb', (model) => {
-
-			const mixer = new THREE.AnimationMixer(model.scene);
-			const animationClipArr = new Array<THREE.AnimationClip>();
-			const modelType = this.findAvatarType(model);
-			const animationClipGltfs = this.setFullBodyLoadingAvatarAnimationClip(loadingManager);
-
-			animationClipGltfs
-				.then((results) => {
+				animationClipGltfs.then((results) => {
 					results.forEach((gltf) => {
 						const animationAction = mixer.clipAction(
 							(gltf as any).animations[0],
@@ -109,7 +109,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					let player = new Avatar(model);
 					player.sessionId = sessionId;
 					player.setAvatarName(profile.avatar_name);
-		
+
 					const forward = Utils.getForward(this._object);
 					player.setOrientation(forward, false);
 					world.add(player);
@@ -123,16 +123,17 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 						const animationClipArr = new Array<THREE.AnimationClip>();
 						const modelType = this.findAvatarType(model);
 						let animationClipGltfs;
-			
+
 						if (modelType === 'full_body_female')
 							animationClipGltfs =
 								this.setFullBodyFemaleAnimationClip(loadingManager);
 						else if (modelType === 'full_body_male') {
-							animationClipGltfs = this.setFullBodyMaleAnimationClip(loadingManager);
+							animationClipGltfs =
+								this.setFullBodyMaleAnimationClip(loadingManager);
 						} else {
 							animationClipGltfs = Promise.all([]);
 						}
-			
+
 						animationClipGltfs
 							.then((results) => {
 								// here the models are returned in deterministic order
@@ -144,7 +145,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 										gltf.scene.children[0].userData.name;
 									animationClipArr.push(animationAction.getClip());
 								});
-			
+
 								model.animations = animationClipArr;
 								player = new Avatar(model);
 								player.sessionId = sessionId;
@@ -153,7 +154,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 								//this.object.getWorldPosition(worldPos);
 								//console.log(this.object.getWorldPosition(worldPos))
 								//player.setPosition(-0.08083007484674454, 2.3437719345092773, -0.27053260803222656);
-			
+
 								const forward = Utils.getForward(this._object);
 								player.setOrientation(forward, false);
 								world.add(player);
@@ -164,8 +165,9 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 								console.log(err);
 							});
 					});
-			});
-		});
+				});
+			},
+		);
 	}
 
 	private findAvatarType(model): string {
@@ -184,15 +186,31 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 		}
 	}
 
-	private setFullBodyLoadingAvatarAnimationClip(loadingManager: LoadingManager) {
+	private setFullBodyLoadingAvatarAnimationClip(
+		loadingManager: LoadingManager,
+	) {
 		return Promise.all([
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarIdle.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarDropIdle.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarFastRun.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarJumpIdle.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarJumpingIdle.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarJumpRunning.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarRunningDrop.glb'),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarIdle.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarDropIdle.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarFastRun.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarJumpIdle.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarJumpingIdle.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarJumpRunning.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarRunningDrop.glb',
+			),
 			loadingManager.loadPromiseGLTF(
 				'/assets/loading-avatar/loadingAvatarRunToStopInPlace.glb',
 			),
@@ -202,9 +220,15 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			loadingManager.loadPromiseGLTF(
 				'/assets/male/readySprintingForwardRollMale.glb',
 			),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarSitDownRight.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarSittingIdle.glb'),
-			loadingManager.loadPromiseGLTF('/assets/loading-avatar/loadingAvatarStandUp.glb'),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarSitDownRight.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarSittingIdle.glb',
+			),
+			loadingManager.loadPromiseGLTF(
+				'/assets/loading-avatar/loadingAvatarStandUp.glb',
+			),
 			loadingManager.loadPromiseGLTF(
 				'/assets/loading-avatar/loadingAvatarStandClap.glb',
 			),
@@ -248,12 +272,8 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			loadingManager.loadPromiseGLTF(
 				'/assets/female/readySprintingForwardRollFemaleOveride91.glb',
 			),
-			loadingManager.loadPromiseGLTF(
-				'/assets/female/readyStandClapFemale.glb',
-			),
-			loadingManager.loadPromiseGLTF(
-				'/assets/female/readyStandWaveFemale.glb',
-			),
+			loadingManager.loadPromiseGLTF('/assets/female/readyStandClapFemale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/female/readyStandWaveFemale.glb'),
 			loadingManager.loadPromiseGLTF(
 				'/assets/female/readyStandDanceFemale.glb',
 			),
@@ -283,15 +303,9 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			loadingManager.loadPromiseGLTF('/assets/male/readySittingIdleMale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/male/readyStandUpMale.glb'),
 			loadingManager.loadPromiseGLTF('/assets/male/readyStandUpLeftMale.glb'),
-			loadingManager.loadPromiseGLTF(
-				'/assets/male/readyStandClapMale.glb',
-			),
-			loadingManager.loadPromiseGLTF(
-				'/assets/male/readyStandWaveMale.glb',
-			),
-			loadingManager.loadPromiseGLTF(
-				'/assets/male/readyStandDanceMale.glb',
-			),
+			loadingManager.loadPromiseGLTF('/assets/male/readyStandClapMale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/male/readyStandWaveMale.glb'),
+			loadingManager.loadPromiseGLTF('/assets/male/readyStandDanceMale.glb'),
 		]);
 	}
 }

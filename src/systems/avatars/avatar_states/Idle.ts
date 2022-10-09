@@ -1,5 +1,11 @@
-import { AvatarStateBase, JumpIdle, Walk, StandClap, StandWave, StandDance } from './_stateLibrary';
-import { IAvatarState } from '../../interfaces/IAvatarState';
+import {
+	AvatarStateBase,
+	JumpIdle,
+	Walk,
+	StandClap,
+	StandWave,
+	StandDance,
+} from './_stateLibrary';
 import { Avatar } from '../Avatar';
 
 export class Idle extends AvatarStateBase {
