@@ -1,5 +1,3 @@
-import LoadingScreen from 'src/component/room/LoadingScreen';
-
 export class UIManager {
 	public static setUserInterfaceVisible(value: boolean): void {
 		document.dispatchEvent(new Event('ui-container-event'));

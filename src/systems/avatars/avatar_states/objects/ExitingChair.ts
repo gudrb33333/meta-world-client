@@ -10,8 +10,8 @@ export class ExitingChair extends ExitingStateBase {
 		super(avatar, chair);
 
 		const newPos = new THREE.Vector3();
-		chair.getEntryPoints().getWorldPosition(newPos);
-		this.exitPoint = chair.getEntryPoints();
+		chair.entryPoints.getWorldPosition(newPos);
+		this.exitPoint = chair.entryPoints;
 
 		this.endPosition.copy(newPos);
 		this.playAnimation('stand_up_right', 0.1);

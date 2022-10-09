@@ -6,10 +6,10 @@ export class Falling extends AvatarStateBase {
 	constructor(avatar: Avatar) {
 		super(avatar);
 
-		this.avatar.getVelocitySimulator().mass = 100;
-		this.avatar.getRotationSimulator().damping = 0.3;
+		this.avatar.velocitySimulator.mass = 100;
+		this.avatar.rotationSimulator.damping = 0.3;
 
-		this.avatar.setArcadeVelocityIsAdditive(true);
+		this.avatar.arcadeVelocityIsAdditive = true;
 		this.avatar.setArcadeVelocityInfluence(0.05, 0, 0.05);
 
 		this.playAnimation('falling', 0.3);
@@ -21,7 +21,7 @@ export class Falling extends AvatarStateBase {
 		this.avatar.setCameraRelativeOrientationTarget();
 		this.avatar.setArcadeVelocityTarget(this.anyDirection() ? 0.8 : 0);
 
-		if (this.avatar.getRayHasHit()) {
+		if (this.avatar.rayHasHit) {
 			this.setAppropriateDropState();
 		}
 	}

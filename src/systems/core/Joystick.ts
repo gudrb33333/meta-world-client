@@ -9,27 +9,27 @@ const ROTATION_SPEED = 10;
 
 export class Joystick implements IUpdatable {
 	public updateOrder = 10;
-	private inputManager: InputManager;
-	private world: World;
+	private _inputManager: InputManager;
+	private _world: World;
 
-	private mockJoystickContainer: HTMLDivElement;
-	private leftMock: HTMLDivElement;
-	private leftMockSmall: HTMLDivElement;
-	private rightMock: HTMLDivElement;
-	private rightMockSmall: HTMLDivElement;
-	private leftTouchZone: HTMLDivElement;
-	private rightTouchZone: HTMLDivElement;
-	private leftStick: nipplejs.JoystickManager;
-	private rightStick: nipplejs.JoystickManager;
-	private moving: boolean;
-	private rotating: boolean;
-	private displacement: THREE.Vector3;
-	private lookDy: number;
-	private lookDx: number;
+	private _mockJoystickContainer: HTMLDivElement;
+	private _leftMock: HTMLDivElement;
+	private _leftMockSmall: HTMLDivElement;
+	private _rightMock: HTMLDivElement;
+	private _rightMockSmall: HTMLDivElement;
+	private _leftTouchZone: HTMLDivElement;
+	private _rightTouchZone: HTMLDivElement;
+	private _leftStick: nipplejs.JoystickManager;
+	private _rightStick: nipplejs.JoystickManager;
+	private _moving: boolean;
+	private _rotating: boolean;
+	private _displacement: THREE.Vector3;
+	private _lookDy: number;
+	private _lookDx: number;
 
 	constructor(world: World, inputManager: InputManager) {
-		this.world = world;
-		this.inputManager = inputManager;
+		this._world = world;
+		this._inputManager = inputManager;
 
 		this.onFirstInteraction = this.onFirstInteraction.bind(this);
 		this.onMoveJoystickChanged = this.onMoveJoystickChanged.bind(this);
@@ -37,34 +37,34 @@ export class Joystick implements IUpdatable {
 		this.onLookJoystickChanged = this.onLookJoystickChanged.bind(this);
 		this.onLookJoystickEnd = this.onLookJoystickEnd.bind(this);
 
-		this.mockJoystickContainer = document.createElement('div');
-		this.mockJoystickContainer.classList.add(styles.mockJoystickContainer);
-		this.leftMock = document.createElement('div');
-		this.leftMock.classList.add(styles.mockJoystick);
-		this.leftMockSmall = document.createElement('div');
-		this.leftMockSmall.classList.add(styles.mockJoystick, styles.inner);
-		this.leftMock.appendChild(this.leftMockSmall);
-		this.mockJoystickContainer.appendChild(this.leftMock);
-		this.rightMock = document.createElement('div');
-		this.rightMock.classList.add(styles.mockJoystick);
-		this.rightMockSmall = document.createElement('div');
-		this.rightMockSmall.classList.add(styles.mockJoystick, styles.inner);
-		this.rightMock.appendChild(this.rightMockSmall);
-		this.mockJoystickContainer.appendChild(this.rightMock);
+		this._mockJoystickContainer = document.createElement('div');
+		this._mockJoystickContainer.classList.add(styles.mockJoystickContainer);
+		this._leftMock = document.createElement('div');
+		this._leftMock.classList.add(styles.mockJoystick);
+		this._leftMockSmall = document.createElement('div');
+		this._leftMockSmall.classList.add(styles.mockJoystick, styles.inner);
+		this._leftMock.appendChild(this._leftMockSmall);
+		this._mockJoystickContainer.appendChild(this._leftMock);
+		this._rightMock = document.createElement('div');
+		this._rightMock.classList.add(styles.mockJoystick);
+		this._rightMockSmall = document.createElement('div');
+		this._rightMockSmall.classList.add(styles.mockJoystick, styles.inner);
+		this._rightMock.appendChild(this._rightMockSmall);
+		this._mockJoystickContainer.appendChild(this._rightMock);
 
 		this.insertAfter(
-			this.mockJoystickContainer,
+			this._mockJoystickContainer,
 			document.getElementById('main-canvas'),
 		);
 		this.createLeftStick();
 		this.createRightStick();
 
-		this.moving = false;
-		this.rotating = false;
+		this._moving = false;
+		this._rotating = false;
 
-		this.displacement = new THREE.Vector3();
-		this.lookDy = 0;
-		this.lookDx = 0;
+		this._displacement = new THREE.Vector3();
+		this._lookDy = 0;
+		this._lookDx = 0;
 
 		world.registerUpdatable(this);
 	}
@@ -74,100 +74,100 @@ export class Joystick implements IUpdatable {
 	}
 
 	private createLeftStick(): void {
-		this.leftTouchZone = document.createElement('div');
-		this.leftTouchZone.classList.add(styles.touchZone, styles.left);
-		this.insertAfter(this.leftTouchZone, this.mockJoystickContainer);
-		this.leftStick = nipplejs.create({
+		this._leftTouchZone = document.createElement('div');
+		this._leftTouchZone.classList.add(styles.touchZone, styles.left);
+		this.insertAfter(this._leftTouchZone, this._mockJoystickContainer);
+		this._leftStick = nipplejs.create({
 			mode: 'static',
 			position: { left: '50%', top: '50%' },
-			zone: this.leftTouchZone,
+			zone: this._leftTouchZone,
 			color: 'white',
 			fadeTime: 0,
 		});
-		this.leftStick[0].ui.el.style.removeProperty('z-index');
-		this.leftStick.on('start', this.onFirstInteraction);
-		this.leftStick.on('move', this.onMoveJoystickChanged);
-		this.leftStick.on('end', this.onMoveJoystickEnd);
+		this._leftStick[0].ui.el.style.removeProperty('z-index');
+		this._leftStick.on('start', this.onFirstInteraction);
+		this._leftStick.on('move', this.onMoveJoystickChanged);
+		this._leftStick.on('end', this.onMoveJoystickEnd);
 	}
 
 	private createRightStick(): void {
-		this.rightTouchZone = document.createElement('div');
-		this.rightTouchZone.classList.add(styles.touchZone, styles.right);
-		this.insertAfter(this.rightTouchZone, this.mockJoystickContainer);
-		this.rightStick = nipplejs.create({
+		this._rightTouchZone = document.createElement('div');
+		this._rightTouchZone.classList.add(styles.touchZone, styles.right);
+		this.insertAfter(this._rightTouchZone, this._mockJoystickContainer);
+		this._rightStick = nipplejs.create({
 			mode: 'static',
 			position: { left: '50%', top: '50%' },
-			zone: this.rightTouchZone,
+			zone: this._rightTouchZone,
 			color: 'white',
 			fadeTime: 0,
 		});
 		// nipplejs sets z-index 999 but it makes the joysticks
 		// visible even if the scene is hidden for example by
 		// preference dialog. So remove z-index.
-		this.rightStick[0].ui.el.style.removeProperty('z-index');
-		this.rightStick.on('start', this.onFirstInteraction);
-		this.rightStick.on('move', this.onLookJoystickChanged);
-		this.rightStick.on('end', this.onLookJoystickEnd);
+		this._rightStick[0].ui.el.style.removeProperty('z-index');
+		this._rightStick.on('start', this.onFirstInteraction);
+		this._rightStick.on('move', this.onLookJoystickChanged);
+		this._rightStick.on('end', this.onLookJoystickEnd);
 	}
 
 	private onFirstInteraction(): void {
-		if (this.leftStick) this.leftStick.off('start', this.onFirstInteraction);
-		if (this.rightStick) this.rightStick.off('start', this.onFirstInteraction);
-		this.mockJoystickContainer.parentNode &&
-			this.mockJoystickContainer.parentNode.removeChild(
-				this.mockJoystickContainer,
+		if (this._leftStick) this._leftStick.off('start', this.onFirstInteraction);
+		if (this._rightStick) this._rightStick.off('start', this.onFirstInteraction);
+		this._mockJoystickContainer.parentNode &&
+			this._mockJoystickContainer.parentNode.removeChild(
+				this._mockJoystickContainer,
 			);
 	}
 
 	private onMoveJoystickChanged(event, joystick): void {
 		const angle = joystick.angle.radian;
 		const force = joystick.force < 1 ? joystick.force : 1;
-		this.displacement
+		this._displacement
 			.set(Math.cos(angle), 0, -Math.sin(angle))
 			.multiplyScalar(force * 1.85);
-		this.displacement.x = -this.displacement.x;
-		this.displacement.z = -this.displacement.z;
-		this.moving = true;
-		this.inputManager.onLeftJoysickDown(this.displacement, 'KeyW', this.moving);
+		this._displacement.x = -this._displacement.x;
+		this._displacement.z = -this._displacement.z;
+		this._moving = true;
+		this._inputManager.onLeftJoysickDown(this._displacement, 'KeyW', this._moving);
 	}
 
 	private onMoveJoystickEnd(): void {
-		this.moving = false;
-		this.displacement.set(0, 0, 0);
-		this.inputManager.onLeftJoysickUp(this.displacement, 'KeyW', this.moving);
+		this._moving = false;
+		this._displacement.set(0, 0, 0);
+		this._inputManager.onLeftJoysickUp(this._displacement, 'KeyW', this._moving);
 	}
 
 	private onLookJoystickChanged(event, joystick) {
 		// Set pitch and yaw angles on right stick move
 		const angle = joystick.angle.radian;
 		const force = joystick.force < 1 ? joystick.force : 1;
-		this.rotating = true;
-		this.lookDy = -Math.sin(angle) * force * ROTATION_SPEED;
-		this.lookDx = Math.cos(angle) * force * ROTATION_SPEED;
-		this.inputManager.onRightJoystickDown(
-			this.lookDx,
-			this.lookDy,
-			this.rotating,
+		this._rotating = true;
+		this._lookDy = -Math.sin(angle) * force * ROTATION_SPEED;
+		this._lookDx = Math.cos(angle) * force * ROTATION_SPEED;
+		this._inputManager.onRightJoystickDown(
+			this._lookDx,
+			this._lookDy,
+			this._rotating,
 		);
 	}
 
 	private onLookJoystickEnd() {
-		this.rotating = false;
-		this.lookDx = 0;
-		this.lookDy = 0;
-		this.inputManager.onRightJoystickUp(
-			this.lookDx,
-			this.lookDy,
-			this.rotating,
+		this._rotating = false;
+		this._lookDx = 0;
+		this._lookDy = 0;
+		this._inputManager.onRightJoystickUp(
+			this._lookDx,
+			this._lookDy,
+			this._rotating,
 		);
 	}
 
 	update(timestep: number, unscaledTimeStep: number): void {
-		if (this.rotating) {
-			this.inputManager.onRightJoystickDown(
-				this.lookDx,
-				this.lookDy,
-				this.rotating,
+		if (this._rotating) {
+			this._inputManager.onRightJoystickDown(
+				this._lookDx,
+				this._lookDy,
+				this._rotating,
 			);
 		}
 	}

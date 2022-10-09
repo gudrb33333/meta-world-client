@@ -59,7 +59,7 @@ export class Sky extends THREE.Object3D implements IUpdatable {
 		this.hemiLight.color.setHSL(0.59, 0.4, 0.6);
 		this.hemiLight.groundColor.setHSL(0.095, 0.2, 0.75);
 		this.hemiLight.position.set(0, 50, 0);
-		this.world.getGraphicsWorld().add(this.hemiLight);
+		this.world.graphicsWorld.add(this.hemiLight);
 
 		// CSM
 		// New version
@@ -88,8 +88,8 @@ export class Sky extends THREE.Object3D implements IUpdatable {
 			lightIntensity: 2.5,
 			cascades: 3,
 			shadowMapSize: 2048,
-			camera: world.getCamera(),
-			parent: world.getGraphicsWorld(),
+			camera: world.camera,
+			parent: world.graphicsWorld,
 			mode: 'custom',
 			customSplitsCallback: splitsCallback,
 		});
@@ -97,15 +97,15 @@ export class Sky extends THREE.Object3D implements IUpdatable {
 
 		this.refreshSunPosition();
 
-		world.getGraphicsWorld().add(this);
+		world.graphicsWorld.add(this);
 		world.registerUpdatable(this);
 	}
 
 	public update(timeScale: number): void {
-		this.position.copy(this.world.getCamera().position);
+		this.position.copy(this.world.camera.position);
 		this.refreshSunPosition();
 
-		this.csm.update(this.world.getCamera().matrix);
+		this.csm.update(this.world.camera.matrix);
 		this.csm.lightDirection = new THREE.Vector3(
 			-this.sunPosition.x,
 			-this.sunPosition.y,
@@ -128,7 +128,7 @@ export class Sky extends THREE.Object3D implements IUpdatable {
 
 		this.skyMaterial.uniforms.sunPosition.value.copy(this.sunPosition);
 		this.skyMaterial.uniforms.cameraPos.value.copy(
-			this.world.getCamera().position,
+			this.world.camera.position,
 		);
 	}
 

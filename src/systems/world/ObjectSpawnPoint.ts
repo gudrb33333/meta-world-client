@@ -6,30 +6,30 @@ import { Chair } from '../objects/Chair';
 import { LoadingManager } from '../core/LoadingManager';
 
 export class ObjectSpawnPoint implements ISpawnPoint {
-	private type: string;
+	private _type: string;
 
-	private object: THREE.Object3D;
+	private _object: THREE.Object3D;
 
 	constructor(object: THREE.Object3D) {
-		this.object = object;
+		this._object = object;
 	}
 
 	public spawn(loadingManager: LoadingManager, world: World): void {
-		loadingManager.loadGLTF('/assets/' + this.type + '.glb', (model: any) => {
+		loadingManager.loadGLTF('/assets/' + this._type + '.glb', (model: any) => {
 			const object: Chair = this.getNewChairByType(
 				model,
-				this.type,
-				this.object,
+				this._type,
+				this._object,
 			);
-			object.setSpawnPoint(this.object);
+			object.spawnPoint = this._object;
 
 			const worldPos = new THREE.Vector3();
 			const worldQuat = new THREE.Quaternion();
-			this.object.getWorldPosition(worldPos);
-			this.object.getWorldQuaternion(worldQuat);
+			this._object.getWorldPosition(worldPos);
+			this._object.getWorldQuaternion(worldQuat);
 
 			object.setPosition(worldPos.x, worldPos.y, worldPos.z);
-			object.getCollision().quaternion.copy(Utils.cannonQuat(worldQuat));
+			object.collision.quaternion.copy(Utils.cannonQuat(worldQuat));
 			world.add(object);
 		});
 	}
@@ -45,11 +45,11 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 		}
 	}
 
-	public getType(): string {
-		return this.type;
+	get type(): string {
+		return this._type;
 	}
 
-	public setType(type: string) {
-		this.type = type;
+	set type(type: string) {
+		this._type = type;
 	}
 }

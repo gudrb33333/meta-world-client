@@ -33,57 +33,57 @@ export class Avatar
 	public entityType: EntityType = EntityType.Avatar;
 	public actions: { [action: string]: KeyBinding };
 
-	private height = 0;
-	private tiltContainer: THREE.Group;
-	private modelContainer: THREE.Group;
-	private materials: THREE.Material[] = [];
-	private mixer: THREE.AnimationMixer;
-	private animations: any[];
+	private _height = 0;
+	private _tiltContainer: THREE.Group;
+	private _modelContainer: THREE.Group;
+	private _materials: THREE.Material[] = [];
+	private _mixer: THREE.AnimationMixer;
+	private _animations: any[];
 
 	// Movement
-	private acceleration: THREE.Vector3 = new THREE.Vector3();
-	private velocity: THREE.Vector3 = new THREE.Vector3();
-	private arcadeVelocityInfluence: THREE.Vector3 = new THREE.Vector3();
-	private velocityTarget: THREE.Vector3 = new THREE.Vector3();
-	private arcadeVelocityIsAdditive = false;
+	private _acceleration: THREE.Vector3 = new THREE.Vector3();
+	private _velocity: THREE.Vector3 = new THREE.Vector3();
+	private _arcadeVelocityInfluence: THREE.Vector3 = new THREE.Vector3();
+	private _velocityTarget: THREE.Vector3 = new THREE.Vector3();
+	private _arcadeVelocityIsAdditive = false;
 
-	private defaultVelocitySimulatorDamping = 0.8;
-	private defaultVelocitySimulatorMass = 50;
-	private velocitySimulator: VectorSpringSimulator;
-	private moveSpeed = 4;
-	private angularVelocity = 0;
-	private orientation: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
-	private orientationTarget: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
-	private defaultRotationSimulatorDamping = 0.5;
-	private defaultRotationSimulatorMass = 10;
-	private rotationSimulator: RelativeSpringSimulator;
-	private viewVector: THREE.Vector3;
-	private avatarCapsule: CapsuleCollider;
+	private _defaultVelocitySimulatorDamping = 0.8;
+	private _defaultVelocitySimulatorMass = 50;
+	private _velocitySimulator: VectorSpringSimulator;
+	private _moveSpeed = 4;
+	private _angularVelocity = 0;
+	private _orientation: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
+	private _orientationTarget: THREE.Vector3 = new THREE.Vector3(0, 0, 1);
+	private _defaultRotationSimulatorDamping = 0.5;
+	private _defaultRotationSimulatorMass = 10;
+	private _rotationSimulator: RelativeSpringSimulator;
+	private _viewVector: THREE.Vector3;
+	private _avatarCapsule: CapsuleCollider;
 
 	// Ray casting
-	private rayResult: CANNON.RaycastResult = new CANNON.RaycastResult();
-	private rayHasHit = false;
-	private rayCastLength = 0.57;
-	private raySafeOffset = 0.06;
-	private wantsToJump = false;
-	private initJumpSpeed = -1;
-	private groundImpactData: GroundImpactData = new GroundImpactData();
-	private raycastBox: THREE.Mesh;
+	private _rayResult: CANNON.RaycastResult = new CANNON.RaycastResult();
+	private _rayHasHit = false;
+	private _rayCastLength = 0.57;
+	private _raySafeOffset = 0.06;
+	private _wantsToJump = false;
+	private _initJumpSpeed = -1;
+	private _groundImpactData: GroundImpactData = new GroundImpactData();
+	private _raycastBox: THREE.Mesh;
 
-	private world: World;
-	private avatarState: IAvatarState;
+	private _world: World;
+	private _avatarState: IAvatarState;
 
 	//chairs
-	private controlledObject: IControllable;
-	private occupyingChair: Chair = null;
-	private chairEntryInstance: ChairEntryInstance = null;
+	private _controlledObject: IControllable;
+	private _occupyingChair: Chair = null;
+	private _chairEntryInstance: ChairEntryInstance = null;
 
-	private sessionId: string;
+	private _sessionId: string;
 
-	private physicsEnabled = true;
+	private _physicsEnabled = true;
 
-	private avatarAnimationState: string = null;
-	private displacement: THREE.Vector3;
+	private _avatarAnimationState: string = null;
+	private _displacement: THREE.Vector3;
 
 	constructor(gltf: GLTF) {
 		super();
@@ -92,29 +92,29 @@ export class Avatar
 		this.setAnimations(gltf.animations);
 
 		// The visuals group is centered for easy avatar tilting
-		this.tiltContainer = new THREE.Group();
-		this.add(this.tiltContainer);
+		this._tiltContainer = new THREE.Group();
+		this.add(this._tiltContainer);
 
 		// Model container is used to reliably ground the avatar, as animation can alter the position of the model itself
-		this.modelContainer = new THREE.Group();
-		this.modelContainer.position.y = -0.57;
-		this.tiltContainer.add(this.modelContainer);
-		this.modelContainer.add(gltf.scene);
+		this._modelContainer = new THREE.Group();
+		this._modelContainer.position.y = -0.57;
+		this._tiltContainer.add(this._modelContainer);
+		this._modelContainer.add(gltf.scene);
 
-		this.mixer = new THREE.AnimationMixer(gltf.scene);
+		this._mixer = new THREE.AnimationMixer(gltf.scene);
 
-		this.velocitySimulator = new VectorSpringSimulator(
+		this._velocitySimulator = new VectorSpringSimulator(
 			60,
-			this.defaultVelocitySimulatorMass,
-			this.defaultVelocitySimulatorDamping,
+			this._defaultVelocitySimulatorMass,
+			this._defaultVelocitySimulatorDamping,
 		);
-		this.rotationSimulator = new RelativeSpringSimulator(
+		this._rotationSimulator = new RelativeSpringSimulator(
 			60,
-			this.defaultRotationSimulatorMass,
-			this.defaultRotationSimulatorDamping,
+			this._defaultRotationSimulatorMass,
+			this._defaultRotationSimulatorDamping,
 		);
 
-		this.viewVector = new THREE.Vector3();
+		this._viewVector = new THREE.Vector3();
 
 		// Actions
 		this.actions = {
@@ -135,7 +135,7 @@ export class Avatar
 
 		// Physics
 		// Player Capsule
-		this.avatarCapsule = new CapsuleCollider({
+		this._avatarCapsule = new CapsuleCollider({
 			mass: 1,
 			position: new CANNON.Vec3(),
 			height: 1,
@@ -144,32 +144,32 @@ export class Avatar
 			friction: 0.0,
 		});
 		// capsulePhysics.physical.collisionFilterMask = ~CollisionGroups.Trimesh;
-		this.avatarCapsule.body.shapes.forEach((shape) => {
+		this._avatarCapsule.body.shapes.forEach((shape) => {
 			// tslint:disable-next-line: no-bitwise
 			shape.collisionFilterMask = ~CollisionGroups.TrimeshColliders;
 		});
-		this.avatarCapsule.body.allowSleep = false;
+		this._avatarCapsule.body.allowSleep = false;
 
 		// Move avatar to different collision group for raycasting
-		this.avatarCapsule.body.collisionFilterGroup = 2;
+		this._avatarCapsule.body.collisionFilterGroup = 2;
 
 		// Disable avatar rotation
-		this.avatarCapsule.body.fixedRotation = true;
-		this.avatarCapsule.body.updateMassProperties();
+		this._avatarCapsule.body.fixedRotation = true;
+		this._avatarCapsule.body.updateMassProperties();
 
 		// Ray cast debug
 		const boxGeo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
 		const boxMat = new THREE.MeshLambertMaterial({
 			color: 0xff0000,
 		});
-		this.raycastBox = new THREE.Mesh(boxGeo, boxMat);
-		this.raycastBox.visible = false;
+		this._raycastBox = new THREE.Mesh(boxGeo, boxMat);
+		this._raycastBox.visible = false;
 
 		// Physics pre/post step callback bindings
-		this.avatarCapsule.body.preStep = (body: CANNON.Body) => {
+		this._avatarCapsule.body.preStep = (body: CANNON.Body) => {
 			this.physicsPreStep(body, this);
 		};
-		this.avatarCapsule.body.postStep = (body: CANNON.Body) => {
+		this._avatarCapsule.body.postStep = (body: CANNON.Body) => {
 			this.physicsPostStep(body, this);
 		};
 
@@ -178,7 +178,7 @@ export class Avatar
 	}
 
 	public setAnimations(animations: THREE.AnimationClip[]): void {
-		this.animations = animations;
+		this._animations = animations;
 	}
 
 	public setArcadeVelocityInfluence(
@@ -186,11 +186,11 @@ export class Avatar
 		y: number = x,
 		z: number = x,
 	): void {
-		this.arcadeVelocityInfluence.set(x, y, z);
+		this._arcadeVelocityInfluence.set(x, y, z);
 	}
 
 	public setViewVector(vector: THREE.Vector3): void {
-		this.viewVector.copy(vector).normalize();
+		this._viewVector.copy(vector).normalize();
 	}
 
 	public setAvatarName(avatarName: string) {
@@ -214,15 +214,15 @@ export class Avatar
 	 * @param {function} State
 	 */
 	public setState(state: IAvatarState): void {
-		this.avatarState = state;
-		this.avatarState.onInputChange();
+		this._avatarState = state;
+		this._avatarState.onInputChange();
 	}
 
 	public setPosition(x: number, y: number, z: number): void {
-		if (this.physicsEnabled) {
-			this.avatarCapsule.body.previousPosition = new CANNON.Vec3(x, y, z);
-			this.avatarCapsule.body.position = new CANNON.Vec3(x, y, z);
-			this.avatarCapsule.body.interpolatedPosition = new CANNON.Vec3(x, y, z);
+		if (this._physicsEnabled) {
+			this._avatarCapsule.body.previousPosition = new CANNON.Vec3(x, y, z);
+			this._avatarCapsule.body.position = new CANNON.Vec3(x, y, z);
+			this._avatarCapsule.body.interpolatedPosition = new CANNON.Vec3(x, y, z);
 		} else {
 			this.position.x = x;
 			this.position.y = y;
@@ -231,29 +231,29 @@ export class Avatar
 	}
 
 	public resetVelocity(): void {
-		this.velocity.x = 0;
-		this.velocity.y = 0;
-		this.velocity.z = 0;
+		this._velocity.x = 0;
+		this._velocity.y = 0;
+		this._velocity.z = 0;
 
-		this.avatarCapsule.body.velocity.x = 0;
-		this.avatarCapsule.body.velocity.y = 0;
-		this.avatarCapsule.body.velocity.z = 0;
+		this._avatarCapsule.body.velocity.x = 0;
+		this._avatarCapsule.body.velocity.y = 0;
+		this._avatarCapsule.body.velocity.z = 0;
 
-		this.velocitySimulator.init();
+		this._velocitySimulator.init();
 	}
 
 	public setArcadeVelocityTarget(velZ: number, velX = 0, velY = 0): void {
-		this.velocityTarget.z = velZ;
-		this.velocityTarget.x = velX;
-		this.velocityTarget.y = velY;
+		this._velocityTarget.z = velZ;
+		this._velocityTarget.x = velX;
+		this._velocityTarget.y = velY;
 	}
 
 	public setOrientation(vector: THREE.Vector3, instantly = false): void {
 		const lookVector = new THREE.Vector3().copy(vector).setY(0).normalize();
-		this.orientationTarget.copy(lookVector);
+		this._orientationTarget.copy(lookVector);
 
 		if (instantly) {
-			this.orientation.copy(lookVector);
+			this._orientation.copy(lookVector);
 		}
 	}
 
@@ -263,13 +263,13 @@ export class Avatar
 	}
 
 	public setPhysicsEnabled(value: boolean): void {
-		this.physicsEnabled = value;
-		const physicsWorld = this.world.getPhysicsWorld();
+		this._physicsEnabled = value;
+		const physicsWorld = this._world.physicsWorld;
 
 		if (value === true) {
-			physicsWorld.addBody(this.avatarCapsule.body);
+			physicsWorld.addBody(this._avatarCapsule.body);
 		} else {
-			physicsWorld.remove(this.avatarCapsule.body);
+			physicsWorld.remove(this._avatarCapsule.body);
 		}
 	}
 
@@ -279,7 +279,7 @@ export class Avatar
 				Utils.setupMeshProperties(child);
 
 				if (child.material !== undefined) {
-					this.materials.push(child.material);
+					this._materials.push(child.material);
 				}
 			}
 		});
@@ -290,15 +290,15 @@ export class Avatar
 		code: string,
 		pressed: boolean,
 	): void {
-		if (this.controlledObject !== undefined) {
-			this.controlledObject.handleKeyboardEvent(event, code, pressed);
+		if (this._controlledObject !== undefined) {
+			this._controlledObject.handleKeyboardEvent(event, code, pressed);
 		} else {
-			const cameraOperator = this.world.getCameraOperator();
+			const cameraOperator = this._world.cameraOperator;
 			// Free camera
 			if (code === 'KeyC' && pressed === true && event.shiftKey === true) {
 				this.resetControls();
 				cameraOperator.setAvatarCaller(this);
-				this.world.getInputManager().setInputReceiver(cameraOperator);
+				this._world.inputManager.setInputReceiver(cameraOperator);
 			} else {
 				for (const action in this.actions) {
 					if (this.actions.hasOwnProperty(action)) {
@@ -317,7 +317,7 @@ export class Avatar
 		code: string,
 		pressed: boolean,
 	): void {
-		this.displacement = displacement;
+		this._displacement = displacement;
 		for (const action in this.actions) {
 			if (this.actions.hasOwnProperty(action)) {
 				const binding = this.actions[action];
@@ -333,7 +333,7 @@ export class Avatar
 		lookDy: number,
 		pressed: boolean,
 	): void {
-		this.world.getCameraOperator().move(lookDx, lookDy);
+		this._world.cameraOperator.move(lookDx, lookDy);
 	}
 
 	public handleMouseButton(
@@ -341,8 +341,8 @@ export class Avatar
 		code: string,
 		pressed: boolean,
 	): void {
-		if (this.controlledObject !== undefined) {
-			this.controlledObject.handleMouseButton(event, code, pressed);
+		if (this._controlledObject !== undefined) {
+			this._controlledObject.handleMouseButton(event, code, pressed);
 		} else {
 			for (const action in this.actions) {
 				if (this.actions.hasOwnProperty(action)) {
@@ -361,16 +361,16 @@ export class Avatar
 		deltaX: number,
 		deltaY: number,
 	): void {
-		if (this.controlledObject !== undefined) {
-			this.controlledObject.handleMouseMove(event, deltaX, deltaY);
+		if (this._controlledObject !== undefined) {
+			this._controlledObject.handleMouseMove(event, deltaX, deltaY);
 		} else {
-			this.world.getCameraOperator().move(deltaX, deltaY);
+			this._world.cameraOperator.move(deltaX, deltaY);
 		}
 	}
 
 	public handleMouseWheel(event: WheelEvent, value: number): void {
-		if (this.controlledObject !== undefined) {
-			this.controlledObject.handleMouseWheel(event, value);
+		if (this._controlledObject !== undefined) {
+			this._controlledObject.handleMouseWheel(event, value);
 		} else {
 			//this.world.scrollTheTimeScale(value);
 		}
@@ -409,8 +409,8 @@ export class Avatar
 	}
 
 	public takeControl(): void {
-		if (this.world !== undefined) {
-			this.world.getInputManager().setInputReceiver(this);
+		if (this._world !== undefined) {
+			this._world.inputManager.setInputReceiver(this);
 		} else {
 			console.warn(
 				"Attempting to take control of a avatar that doesn't belong to a world.",
@@ -427,29 +427,29 @@ export class Avatar
 	}
 
 	public update(timeStep: number): void {
-		this.chairEntryInstance?.update(timeStep);
+		this._chairEntryInstance?.update(timeStep);
 		// console.log(this.occupyingSeat);
 		this.avatarState?.update(timeStep);
 
 		// this.visuals.position.copy(this.modelOffset);
-		if (this.physicsEnabled) this.springMovement(timeStep);
-		if (this.physicsEnabled) this.springRotation(timeStep);
-		if (this.physicsEnabled) this.rotateModel();
-		if (this.mixer !== undefined) this.mixer.update(timeStep);
+		if (this._physicsEnabled) this.springMovement(timeStep);
+		if (this._physicsEnabled) this.springRotation(timeStep);
+		if (this._physicsEnabled) this.rotateModel();
+		if (this._mixer !== undefined) this._mixer.update(timeStep);
 
 		// Sync physics/graphics
-		if (this.physicsEnabled) {
+		if (this._physicsEnabled) {
 			this.position.set(
-				this.avatarCapsule.body.interpolatedPosition.x,
-				this.avatarCapsule.body.interpolatedPosition.y,
-				this.avatarCapsule.body.interpolatedPosition.z,
+				this._avatarCapsule.body.interpolatedPosition.x,
+				this._avatarCapsule.body.interpolatedPosition.y,
+				this._avatarCapsule.body.interpolatedPosition.z,
 			);
 		} else {
 			const newPos = new THREE.Vector3();
 			this.getWorldPosition(newPos);
 
-			this.avatarCapsule.body.position.copy(Utils.cannonVector(newPos));
-			this.avatarCapsule.body.interpolatedPosition.copy(
+			this._avatarCapsule.body.position.copy(Utils.cannonVector(newPos));
+			this._avatarCapsule.body.interpolatedPosition.copy(
 				Utils.cannonVector(newPos),
 			);
 		}
@@ -458,11 +458,11 @@ export class Avatar
 	}
 
 	public inputReceiverInit(): void {
-		if (this.controlledObject !== undefined) {
-			this.controlledObject.inputReceiverInit();
+		if (this._controlledObject !== undefined) {
+			this._controlledObject.inputReceiverInit();
 			return;
 		}
-		const cameraOperator = this.world.getCameraOperator();
+		const cameraOperator = this._world.cameraOperator;
 		cameraOperator.setRadius(2, true);
 		cameraOperator.setFollowMode(false);
 		// this.world.dirLight.target = this;
@@ -500,36 +500,36 @@ export class Avatar
 	// }
 
 	public inputReceiverUpdate(timeStep: number): void {
-		if (this.controlledObject !== undefined) {
-			this.controlledObject.inputReceiverUpdate(timeStep);
+		if (this._controlledObject !== undefined) {
+			this._controlledObject.inputReceiverUpdate(timeStep);
 		} else {
 			// Look in camera's direction
-			this.viewVector = new THREE.Vector3().subVectors(
+			this._viewVector = new THREE.Vector3().subVectors(
 				this.position,
-				this.world.getCamera().position,
+				this._world.camera.position,
 			);
-			this.getWorldPosition(this.world.getCameraOperator().getTarget());
+			this.getWorldPosition(this._world.cameraOperator.getTarget());
 		}
 	}
 
 	public setAvatarAnimationState(clipName: string): void {
-		this.avatarAnimationState = clipName;
+		this._avatarAnimationState = clipName;
 	}
 
 	public setAnimation(clipName: string, fadeIn: number): number {
-		if (this.mixer !== undefined) {
+		if (this._mixer !== undefined) {
 			// gltf
-			const clip = THREE.AnimationClip.findByName(this.animations, clipName);
+			const clip = THREE.AnimationClip.findByName(this._animations, clipName);
 
 			this.setAvatarAnimationState(clipName);
 
-			const action = this.mixer.clipAction(clip);
+			const action = this._mixer.clipAction(clip);
 			if (action === null) {
 				console.error(`Animation ${clipName} not found!`);
 				return 0;
 			}
 
-			this.mixer.stopAllAction();
+			this._mixer.stopAllAction();
 			action.fadeIn(fadeIn);
 			action.play();
 
@@ -538,11 +538,11 @@ export class Avatar
 	}
 
 	public setOtherAvatarAnimation(clipName: string, fadeIn: number): number {
-		if (this.mixer !== undefined) {
+		if (this._mixer !== undefined) {
 			// gltf
-			const clip = THREE.AnimationClip.findByName(this.animations, clipName);
+			const clip = THREE.AnimationClip.findByName(this._animations, clipName);
 
-			const action: THREE.AnimationAction = this.mixer.clipAction(clip);
+			const action: THREE.AnimationAction = this._mixer.clipAction(clip);
 			if (action === null) {
 				console.error(`Animation ${clipName} not found!`);
 				return 0;
@@ -550,7 +550,7 @@ export class Avatar
 			//console.log(clipName)
 			//console.log(action.isRunning())
 			if (!action.isRunning()) {
-				this.mixer.stopAllAction();
+				this._mixer.stopAllAction();
 				action.fadeIn(fadeIn);
 				action.play();
 			}
@@ -560,35 +560,35 @@ export class Avatar
 
 	public springMovement(timeStep: number): void {
 		// Simulator
-		this.velocitySimulator.target.copy(this.velocityTarget);
-		this.velocitySimulator.simulate(timeStep);
+		this._velocitySimulator.target.copy(this._velocityTarget);
+		this._velocitySimulator.simulate(timeStep);
 
 		// Update values
-		this.velocity.copy(this.velocitySimulator.position);
-		this.acceleration.copy(this.velocitySimulator.velocity);
+		this._velocity.copy(this._velocitySimulator.position);
+		this._acceleration.copy(this._velocitySimulator.velocity);
 	}
 
 	public springRotation(timeStep: number): void {
 		// Spring rotation
 		// Figure out angle between current and target orientation
 		const angle = Utils.getSignedAngleBetweenVectors(
-			this.orientation,
-			this.orientationTarget,
+			this._orientation,
+			this._orientationTarget,
 		);
 
 		// Simulator
-		this.rotationSimulator.target = angle;
-		this.rotationSimulator.simulate(timeStep);
-		const rot = this.rotationSimulator.position;
+		this._rotationSimulator.target = angle;
+		this._rotationSimulator.simulate(timeStep);
+		const rot = this._rotationSimulator.position;
 
 		// Updating values
-		this.orientation.applyAxisAngle(new THREE.Vector3(0, 1, 0), rot);
-		this.angularVelocity = this.rotationSimulator.velocity;
+		this._orientation.applyAxisAngle(new THREE.Vector3(0, 1, 0), rot);
+		this._angularVelocity = this._rotationSimulator.velocity;
 	}
 
 	public getLocalMovementDirection(): THREE.Vector3 {
-		if (this.displacement !== undefined) {
-			return this.displacement.normalize();
+		if (this._displacement !== undefined) {
+			return this._displacement.normalize();
 		} else {
 			const positiveX = this.actions.right.isPressed ? -1 : 0;
 			const negativeX = this.actions.left.isPressed ? 1 : 0;
@@ -606,20 +606,20 @@ export class Avatar
 	public getCameraRelativeMovementVector(): THREE.Vector3 {
 		const localDirection = this.getLocalMovementDirection();
 		const flatViewVector = new THREE.Vector3(
-			this.viewVector.x,
+			this._viewVector.x,
 			0,
-			this.viewVector.z,
+			this._viewVector.z,
 		).normalize();
 
 		return Utils.appplyVectorMatrixXZ(flatViewVector, localDirection);
 	}
 
 	public setCameraRelativeOrientationTarget(): void {
-		if (this.chairEntryInstance === null) {
+		if (this._chairEntryInstance === null) {
 			const moveVector = this.getCameraRelativeMovementVector();
 
 			if (moveVector.x === 0 && moveVector.y === 0 && moveVector.z === 0) {
-				this.setOrientation(this.orientation);
+				this.setOrientation(this._orientation);
 			} else {
 				this.setOrientation(moveVector);
 			}
@@ -628,15 +628,15 @@ export class Avatar
 
 	public rotateModel(): void {
 		this.lookAt(
-			this.position.x + this.orientation.x,
-			this.position.y + this.orientation.y,
-			this.position.z + this.orientation.z,
+			this.position.x + this._orientation.x,
+			this.position.y + this._orientation.y,
+			this.position.z + this._orientation.z,
 		);
 	}
 
 	public jump(initJumpSpeed = -1): void {
-		this.wantsToJump = true;
-		this.initJumpSpeed = initJumpSpeed;
+		this._wantsToJump = true;
+		this._initJumpSpeed = initJumpSpeed;
 	}
 
 	public findChairToEnter(wantsToSit: boolean): void {
@@ -645,7 +645,7 @@ export class Avatar
 
 		// Find best chair
 		const chairFinder = new ClosestObjectFinder<Chair>(this.position, 2);
-		this.world.getChairs().forEach((chair) => {
+		this._world.chairs.forEach((chair) => {
 			chairFinder.consider(chair, chair.position);
 		});
 
@@ -653,25 +653,25 @@ export class Avatar
 			const chair = chairFinder.closestObject;
 			const chairEntryInstance = new ChairEntryInstance(this);
 
-			chair.getSeatPointObject().getWorldPosition(worldPos);
+			chair.seatPointObject.getWorldPosition(worldPos);
 			chairFinder.consider(chair, worldPos);
 
 			if (chairFinder.closestObject !== undefined) {
 				const targetChair = chairFinder.closestObject;
-				chairEntryInstance.setTargetChair(targetChair);
+				chairEntryInstance.targetChair = targetChair;
 
 				const entryPointFinder = new ClosestObjectFinder<Object3D>(
 					this.position,
 				);
 
-				const point = targetChair.getEntryPoints();
+				const point = targetChair.entryPoints;
 				point.getWorldPosition(worldPos);
 				entryPointFinder.consider(point, worldPos);
 
 				if (entryPointFinder.closestObject !== undefined) {
-					chairEntryInstance.setEntryPoint(entryPointFinder.closestObject);
+					chairEntryInstance.entryPoint = entryPointFinder.closestObject;
 					this.triggerAction('up', true);
-					this.chairEntryInstance = chairEntryInstance;
+					this._chairEntryInstance = chairEntryInstance;
 				}
 			}
 		}
@@ -708,19 +708,19 @@ export class Avatar
 	}
 
 	public exitChair(): void {
-		if (this.occupyingChair !== null) {
-			this.setState(new ExitingChair(this, this.occupyingChair));
+		if (this._occupyingChair !== null) {
+			this.setState(new ExitingChair(this, this._occupyingChair));
 		}
 	}
 
 	public occupySeat(chair: Chair): void {
-		this.occupyingChair = chair;
-		chair.setOccupiedBy(this);
+		this._occupyingChair = chair;
+		chair.occupiedBy = this;
 	}
 
 	public leaveSeat(): void {
-		if (this.occupyingChair !== null) {
-			this.occupyingChair.setOccupiedBy(null);
+		if (this._occupyingChair !== null) {
+			this._occupyingChair.occupiedBy = null;
 		}
 	}
 
@@ -728,17 +728,17 @@ export class Avatar
 		avatar.feetRaycast();
 
 		// Raycast debug
-		if (avatar.rayHasHit) {
-			if (avatar.raycastBox.visible) {
-				avatar.raycastBox.position.x = avatar.rayResult.hitPointWorld.x;
-				avatar.raycastBox.position.y = avatar.rayResult.hitPointWorld.y;
-				avatar.raycastBox.position.z = avatar.rayResult.hitPointWorld.z;
+		if (avatar._rayHasHit) {
+			if (avatar._raycastBox.visible) {
+				avatar._raycastBox.position.x = avatar._rayResult.hitPointWorld.x;
+				avatar._raycastBox.position.y = avatar._rayResult.hitPointWorld.y;
+				avatar._raycastBox.position.z = avatar._rayResult.hitPointWorld.z;
 			}
 		} else {
-			if (avatar.raycastBox.visible) {
-				avatar.raycastBox.position.set(
+			if (avatar._raycastBox.visible) {
+				avatar._raycastBox.position.set(
 					body.position.x,
-					body.position.y - avatar.rayCastLength - avatar.raySafeOffset,
+					body.position.y - avatar._rayCastLength - avatar._raySafeOffset,
 					body.position.z,
 				);
 			}
@@ -748,7 +748,7 @@ export class Avatar
 	public feetRaycast(): void {
 		// Player ray casting
 		// Create ray
-		const body = this.avatarCapsule.body;
+		const body = this._avatarCapsule.body;
 		const start = new CANNON.Vec3(
 			body.position.x,
 			body.position.y,
@@ -756,7 +756,7 @@ export class Avatar
 		);
 		const end = new CANNON.Vec3(
 			body.position.x,
-			body.position.y - this.rayCastLength - this.raySafeOffset,
+			body.position.y - this._rayCastLength - this._raySafeOffset,
 			body.position.z,
 		);
 		// Raycast options
@@ -765,9 +765,9 @@ export class Avatar
 			skipBackfaces: true /* ignore back faces */,
 		};
 		// Cast the ray
-		this.rayHasHit = this.world
-			.getPhysicsWorld()
-			.raycastClosest(start, end, rayCastOptions, this.rayResult);
+		this._rayHasHit = this._world
+			.physicsWorld
+			.raycastClosest(start, end, rayCastOptions, this._rayResult);
 	}
 
 	public physicsPostStep(body: CANNON.Body, avatar: Avatar): void {
@@ -780,45 +780,45 @@ export class Avatar
 
 		// Take local velocity
 		let arcadeVelocity = new THREE.Vector3()
-			.copy(avatar.velocity)
-			.multiplyScalar(avatar.moveSpeed);
+			.copy(avatar._velocity)
+			.multiplyScalar(avatar._moveSpeed);
 		// Turn local into global
 		arcadeVelocity = Utils.appplyVectorMatrixXZ(
-			avatar.orientation,
+			avatar._orientation,
 			arcadeVelocity,
 		);
 
 		let newVelocity = new THREE.Vector3();
 
 		// Additive velocity mode
-		if (avatar.arcadeVelocityIsAdditive) {
+		if (avatar._arcadeVelocityIsAdditive) {
 			newVelocity.copy(simulatedVelocity);
 
 			const globalVelocityTarget = Utils.appplyVectorMatrixXZ(
-				avatar.orientation,
-				avatar.velocityTarget,
+				avatar._orientation,
+				avatar._velocityTarget,
 			);
 			const add = new THREE.Vector3()
 				.copy(arcadeVelocity)
-				.multiply(avatar.arcadeVelocityInfluence);
+				.multiply(avatar._arcadeVelocityInfluence);
 
 			if (
 				Math.abs(simulatedVelocity.x) <
-					Math.abs(globalVelocityTarget.x * avatar.moveSpeed) ||
+					Math.abs(globalVelocityTarget.x * avatar._moveSpeed) ||
 				Utils.haveDifferentSigns(simulatedVelocity.x, arcadeVelocity.x)
 			) {
 				newVelocity.x += add.x;
 			}
 			if (
 				Math.abs(simulatedVelocity.y) <
-					Math.abs(globalVelocityTarget.y * avatar.moveSpeed) ||
+					Math.abs(globalVelocityTarget.y * avatar._moveSpeed) ||
 				Utils.haveDifferentSigns(simulatedVelocity.y, arcadeVelocity.y)
 			) {
 				newVelocity.y += add.y;
 			}
 			if (
 				Math.abs(simulatedVelocity.z) <
-					Math.abs(globalVelocityTarget.z * avatar.moveSpeed) ||
+					Math.abs(globalVelocityTarget.z * avatar._moveSpeed) ||
 				Utils.haveDifferentSigns(simulatedVelocity.z, arcadeVelocity.z)
 			) {
 				newVelocity.z += add.z;
@@ -828,31 +828,31 @@ export class Avatar
 				THREE.MathUtils.lerp(
 					simulatedVelocity.x,
 					arcadeVelocity.x,
-					avatar.arcadeVelocityInfluence.x,
+					avatar._arcadeVelocityInfluence.x,
 				),
 				THREE.MathUtils.lerp(
 					simulatedVelocity.y,
 					arcadeVelocity.y,
-					avatar.arcadeVelocityInfluence.y,
+					avatar._arcadeVelocityInfluence.y,
 				),
 				THREE.MathUtils.lerp(
 					simulatedVelocity.z,
 					arcadeVelocity.z,
-					avatar.arcadeVelocityInfluence.z,
+					avatar._arcadeVelocityInfluence.z,
 				),
 			);
 		}
 
 		// If we're hitting the ground, stick to ground
-		if (avatar.rayHasHit) {
+		if (avatar._rayHasHit) {
 			// Flatten velocity
 			newVelocity.y = 0;
 
 			// Move on top of moving objects
-			if (avatar.rayResult.body.mass > 0) {
+			if (avatar._rayResult.body.mass > 0) {
 				const pointVelocity = new CANNON.Vec3();
-				avatar.rayResult.body.getVelocityAtWorldPoint(
-					avatar.rayResult.hitPointWorld,
+				avatar._rayResult.body.getVelocityAtWorldPoint(
+					avatar._rayResult.hitPointWorld,
 					pointVelocity,
 				);
 				newVelocity.add(Utils.threeVector(pointVelocity));
@@ -862,9 +862,9 @@ export class Avatar
 			// and transform it into a matrix
 			const up = new THREE.Vector3(0, 1, 0);
 			const normal = new THREE.Vector3(
-				avatar.rayResult.hitNormalWorld.x,
-				avatar.rayResult.hitNormalWorld.y,
-				avatar.rayResult.hitNormalWorld.z,
+				avatar._rayResult.hitNormalWorld.x,
+				avatar._rayResult.hitNormalWorld.y,
+				avatar._rayResult.hitNormalWorld.z,
 			);
 			const q = new THREE.Quaternion().setFromUnitVectors(up, normal);
 			const m = new THREE.Matrix4().makeRotationFromQuaternion(q);
@@ -881,9 +881,9 @@ export class Avatar
 			body.velocity.z = newVelocity.z;
 			// Ground avatar
 			body.position.y =
-				avatar.rayResult.hitPointWorld.y +
-				avatar.rayCastLength +
-				newVelocity.y / avatar.world.getPhysicsFrameRate();
+				avatar._rayResult.hitPointWorld.y +
+				avatar._rayCastLength +
+				newVelocity.y / avatar._world.physicsFrameRate;
 		} else {
 			// If we're in air
 			body.velocity.x = newVelocity.x;
@@ -891,29 +891,29 @@ export class Avatar
 			body.velocity.z = newVelocity.z;
 
 			// Save last in-air information
-			avatar.groundImpactData.velocity.x = body.velocity.x;
-			avatar.groundImpactData.velocity.y = body.velocity.y;
-			avatar.groundImpactData.velocity.z = body.velocity.z;
+			avatar._groundImpactData.velocity.x = body.velocity.x;
+			avatar._groundImpactData.velocity.y = body.velocity.y;
+			avatar._groundImpactData.velocity.z = body.velocity.z;
 		}
 
 		// Jumping
-		if (avatar.wantsToJump) {
+		if (avatar._wantsToJump) {
 			// If initJumpSpeed is set
-			if (avatar.initJumpSpeed > -1) {
+			if (avatar._initJumpSpeed > -1) {
 				// Flatten velocity
 				body.velocity.y = 0;
 				const speed = Math.max(
-					avatar.velocitySimulator.position.length() * 4,
-					avatar.initJumpSpeed,
+					avatar._velocitySimulator.position.length() * 4,
+					avatar._initJumpSpeed,
 				);
 				body.velocity = Utils.cannonVector(
-					avatar.orientation.clone().multiplyScalar(speed),
+					avatar._orientation.clone().multiplyScalar(speed),
 				);
 			} else {
 				// Moving objects compensation
 				const add = new CANNON.Vec3();
-				avatar.rayResult.body.getVelocityAtWorldPoint(
-					avatar.rayResult.hitPointWorld,
+				avatar._rayResult.body.getVelocityAtWorldPoint(
+					avatar._rayResult.hitPointWorld,
 					add,
 				);
 				body.velocity.vsub(add, body.velocity);
@@ -922,28 +922,28 @@ export class Avatar
 			// Add positive vertical velocity
 			body.velocity.y += 4;
 			// Move above ground by 2x safe offset value
-			body.position.y += avatar.raySafeOffset * 2;
+			body.position.y += avatar._raySafeOffset * 2;
 			// Reset flag
-			avatar.wantsToJump = false;
+			avatar._wantsToJump = false;
 		}
 	}
 
 	public addToWorld(world: World): void {
-		if (_.includes(world.getAvatars(), this)) {
+		if (_.includes(world.avatars, this)) {
 			console.warn('Adding avatar to a world in which it already exists.');
 		} else {
 			// Set world
-			this.world = world;
+			this._world = world;
 
 			// Register avatar
-			world.getAvatars().push(this);
+			world.avatars.push(this);
 
 			// Register physics
-			world.getPhysicsWorld().addBody(this.avatarCapsule.body);
+			world.physicsWorld.addBody(this._avatarCapsule.body);
 
 			// Add to graphicsWorld
-			world.getGraphicsWorld().add(this);
-			world.getGraphicsWorld().add(this.raycastBox);
+			world.graphicsWorld.add(this);
+			world.graphicsWorld.add(this._raycastBox);
 
 			// Shadow cascades
 			// this.materials.forEach((mat) => {
@@ -953,10 +953,10 @@ export class Avatar
 	}
 
 	public removeFromWorld(world: World): void {
-		const inputManager = world.getInputManager();
-		const avatars = world.getAvatars();
-		const physicsWorld = world.getPhysicsWorld();
-		const graphicsWorld = world.getGraphicsWorld();
+		const inputManager = world.inputManager;
+		const avatars = world.avatars;
+		const physicsWorld = world.physicsWorld;
+		const graphicsWorld = world.graphicsWorld;
 		if (!_.includes(avatars, this)) {
 			console.warn("Removing avatar from a world in which it isn't present.");
 		} else {
@@ -964,105 +964,106 @@ export class Avatar
 				inputManager.setInputReceiver(undefined);
 			}
 
-			this.world = undefined;
+			this._world = undefined;
 
 			// Remove from avatars
 			_.pull(avatars, this);
 
 			// Remove physics
-			physicsWorld.remove(this.avatarCapsule.body);
+			physicsWorld.remove(this._avatarCapsule.body);
 
 			// Remove visuals
 			graphicsWorld.remove(this);
-			graphicsWorld.remove(this.raycastBox);
+			graphicsWorld.remove(this._raycastBox);
 		}
 	}
 
-	public getWorld(): World {
-		return this.world;
+	//getter,setter
+	get world(): World {
+		return this._world;
 	}
 
-	public getSessionId(): string {
-		return this.sessionId;
+	get sessionId(): string {
+		return this._sessionId;
 	}
 
-	public setSessionId(sessionId: string) {
-		this.sessionId = sessionId;
+	set sessionId(sessionId: string) {
+		this._sessionId = sessionId;
 	}
 
-	public getAvatarState(): IAvatarState {
-		return this.avatarState;
+	get avatarState(): IAvatarState {
+		return this._avatarState;
 	}
 
-	public setControlledObject(controllableObject: IControllable) {
-		this.controlledObject = controllableObject;
+	set controlledObject(controllableObject: IControllable) {
+		this._controlledObject = controllableObject;
 	}
 
-	public getAvatarAnimationState(): string {
-		return this.avatarAnimationState;
+	get avatarAnimationState(): string {
+		return this._avatarAnimationState;
 	}
 
-	public getAvatarCapsule(): CapsuleCollider {
-		return this.avatarCapsule;
+	get avatarCapsule(): CapsuleCollider {
+		return this._avatarCapsule;
 	}
 
-	public getChairEntryInstance(): ChairEntryInstance {
-		return this.chairEntryInstance;
+	get chairEntryInstance(): ChairEntryInstance {
+		return this._chairEntryInstance;
 	}
 
-	public setChairEntryInstance(chairEntryInstance: ChairEntryInstance) {
-		this.chairEntryInstance = chairEntryInstance;
+	set chairEntryInstance(chairEntryInstance: ChairEntryInstance) {
+		this._chairEntryInstance = chairEntryInstance;
 	}
 
-	public getVelocity(): THREE.Vector3 {
-		return this.velocity;
+	get velocity(): THREE.Vector3 {
+		return this._velocity;
 	}
 
-	public getVelocitySimulator(): VectorSpringSimulator {
-		return this.velocitySimulator;
+	get velocitySimulator(): VectorSpringSimulator {
+		return this._velocitySimulator;
 	}
 
-	public getRotationSimulator(): RelativeSpringSimulator {
-		return this.rotationSimulator;
+	get rotationSimulator(): RelativeSpringSimulator {
+		return this._rotationSimulator;
 	}
 
-	public setArcadeVelocityIsAdditive(arcadeVelocityIsAdditive: boolean) {
-		this.arcadeVelocityIsAdditive = arcadeVelocityIsAdditive;
+	set arcadeVelocityIsAdditive(arcadeVelocityIsAdditive: boolean) {
+		this._arcadeVelocityIsAdditive = arcadeVelocityIsAdditive;
 	}
 
-	public getRayHasHit(): boolean {
-		return this.rayHasHit;
+	get rayHasHit(): boolean {
+		return this._rayHasHit;
 	}
 
-	public getRayResult(): CANNON.RaycastResult {
-		return this.rayResult;
+	get rayResult(): CANNON.RaycastResult {
+		return this._rayResult;
 	}
 
-	public getDefaultVelocitySimulatorDamping(): number {
-		return this.defaultVelocitySimulatorDamping;
+	get defaultVelocitySimulatorDamping(): number {
+		return this._defaultVelocitySimulatorDamping;
 	}
 
-	public getDefaultVelocitySimulatorMass(): number {
-		return this.defaultVelocitySimulatorMass;
+	get defaultVelocitySimulatorMass(): number {
+		return this._defaultVelocitySimulatorMass;
 	}
 
-	public getDefaultRotationSimulatorDamping(): number {
-		return this.defaultRotationSimulatorDamping;
+	get defaultRotationSimulatorDamping(): number {
+		return this._defaultRotationSimulatorDamping;
 	}
 
-	public getDefaultRotationSimulatorMass(): number {
-		return this.defaultRotationSimulatorMass;
+	get defaultRotationSimulatorMass(): number {
+		return this._defaultRotationSimulatorMass;
 	}
 
-	public getMixer(): THREE.AnimationMixer {
-		return this.mixer;
+	get mixer(): THREE.AnimationMixer {
+		return this._mixer;
 	}
 
-	public getGroundImpactData(): GroundImpactData {
-		return this.groundImpactData;
+	get groundImpactData(): GroundImpactData {
+		return this._groundImpactData;
 	}
 
-	public getRaycastBox(): THREE.Mesh {
-		return this.raycastBox;
+	get raycastBox(): THREE.Mesh {
+		return this._raycastBox;
 	}
 }

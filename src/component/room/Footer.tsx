@@ -35,7 +35,7 @@ function Footer(props) {
 
 	const micButtonClicked = () => {
 		const world = props.getWorld();
-		const mediasoupAdapter = world.getMediasoupAdapter();
+		const mediasoupAdapter = world.mediasoupAdapter;
 		if (isMicOn) {
 			mediasoupAdapter.muteMic();
 			setIsMicOn(false);
@@ -47,7 +47,7 @@ function Footer(props) {
 
 	const webcamButtonClicked = () => {
 		const world = props.getWorld();
-		const mediasoupAdapter = world.getMediasoupAdapter();
+		const mediasoupAdapter = world.mediasoupAdapter;
 		if (isWebcamOn) {
 			mediasoupAdapter.disableWebcam();
 			setIsWebcamOn(false);
@@ -59,7 +59,7 @@ function Footer(props) {
 
 	const shareButtonClicked = async () => {
 		const world = props.getWorld();
-		const mediasoupAdapter = world.getMediasoupAdapter();
+		const mediasoupAdapter = world.mediasoupAdapter;
 		if (isShareOn) {
 			if (await mediasoupAdapter.disableShare()) {
 				setIsShareOn(false);

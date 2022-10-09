@@ -11,27 +11,27 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 	public updateOrder = 4;
 	public actions: { [action: string]: KeyBinding };
 
-	private world: World;
-	private camera: THREE.Camera;
-	private target: THREE.Vector3;
-	private sensitivity: THREE.Vector2;
-	private radius = 1;
-	private theta: number;
-	private phi: number;
-	private onMouseDownPosition: THREE.Vector2;
-	private onMouseDownTheta: any;
-	private onMouseDownPhi: any;
-	private targetRadius = 1;
+	private _world: World;
+	private _camera: THREE.Camera;
+	private _target: THREE.Vector3;
+	private _sensitivity: THREE.Vector2;
+	private _radius = 1;
+	private _theta: number;
+	private _phi: number;
+	private _onMouseDownPosition: THREE.Vector2;
+	private _onMouseDownTheta: any;
+	private _onMouseDownPhi: any;
+	private _targetRadius = 1;
 
-	private movementSpeed: number;
+	private _movementSpeed: number;
 
-	private upVelocity = 0;
-	private forwardVelocity = 0;
-	private rightVelocity = 0;
+	private _upVelocity = 0;
+	private _forwardVelocity = 0;
+	private _rightVelocity = 0;
 
-	private followMode = false;
+	private _followMode = false;
 
-	private avatarCaller: Avatar;
+	private _avatarCaller: Avatar;
 
 	constructor(
 		world: World,
@@ -39,19 +39,19 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		sensitivityX = 1,
 		sensitivityY: number = sensitivityX * 0.8,
 	) {
-		this.world = world;
-		this.camera = camera;
-		this.target = new THREE.Vector3();
-		this.sensitivity = new THREE.Vector2(sensitivityX, sensitivityY);
+		this._world = world;
+		this._camera = camera;
+		this._target = new THREE.Vector3();
+		this._sensitivity = new THREE.Vector2(sensitivityX, sensitivityY);
 
-		this.movementSpeed = 0.06;
-		this.radius = 3;
-		this.theta = 0;
-		this.phi = 0;
+		this._movementSpeed = 0.06;
+		this._radius = 3;
+		this._theta = 0;
+		this._phi = 0;
 
-		this.onMouseDownPosition = new THREE.Vector2();
-		this.onMouseDownTheta = this.theta;
-		this.onMouseDownPhi = this.phi;
+		this._onMouseDownPosition = new THREE.Vector2();
+		this._onMouseDownTheta = this._theta;
+		this._onMouseDownPhi = this._phi;
 
 		this.actions = {
 			forward: new KeyBinding('KeyW'),
@@ -70,58 +70,58 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		sensitivityX: number,
 		sensitivityY: number = sensitivityX,
 	): void {
-		this.sensitivity = new THREE.Vector2(sensitivityX, sensitivityY);
+		this._sensitivity = new THREE.Vector2(sensitivityX, sensitivityY);
 	}
 
 	public setRadius(value: number, instantly = false): void {
-		this.targetRadius = Math.max(0.001, value);
+		this._targetRadius = Math.max(0.001, value);
 		if (instantly === true) {
-			this.radius = value;
+			this._radius = value;
 		}
 	}
 
 	public move(deltaX: number, deltaY: number): void {
-		this.theta -= deltaX * (this.sensitivity.x / 2);
-		this.theta %= 360;
-		this.phi += deltaY * (this.sensitivity.y / 2);
-		this.phi = Math.min(85, Math.max(-85, this.phi));
+		this._theta -= deltaX * (this._sensitivity.x / 2);
+		this._theta %= 360;
+		this._phi += deltaY * (this._sensitivity.y / 2);
+		this._phi = Math.min(85, Math.max(-85, this._phi));
 	}
 
 	public update(timeScale: number): void {
-		if (this.followMode === true) {
-			this.camera.position.y = THREE.MathUtils.clamp(
-				this.camera.position.y,
-				this.target.y,
+		if (this._followMode === true) {
+			this._camera.position.y = THREE.MathUtils.clamp(
+				this._camera.position.y,
+				this._target.y,
 				Number.POSITIVE_INFINITY,
 			);
-			const newPos = this.target
+			const newPos = this._target
 				.clone()
 				.add(
 					new THREE.Vector3()
-						.subVectors(this.camera.position, this.target)
+						.subVectors(this._camera.position, this._target)
 						.normalize()
-						.multiplyScalar(this.targetRadius),
+						.multiplyScalar(this._targetRadius),
 				);
-			this.camera.position.x = newPos.x;
-			this.camera.position.y = newPos.y;
-			this.camera.position.z = newPos.z;
+			this._camera.position.x = newPos.x;
+			this._camera.position.y = newPos.y;
+			this._camera.position.z = newPos.z;
 		} else {
-			this.target.y += 0.8;
-			this.radius = THREE.MathUtils.lerp(this.radius, this.targetRadius, 0.1);
-			this.camera.position.x =
-				this.target.x +
-				this.radius *
-					Math.sin((this.theta * Math.PI) / 180) *
-					Math.cos((this.phi * Math.PI) / 180);
-			this.camera.position.y =
-				this.target.y + this.radius * Math.sin((this.phi * Math.PI) / 180);
-			this.camera.position.z =
-				this.target.z +
-				this.radius *
-					Math.cos((this.theta * Math.PI) / 180) *
-					Math.cos((this.phi * Math.PI) / 180);
-			this.camera.updateMatrix();
-			this.camera.lookAt(this.target);
+			this._target.y += 0.8;
+			this._radius = THREE.MathUtils.lerp(this._radius, this._targetRadius, 0.1);
+			this._camera.position.x =
+				this._target.x +
+				this._radius *
+					Math.sin((this._theta * Math.PI) / 180) *
+					Math.cos((this._phi * Math.PI) / 180);
+			this._camera.position.y =
+				this._target.y + this._radius * Math.sin((this._phi * Math.PI) / 180);
+			this._camera.position.z =
+				this._target.z +
+				this._radius *
+					Math.cos((this._theta * Math.PI) / 180) *
+					Math.cos((this._phi * Math.PI) / 180);
+			this._camera.updateMatrix();
+			this._camera.lookAt(this._target);
 		}
 	}
 
@@ -141,7 +141,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 	}
 
 	public handleMouseWheel(event: WheelEvent, value: number): void {
-		//this.world.scrollTheTimeScale(value);
+		//this._world.scrollTheTimeScale(value);
 	}
 
 	public handleMouseButton(
@@ -169,11 +169,11 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 	}
 
 	public inputReceiverInit(): void {
-		this.target.copy(this.camera.position);
+		this._target.copy(this._camera.position);
 		this.setRadius(0, true);
-		// this.world.dirLight.target = this.world.camera;
+		// this._world.dirLight.target = this._world.camera;
 
-		// this.world.updateControls([
+		// this._world.updateControls([
 		// 	{
 		// 		keys: ['W', 'S', 'A', 'D'],
 		// 		desc: 'Move around',
@@ -196,47 +196,47 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 	public inputReceiverUpdate(timeStep: number): void {
 		// Set fly speed
 		const speed =
-			this.movementSpeed *
+			this._movementSpeed *
 			(this.actions.fast.isPressed ? timeStep * 600 : timeStep * 60);
 
-		const up = Utils.getUp(this.camera);
-		const right = Utils.getRight(this.camera);
-		const forward = Utils.getBack(this.camera);
+		const up = Utils.getUp(this._camera);
+		const right = Utils.getRight(this._camera);
+		const forward = Utils.getBack(this._camera);
 
-		this.upVelocity = THREE.MathUtils.lerp(
-			this.upVelocity,
+		this._upVelocity = THREE.MathUtils.lerp(
+			this._upVelocity,
 			+this.actions.up.isPressed - +this.actions.down.isPressed,
 			0.3,
 		);
-		this.forwardVelocity = THREE.MathUtils.lerp(
-			this.forwardVelocity,
+		this._forwardVelocity = THREE.MathUtils.lerp(
+			this._forwardVelocity,
 			+this.actions.forward.isPressed - +this.actions.back.isPressed,
 			0.3,
 		);
-		this.rightVelocity = THREE.MathUtils.lerp(
-			this.rightVelocity,
+		this._rightVelocity = THREE.MathUtils.lerp(
+			this._rightVelocity,
 			+this.actions.right.isPressed - +this.actions.left.isPressed,
 			0.3,
 		);
 
-		this.target.add(up.multiplyScalar(speed * this.upVelocity));
-		this.target.add(forward.multiplyScalar(speed * this.forwardVelocity));
-		this.target.add(right.multiplyScalar(speed * this.rightVelocity));
+		this._target.add(up.multiplyScalar(speed * this._upVelocity));
+		this._target.add(forward.multiplyScalar(speed * this._forwardVelocity));
+		this._target.add(right.multiplyScalar(speed * this._rightVelocity));
 	}
 
 	public getTarget(): THREE.Vector3 {
-		return this.target;
+		return this._target;
 	}
 
 	public getAvatarCaller(): Avatar {
-		return this.avatarCaller;
+		return this._avatarCaller;
 	}
 
 	public setAvatarCaller(avatar: Avatar) {
-		this.avatarCaller = avatar;
+		this._avatarCaller = avatar;
 	}
 
 	public setFollowMode(followMode: boolean) {
-		this.followMode = followMode;
+		this._followMode = followMode;
 	}
 }

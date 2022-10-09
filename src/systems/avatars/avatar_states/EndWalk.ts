@@ -31,7 +31,7 @@ export class EndWalk extends AvatarStateBase {
 			if (this.avatar.actions.run.isPressed) {
 				this.avatar.setState(new Sprint(this.avatar));
 			} else {
-				if (this.avatar.getVelocity().length() > 0.5) {
+				if (this.avatar.velocity.length() > 0.5) {
 					this.avatar.setState(new Walk(this.avatar));
 				} else {
 					this.setAppropriateStartWalkState();

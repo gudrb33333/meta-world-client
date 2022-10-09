@@ -5,11 +5,16 @@ import { World } from './World';
 import { Avatar } from '../avatars/Avatar';
 import { LoadingManager } from '../core/LoadingManager';
 
+export interface Profile {
+	avatar_url: string;
+	avatar_name: string;
+}
+
 export class AvatarSpawnPoint implements ISpawnPoint {
-	private object: THREE.Object3D;
+	private _object: THREE.Object3D;
 
 	constructor(object: THREE.Object3D) {
-		this.object = object;
+		this._object = object;
 	}
 
 	public spawn(loadingManager: LoadingManager, world: World): void {
@@ -60,10 +65,10 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					player.setAvatarName(avatarName);
 
 					let worldPos = new THREE.Vector3();
-					this.object.getWorldPosition(worldPos);
+					this._object.getWorldPosition(worldPos);
 					player.setPosition(worldPos.x, worldPos.y, worldPos.z);
 					
-					let back = Utils.getBack(this.object);
+					let back = Utils.getBack(this._object);
 					player.setOrientation(back, true);
 
 					world.add(player);
@@ -78,7 +83,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 	public spawnOtherAvatar(
 		loadingManager: LoadingManager,
 		world: World,
-		sessionId: string,
+		sessionId:string,
 		profile: Profile,
 	): void {
 
@@ -102,13 +107,13 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 
 					model.animations = animationClipArr;
 					let player = new Avatar(model);
-					player.setSessionId(sessionId);
+					player.sessionId = sessionId;
 					player.setAvatarName(profile.avatar_name);
 		
-					const forward = Utils.getForward(this.object);
+					const forward = Utils.getForward(this._object);
 					player.setOrientation(forward, false);
 					world.add(player);
-					const avatarMap = world.getAvatarMap();
+					const avatarMap = world.avatarMap;
 					avatarMap.set(sessionId, player);
 					player.setPhysicsEnabled(false);
 
@@ -142,14 +147,14 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			
 								model.animations = animationClipArr;
 								player = new Avatar(model);
-								player.setSessionId(sessionId);
+								player.sessionId = sessionId;
 								player.setAvatarName(profile.avatar_name);
 								const worldPos = new THREE.Vector3();
 								//this.object.getWorldPosition(worldPos);
 								//console.log(this.object.getWorldPosition(worldPos))
 								//player.setPosition(-0.08083007484674454, 2.3437719345092773, -0.27053260803222656);
 			
-								const forward = Utils.getForward(this.object);
+								const forward = Utils.getForward(this._object);
 								player.setOrientation(forward, false);
 								world.add(player);
 								avatarMap.set(sessionId, player);

@@ -5,7 +5,7 @@ import { World } from '../world/World';
 import { IUpdatable } from '../interfaces/IUpdatable';
 import { Chair } from '../objects/Chair';
 
-type RemoteWebcamInfo = {
+export interface RemoteWebcamInfo {
 	remoteWebcamSocketId: string;
 	remoteWebcam: any;
 	remoteWebcamImage: HTMLCanvasElement;
@@ -14,7 +14,7 @@ type RemoteWebcamInfo = {
 	remoteWebcamScreen: THREE.Mesh;
 };
 
-type RemoteShareInfo = {
+export interface RemoteShareInfo {
 	remoteShareSocketId: string;
 	remoteShare: any;
 	remoteShareImage: HTMLCanvasElement;
@@ -26,53 +26,53 @@ type RemoteShareInfo = {
 export class MediasoupAdapter implements IUpdatable {
 	public updateOrder = 7;
 
-	private world: World;
-	private mediasoupSocket: Socket;
-	private roomName = 'abc';
+	private _world: World;
+	private _mediasoupSocket: Socket;
+	private _roomName = 'abc';
 
-	private device;
+	private _device;
 
-	private rtpCapabilities;
-	private micProducer;
-	private micParams;
-	private micDefaultParams;
-	private shareProducer;
-	private shareParams;
-	private shareDefalutParams;
+	private _rtpCapabilities;
+	private _micProducer;
+	private _micParams;
+	private _micDefaultParams;
+	private _shareProducer;
+	private _shareParams;
+	private _shareDefalutParams;
 
-	private webcamProducer;
-	private webcamParams;
-	private webcamDefalutParams;
+	private _webcamProducer;
+	private _webcamParams;
+	private _webcamDefalutParams;
 
-	private localWebcam;
-	private localWebcamImage;
-	private localWebcamImageContext;
-	private localWebcamTexture;
-	private localWebcamScreen;
+	private _localWebcam;
+	private _localWebcamImage;
+	private _localWebcamImageContext;
+	private _localWebcamTexture;
+	private _localWebcamScreen;
 
-	private localShare;
-	private localShareImage;
-	private localShareImageContext;
-	private localShareTexture;
-	private localShareScreen;
+	private _localShare;
+	private _localShareImage;
+	private _localShareImageContext;
+	private _localShareTexture;
+	private _localShareScreen;
 
-	private remoteWebcamKeyList = [];
-	private remoteWebcamMap = new Map<string, RemoteWebcamInfo>();
+	private _remoteWebcamKeyList = [];
+	private _remoteWebcamMap = new Map<string, RemoteWebcamInfo>();
 
-	private remoteShareKeyList = [];
-	private remoteShareMap = new Map<string, RemoteShareInfo>();
+	private _remoteShareKeyList = [];
+	private _remoteShareMap = new Map<string, RemoteShareInfo>();
 
-	private producerTransport;
-	private consumerTransports = [];
-	private consumingTransports = [];
+	private _producerTransport;
+	private _consumerTransports = [];
+	private _consumingTransports = [];
 
 	constructor(world: World, serverUrl: string) {
-		this.world = world;
-		this.mediasoupSocket = io(serverUrl, { transports: ['websocket'] });
+		this._world = world;
+		this._mediasoupSocket = io(serverUrl, { transports: ['websocket'] });
 
-		this.mediasoupSocket.on('connection-success', async ({ socketId }) => {
-			const avaterSessionId = this.world.getUserAvatar().getSessionId();
-			await this.mediasoupSocket.emit(
+		this._mediasoupSocket.on('connection-success', async ({ socketId }) => {
+			const avaterSessionId = this._world.userAvatar.sessionId;
+			await this._mediasoupSocket.emit(
 				'set-socket-id',
 				{ avaterSessionId },
 				() => {
@@ -80,16 +80,16 @@ export class MediasoupAdapter implements IUpdatable {
 					this.getLocalAudioStream();
 
 					// server informs the client of a new producer just joined
-					this.mediasoupSocket.on('new-producer', ({ producerId, socketId }) =>
+					this._mediasoupSocket.on('new-producer', ({ producerId, socketId }) =>
 						this.signalNewConsumerTransport(producerId, socketId),
 					);
 
-					this.mediasoupSocket.on(
+					this._mediasoupSocket.on(
 						'producer-closed',
 						({ remoteProducerId, remoteProducerAppData }) => {
 							// server notification is received when a producer is closed
 							// we need to close the client-side consumer and associated transport
-							const producerToClose = this.consumerTransports.find(
+							const producerToClose = this._consumerTransports.find(
 								(transportData) =>
 									transportData.producerId === remoteProducerId,
 							);
@@ -97,7 +97,7 @@ export class MediasoupAdapter implements IUpdatable {
 							producerToClose.consumer.close();
 
 							// remove the consumer transport from the list
-							this.consumerTransports = this.consumerTransports.filter(
+							this._consumerTransports = this._consumerTransports.filter(
 								(transportData) =>
 									transportData.producerId !== remoteProducerId,
 							);
@@ -106,15 +106,15 @@ export class MediasoupAdapter implements IUpdatable {
 
 							if (remoteProducerAppData.target === 'webcam') {
 								const remoteWebcamInfo: RemoteWebcamInfo =
-									this.remoteWebcamMap.get(remoteProducerId);
+									this._remoteWebcamMap.get(remoteProducerId);
 
-								this.world
-									.getGraphicsWorld()
+								this._world
+									.graphicsWorld
 									.remove(remoteWebcamInfo.remoteWebcamScreen);
-								this.remoteWebcamKeyList = this.remoteWebcamKeyList.filter(
+								this._remoteWebcamKeyList = this._remoteWebcamKeyList.filter(
 									(remoteWebcamKey) => remoteWebcamKey != remoteProducerId,
 								);
-								this.remoteWebcamMap.delete(remoteProducerId);
+								this._remoteWebcamMap.delete(remoteProducerId);
 
 								// remove the video div element
 								const remoteProducerContainer = document.getElementById(
@@ -125,15 +125,15 @@ export class MediasoupAdapter implements IUpdatable {
 								);
 							} else if (remoteProducerAppData.target === 'share') {
 								const remoteShareInfo: RemoteShareInfo =
-									this.remoteShareMap.get(remoteProducerId);
+									this._remoteShareMap.get(remoteProducerId);
 
-								this.world
-									.getGraphicsWorld()
+								this._world
+									.graphicsWorld
 									.remove(remoteShareInfo.remoteShareScreen);
-								this.remoteShareKeyList = this.remoteShareKeyList.filter(
+								this._remoteShareKeyList = this._remoteShareKeyList.filter(
 									(remoteShareKey) => remoteShareKey != remoteProducerId,
 								);
-								this.remoteShareMap.delete(remoteProducerId);
+								this._remoteShareMap.delete(remoteProducerId);
 
 								// remove the video div element
 								const remoteProducerContainer = document.getElementById(
@@ -148,13 +148,13 @@ export class MediasoupAdapter implements IUpdatable {
 				},
 			);
 		});
-		this.micDefaultParams = {
+		this._micDefaultParams = {
 			appData: {
 				target: 'mic',
 			},
 		};
 
-		this.webcamDefalutParams = {
+		this._webcamDefalutParams = {
 			appData: {
 				target: 'webcam',
 			},
@@ -182,7 +182,7 @@ export class MediasoupAdapter implements IUpdatable {
 			},
 		};
 
-		this.shareDefalutParams = {
+		this._shareDefalutParams = {
 			appData: {
 				target: 'share',
 			},
@@ -209,9 +209,9 @@ export class MediasoupAdapter implements IUpdatable {
 		) as HTMLAudioElement;
 		localAudio.srcObject = stream;
 
-		this.micParams = {
+		this._micParams = {
 			track: stream.getAudioTracks()[0],
-			...this.micDefaultParams,
+			...this._micDefaultParams,
 		};
 		//webcamParams = { track: stream.getVideoTracks()[0], ...webcamDefalutParams };
 
@@ -221,13 +221,13 @@ export class MediasoupAdapter implements IUpdatable {
 	};
 
 	private joinRoom = () => {
-		console.log('joinRoom():', this.roomName);
-		const roomName = this.roomName;
-		this.mediasoupSocket.emit('joinRoom', { roomName }, (data) => {
+		console.log('joinRoom():', this._roomName);
+		const roomName = this._roomName;
+		this._mediasoupSocket.emit('joinRoom', { roomName }, (data) => {
 			console.log(`Router RTP Capabilities... ${data.rtpCapabilities}`);
 			// we assign to local variable and will be used when
 			// loading the client Device (see createDevice above)
-			this.rtpCapabilities = data.rtpCapabilities;
+			this._rtpCapabilities = data.rtpCapabilities;
 
 			// once we have rtpCapabilities from the Router, create Device
 			this.createDevice();
@@ -236,12 +236,12 @@ export class MediasoupAdapter implements IUpdatable {
 
 	private createDevice = async () => {
 		try {
-			this.device = new mediasoupClient.Device();
-			await this.device.load({
-				routerRtpCapabilities: this.rtpCapabilities,
+			this._device = new mediasoupClient.Device();
+			await this._device.load({
+				routerRtpCapabilities: this._rtpCapabilities,
 			});
 
-			console.log('Device RTP Capabilities', this.device.rtpCapabilities);
+			console.log('Device RTP Capabilities', this._device.rtpCapabilities);
 
 			// once the device loads, create transport
 			this.createSendTransport();
@@ -255,7 +255,7 @@ export class MediasoupAdapter implements IUpdatable {
 	private createSendTransport = () => {
 		// see server's socket.on('createWebRtcTransport', sender?, ...)
 		// this is a call from Producer, so sender = true
-		this.mediasoupSocket.emit(
+		this._mediasoupSocket.emit(
 			'createWebRtcTransport',
 			{ consumer: false },
 			({ params }) => {
@@ -268,18 +268,18 @@ export class MediasoupAdapter implements IUpdatable {
 				// creates a new WebRTC Transport to send media
 				// based on the server's producer transport params
 				// https://mediasoup.org/documentation/v3/mediasoup-client/api/#TransportOptions
-				this.producerTransport = this.device.createSendTransport(params);
+				this._producerTransport = this._device.createSendTransport(params);
 
 				// https://mediasoup.org/documentation/v3/communication-between-client-and-server/#producing-media
 				// this event is raised when a first call to transport.produce() is made
 				// see connectSendTransport() below
-				this.producerTransport.on(
+				this._producerTransport.on(
 					'connect',
 					async ({ dtlsParameters }, callback, errback) => {
 						try {
 							// Signal local DTLS parameters to the server side transport
 							// see server's socket.on('transport-connect', ...)
-							await this.mediasoupSocket.emit('transport-connect', {
+							await this._mediasoupSocket.emit('transport-connect', {
 								dtlsParameters,
 							});
 
@@ -291,7 +291,7 @@ export class MediasoupAdapter implements IUpdatable {
 					},
 				);
 
-				this.producerTransport.on(
+				this._producerTransport.on(
 					'produce',
 					async (parameters, callback, errback) => {
 						try {
@@ -299,7 +299,7 @@ export class MediasoupAdapter implements IUpdatable {
 							// with the following parameters and produce
 							// and expect back a server side producer id
 							// see server's socket.on('transport-produce', ...)
-							await this.mediasoupSocket.emit(
+							await this._mediasoupSocket.emit(
 								'transport-produce',
 								{
 									kind: parameters.kind,
@@ -328,7 +328,7 @@ export class MediasoupAdapter implements IUpdatable {
 	};
 
 	private getProducers = () => {
-		this.mediasoupSocket.emit('getProducers', (producerIds, socketIds) => {
+		this._mediasoupSocket.emit('getProducers', (producerIds, socketIds) => {
 			// for each of the producer create a consumer
 			// producerIds.forEach(id => signalNewConsumerTransport(id))
 			producerIds.forEach((producerId, index) => {
@@ -339,10 +339,10 @@ export class MediasoupAdapter implements IUpdatable {
 
 	private signalNewConsumerTransport = async (remoteProducerId, socketId) => {
 		//check if we are already consuming the remoteProducerId
-		if (this.consumingTransports.includes(remoteProducerId)) return;
-		this.consumingTransports.push(remoteProducerId);
+		if (this._consumingTransports.includes(remoteProducerId)) return;
+		this._consumingTransports.push(remoteProducerId);
 
-		await this.mediasoupSocket.emit(
+		await this._mediasoupSocket.emit(
 			'createWebRtcTransport',
 			{ consumer: true },
 			({ params }) => {
@@ -356,7 +356,7 @@ export class MediasoupAdapter implements IUpdatable {
 
 				let consumerTransport;
 				try {
-					consumerTransport = this.device.createRecvTransport(params);
+					consumerTransport = this._device.createRecvTransport(params);
 				} catch (error) {
 					// exceptions:
 					// {InvalidStateError} if not loaded
@@ -371,7 +371,7 @@ export class MediasoupAdapter implements IUpdatable {
 						try {
 							// Signal local DTLS parameters to the server side transport
 							// see server's socket.on('transport-recv-connect', ...)
-							await this.mediasoupSocket.emit('transport-recv-connect', {
+							await this._mediasoupSocket.emit('transport-recv-connect', {
 								dtlsParameters,
 								serverConsumerTransportId: params.id,
 							});
@@ -404,10 +404,10 @@ export class MediasoupAdapter implements IUpdatable {
 		// for consumer, we need to tell the server first
 		// to create a consumer based on the rtpCapabilities and consume
 		// if the router can consume, it will send back a set of params as below
-		await this.mediasoupSocket.emit(
+		await this._mediasoupSocket.emit(
 			'consume',
 			{
-				rtpCapabilities: this.device.rtpCapabilities,
+				rtpCapabilities: this._device.rtpCapabilities,
 				remoteProducerId,
 				serverConsumerTransportId,
 			},
@@ -429,8 +429,8 @@ export class MediasoupAdapter implements IUpdatable {
 					rtpParameters: params.rtpParameters,
 				});
 
-				this.consumerTransports = [
-					...this.consumerTransports,
+				this._consumerTransports = [
+					...this._consumerTransports,
 					{
 						consumerTransport,
 						serverConsumerTransportId: params.id,
@@ -501,7 +501,7 @@ export class MediasoupAdapter implements IUpdatable {
 						movieMaterial,
 					);
 
-					this.world.getGraphicsWorld().add(remoteWebcamScreen);
+					this._world.graphicsWorld.add(remoteWebcamScreen);
 
 					// destructure and retrieve the video track from the producer
 					const { track } = consumer;
@@ -510,7 +510,7 @@ export class MediasoupAdapter implements IUpdatable {
 					) as HTMLMediaElement;
 					remoteWebcam.srcObject = new MediaStream([track]);
 
-					this.remoteWebcamKeyList.push(remoteProducerId);
+					this._remoteWebcamKeyList.push(remoteProducerId);
 
 					const remoteWebcamInfo: RemoteWebcamInfo = {
 						remoteWebcamSocketId: socketId,
@@ -521,9 +521,9 @@ export class MediasoupAdapter implements IUpdatable {
 						remoteWebcamScreen: remoteWebcamScreen,
 					};
 
-					this.remoteWebcamMap.set(remoteProducerId, remoteWebcamInfo);
+					this._remoteWebcamMap.set(remoteProducerId, remoteWebcamInfo);
 				} else if (params.appData.target === 'share') {
-					if (this.shareProducer) {
+					if (this._shareProducer) {
 						this.disableShare();
 					}
 
@@ -572,7 +572,7 @@ export class MediasoupAdapter implements IUpdatable {
 					remoteShareScreen.position.set(0, 1.6, -1.325);
 					remoteShareScreen.rotation.set(0, 3.145, 0);
 
-					this.world.getGraphicsWorld().add(remoteShareScreen);
+					this._world.graphicsWorld.add(remoteShareScreen);
 
 					// destructure and retrieve the video track from the producer
 					const { track } = consumer;
@@ -581,7 +581,7 @@ export class MediasoupAdapter implements IUpdatable {
 					) as HTMLMediaElement;
 					remoteShare.srcObject = new MediaStream([track]);
 
-					this.remoteShareKeyList.push(remoteProducerId);
+					this._remoteShareKeyList.push(remoteProducerId);
 
 					const remoteShareInfo: RemoteShareInfo = {
 						remoteShareSocketId: socketId,
@@ -592,12 +592,12 @@ export class MediasoupAdapter implements IUpdatable {
 						remoteShareScreen: remoteShareScreen,
 					};
 
-					this.remoteShareMap.set(remoteProducerId, remoteShareInfo);
+					this._remoteShareMap.set(remoteProducerId, remoteShareInfo);
 				}
 
 				// the server consumer started with media paused
 				// so we need to inform the server to resume
-				this.mediasoupSocket.emit('consumer-resume', {
+				this._mediasoupSocket.emit('consumer-resume', {
 					serverConsumerId: params.serverConsumerId,
 				});
 			},
@@ -610,15 +610,15 @@ export class MediasoupAdapter implements IUpdatable {
 		// https://mediasoup.org/documentation/v3/mediasoup-client/api/#transport-produce
 		// this action will trigger the 'connect' and 'produce' events above
 
-		if (this.micProducer) return;
+		if (this._micProducer) return;
 
-		this.micProducer = await this.producerTransport.produce(this.micParams);
+		this._micProducer = await this._producerTransport.produce(this._micParams);
 
-		this.micProducer.on('trackended', () => {
+		this._micProducer.on('trackended', () => {
 			console.log('audio track ended');
 		});
 
-		this.micProducer.on('transportclose', () => {
+		this._micProducer.on('transportclose', () => {
 			console.log('audio transport ended');
 		});
 	};
@@ -626,9 +626,9 @@ export class MediasoupAdapter implements IUpdatable {
 	public unmuteMic = async () => {
 		console.log('unmuteMic()');
 		try {
-			this.micProducer.resume();
-			await this.mediasoupSocket.emit('resumeProducer', {
-				producerId: this.micProducer.id,
+			this._micProducer.resume();
+			await this._mediasoupSocket.emit('resumeProducer', {
+				producerId: this._micProducer.id,
 			});
 		} catch (error) {
 			console.error('unmuteMic() | failed: %o', error);
@@ -638,9 +638,9 @@ export class MediasoupAdapter implements IUpdatable {
 	public muteMic = async (): Promise<boolean> => {
 		console.log('muteMic()');
 		try {
-			this.micProducer.pause();
-			await this.mediasoupSocket.emit('pauseProducer', {
-				producerId: this.micProducer.id,
+			this._micProducer.pause();
+			await this._mediasoupSocket.emit('pauseProducer', {
+				producerId: this._micProducer.id,
 			});
 			return true;
 		} catch (error) {
@@ -651,7 +651,7 @@ export class MediasoupAdapter implements IUpdatable {
 
 	public enableWebcam = async () => {
 		console.log('enableWebcam()');
-		if (this.webcamProducer) return;
+		if (this._webcamProducer) return;
 
 		try {
 			navigator.mediaDevices
@@ -673,59 +673,59 @@ export class MediasoupAdapter implements IUpdatable {
 					// localWebcam.srcObject = stream
 
 					// create the video element
-					this.localWebcam = document.getElementById(
+					this._localWebcam = document.getElementById(
 						'local-webcam',
 					) as HTMLVideoElement;
-					this.localWebcam.srcObject = stream;
+					this._localWebcam.srcObject = stream;
 
-					this.localWebcamImage = document.getElementById(
+					this._localWebcamImage = document.getElementById(
 						'local-webcam-image',
 					) as HTMLCanvasElement;
-					this.localWebcamImageContext = this.localWebcamImage.getContext('2d');
+					this._localWebcamImageContext = this._localWebcamImage.getContext('2d');
 
 					// background color if no video present
-					this.localWebcamImageContext.fillStyle = '#000000';
-					this.localWebcamImageContext.fillRect(
+					this._localWebcamImageContext.fillStyle = '#000000';
+					this._localWebcamImageContext.fillRect(
 						0,
 						0,
-						this.localWebcamImage.width,
-						this.localWebcamImage.height,
+						this._localWebcamImage.width,
+						this._localWebcamImage.height,
 					);
 
-					this.localWebcamTexture = new THREE.Texture(this.localWebcamImage);
-					this.localWebcamTexture.minFilter = THREE.LinearFilter;
-					this.localWebcamTexture.magFilter = THREE.LinearFilter;
+					this._localWebcamTexture = new THREE.Texture(this._localWebcamImage);
+					this._localWebcamTexture.minFilter = THREE.LinearFilter;
+					this._localWebcamTexture.magFilter = THREE.LinearFilter;
 
 					const movieMaterial = new THREE.MeshBasicMaterial({
-						map: this.localWebcamTexture,
+						map: this._localWebcamTexture,
 						side: THREE.DoubleSide,
 					});
 					// the geometry on which the movie will be displayed;
 					// movie image will be scaled to fit these dimensions.
 					const movieGeometry = new THREE.PlaneGeometry(1, 0.5, 0.1, 0.1);
-					this.localWebcamScreen = new THREE.Mesh(movieGeometry, movieMaterial);
-					const avatar = this.world.getUserAvatar();
-					this.localWebcamScreen.position.set(
+					this._localWebcamScreen = new THREE.Mesh(movieGeometry, movieMaterial);
+					const avatar = this._world.userAvatar;
+					this._localWebcamScreen.position.set(
 						avatar.position.x,
 						avatar.position.y + 1.7,
 						avatar.position.z,
 					);
 
-					this.world.getGraphicsWorld().add(this.localWebcamScreen);
+					this._world.graphicsWorld.add(this._localWebcamScreen);
 
-					this.webcamParams = {
+					this._webcamParams = {
 						track: stream.getVideoTracks()[0],
-						...this.webcamDefalutParams,
+						...this._webcamDefalutParams,
 					};
 
-					this.webcamProducer = await this.producerTransport.produce(
-						this.webcamParams,
+					this._webcamProducer = await this._producerTransport.produce(
+						this._webcamParams,
 					);
 
-					this.webcamProducer.on('transportclose', () => {
-						this.webcamProducer = null;
+					this._webcamProducer.on('transportclose', () => {
+						this._webcamProducer = null;
 					});
-					this.webcamProducer.on('trackended', () => {
+					this._webcamProducer.on('trackended', () => {
 						console.log('Webcam disconnected!');
 						this.disableWebcam()
 							// eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -744,34 +744,34 @@ export class MediasoupAdapter implements IUpdatable {
 
 	public disableWebcam = async () => {
 		console.log('disableWebcam()');
-		if (!this.webcamProducer) return;
+		if (!this._webcamProducer) return;
 
-		this.webcamProducer.close();
+		this._webcamProducer.close();
 		try {
-			await this.mediasoupSocket.emit('closeProducer', {
-				producerId: this.webcamProducer.id,
+			await this._mediasoupSocket.emit('closeProducer', {
+				producerId: this._webcamProducer.id,
 			});
-			this.world.getGraphicsWorld().remove(this.localWebcamScreen);
+			this._world.graphicsWorld.remove(this._localWebcamScreen);
 		} catch (error) {
 			console.error(`Error closing server-side webcam Producer: ${error}`);
 		}
-		this.webcamProducer = null;
+		this._webcamProducer = null;
 	};
 
 	public enableShare = async (): Promise<boolean> => {
 		return new Promise<boolean>(
 			(resolve: (value: boolean) => void, reject: (error: boolean) => void) => {
 				console.log('enableShare()');
-				if (this.shareProducer) return reject(false);
-				if (this.remoteShareKeyList.length > 0) {
+				if (this._shareProducer) return reject(false);
+				if (this._remoteShareKeyList.length > 0) {
 					alert('이미 다른사람이 화면공유 중 입니다.');
 					return reject(false);
 				}
 
-				// if (this.remoteShareKeyList.length > 1) {
-				// 	this.remoteShareKeyList.forEach(async (remoteShareKey) => {
+				// if (this._remoteShareKeyList.length > 1) {
+				// 	this._remoteShareKeyList.forEach(async (remoteShareKey) => {
 				// 		try {
-				// 			await this.mediasoupSocket.emit('closeProducer', {
+				// 			await this._mediasoupSocket.emit('closeProducer', {
 				// 				producerId: remoteShareKey,
 				// 			});
 				// 		} catch (error) {
@@ -779,7 +779,7 @@ export class MediasoupAdapter implements IUpdatable {
 				// 		}
 				// 	});
 				// }
-				// if (!this._mediasoupDevice.canProduce('video')) {
+				// if (!this.__mediasoupDevice.canProduce('video')) {
 				//     logger.error('enableWebcam() | cannot produce video');
 				//     return;
 				// }
@@ -796,60 +796,60 @@ export class MediasoupAdapter implements IUpdatable {
 							},
 						})
 						.then(async (stream) => {
-							this.localShare = document.getElementById(
+							this._localShare = document.getElementById(
 								'local-share',
 							) as HTMLVideoElement;
-							this.localShare.srcObject = stream;
+							this._localShare.srcObject = stream;
 
-							this.localShareImage = document.getElementById(
+							this._localShareImage = document.getElementById(
 								'local-share-image',
 							) as HTMLCanvasElement;
-							this.localShareImageContext =
-								this.localShareImage.getContext('2d');
+							this._localShareImageContext =
+								this._localShareImage.getContext('2d');
 
 							// background color if no video present
-							this.localShareImageContext.fillStyle = '#000000';
-							this.localShareImageContext.fillRect(
+							this._localShareImageContext.fillStyle = '#000000';
+							this._localShareImageContext.fillRect(
 								0,
 								0,
-								this.localShareImage.width,
-								this.localShareImage.height,
+								this._localShareImage.width,
+								this._localShareImage.height,
 							);
 
-							this.localShareTexture = new THREE.Texture(this.localShareImage);
-							this.localShareTexture.minFilter = THREE.LinearFilter;
-							this.localShareTexture.magFilter = THREE.LinearFilter;
+							this._localShareTexture = new THREE.Texture(this._localShareImage);
+							this._localShareTexture.minFilter = THREE.LinearFilter;
+							this._localShareTexture.magFilter = THREE.LinearFilter;
 
 							const movieMaterial = new THREE.MeshBasicMaterial({
-								map: this.localShareTexture,
+								map: this._localShareTexture,
 								side: THREE.DoubleSide,
 							});
 							// the geometry on which the movie will be displayed;
 							// movie image will be scaled to fit these dimensions.
 							const movieGeometry = new THREE.PlaneGeometry(3.25, 1.5, 1, 1);
-							this.localShareScreen = new THREE.Mesh(
+							this._localShareScreen = new THREE.Mesh(
 								movieGeometry,
 								movieMaterial,
 							);
-							this.localShareScreen.position.set(0, 1.6, -1.325);
+							this._localShareScreen.position.set(0, 1.6, -1.325);
 
-							this.localShareScreen.rotation.set(0, 3.145, 0);
+							this._localShareScreen.rotation.set(0, 3.145, 0);
 
-							this.world.getGraphicsWorld().add(this.localShareScreen);
+							this._world.graphicsWorld.add(this._localShareScreen);
 
-							this.shareParams = {
+							this._shareParams = {
 								track: stream.getVideoTracks()[0],
-								...this.shareDefalutParams,
+								...this._shareDefalutParams,
 							};
 
-							this.shareProducer = await this.producerTransport.produce(
-								this.shareParams,
+							this._shareProducer = await this._producerTransport.produce(
+								this._shareParams,
 							);
 
-							this.shareProducer.on('transportclose', () => {
-								this.shareProducer = null;
+							this._shareProducer.on('transportclose', () => {
+								this._shareProducer = null;
 							});
-							this.shareProducer.on('trackended', () => {
+							this._shareProducer.on('trackended', () => {
 								console.log('share disconnected!');
 								document.dispatchEvent(new Event('stop-share-event'));
 							});
@@ -861,17 +861,17 @@ export class MediasoupAdapter implements IUpdatable {
 							return reject(false);
 						});
 
-					// if (!this._externalVideo) {
-					//     stream = await this._worker.getUserMedia({
+					// if (!this.__externalVideo) {
+					//     stream = await this.__worker.getUserMedia({
 					//         video: { source: 'device' }
 					//     });
 					// }
 					// else {
-					//     stream = await this._worker.getUserMedia({
+					//     stream = await this.__worker.getUserMedia({
 					//         video: {
-					//             source: this._externalVideo.startsWith('http') ? 'url' : 'file',
-					//             file: this._externalVideo,
-					//             url: this._externalVideo
+					//             source: this.__externalVideo.startsWith('http') ? 'url' : 'file',
+					//             file: this.__externalVideo,
+					//             url: this.__externalVideo
 					//         }
 					//     });
 					// }
@@ -884,20 +884,20 @@ export class MediasoupAdapter implements IUpdatable {
 					//     label: 'rear-xyz'
 					// };
 					// store.dispatch(stateActions.addProducer({
-					//     id: this._webcamProducer.id,
+					//     id: this.__webcamProducer.id,
 					//     deviceLabel: device.label,
-					//     type: this._getWebcamType(device),
-					//     paused: this._webcamProducer.paused,
-					//     track: this._webcamProducer.track,
-					//     rtpParameters: this._webcamProducer.rtpParameters,
-					//     codec: this._webcamProducer.rtpParameters.codecs[0].mimeType.split('/')[1]
+					//     type: this.__getWebcamType(device),
+					//     paused: this.__webcamProducer.paused,
+					//     track: this.__webcamProducer.track,
+					//     rtpParameters: this.__webcamProducer.rtpParameters,
+					//     codec: this.__webcamProducer.rtpParameters.codecs[0].mimeType.split('/')[1]
 					// }));
 					//webcamProducer.on('transportclose', () => {
 					//    webcamProducer = null;
 					//});
 					//webcamProducer.on('trackended', () => {
 					//    console.log('Webcam disconnected!');
-					// this.disableWebcam()
+					// this._disableWebcam()
 					//     // eslint-disable-next-line @typescript-eslint/no-empty-function
 					//     .catch(() => { });
 					//});
@@ -921,13 +921,13 @@ export class MediasoupAdapter implements IUpdatable {
 			) => {
 				try {
 					console.log('disableShare()');
-					if (!this.shareProducer) return;
-					this.shareProducer.close();
+					if (!this._shareProducer) return;
+					this._shareProducer.close();
 
-					await this.mediasoupSocket.emit('closeProducer', {
-						producerId: this.shareProducer.id,
+					await this._mediasoupSocket.emit('closeProducer', {
+						producerId: this._shareProducer.id,
 					});
-					this.shareProducer = null;
+					this._shareProducer = null;
 					resolve(true);
 				} catch (error) {
 					console.error(`Error closing server-side webcam Producer: ${error}`);
@@ -939,72 +939,72 @@ export class MediasoupAdapter implements IUpdatable {
 
 	public update(timestep: number, unscaledTimeStep: number): void {
 		if (
-			this.localWebcam &&
-			this.localWebcam.readyState === this.localWebcam.HAVE_ENOUGH_DATA
+			this._localWebcam &&
+			this._localWebcam.readyState === this._localWebcam.HAVE_ENOUGH_DATA
 		) {
-			const avatar = this.world.getUserAvatar();
+			const avatar = this._world.userAvatar;
 
 			if (avatar.parent instanceof Chair) {
 				const userEnteredChair: Chair = avatar.parent;
 
-				this.localWebcamImageContext.drawImage(
-					this.localWebcam,
+				this._localWebcamImageContext.drawImage(
+					this._localWebcam,
 					0,
 					0,
-					this.localWebcamImage.width,
-					this.localWebcamImage.height,
+					this._localWebcamImage.width,
+					this._localWebcamImage.height,
 				);
-				if (this.localWebcamTexture) {
-					this.localWebcamTexture.needsUpdate = true;
-					this.localWebcamScreen.position.set(
+				if (this._localWebcamTexture) {
+					this._localWebcamTexture.needsUpdate = true;
+					this._localWebcamScreen.position.set(
 						userEnteredChair.position.x,
 						userEnteredChair.position.y + 2.2,
 						userEnteredChair.position.z,
 					);
-					this.localWebcamScreen.rotation.copy(userEnteredChair.rotation);
+					this._localWebcamScreen.rotation.copy(userEnteredChair.rotation);
 				}
 			} else {
-				this.localWebcamImageContext.drawImage(
-					this.localWebcam,
+				this._localWebcamImageContext.drawImage(
+					this._localWebcam,
 					0,
 					0,
-					this.localWebcamImage.width,
-					this.localWebcamImage.height,
+					this._localWebcamImage.width,
+					this._localWebcamImage.height,
 				);
-				if (this.localWebcamTexture) {
-					this.localWebcamTexture.needsUpdate = true;
-					this.localWebcamScreen.position.set(
+				if (this._localWebcamTexture) {
+					this._localWebcamTexture.needsUpdate = true;
+					this._localWebcamScreen.position.set(
 						avatar.position.x,
 						avatar.position.y + 1.7,
 						avatar.position.z,
 					);
-					this.localWebcamScreen.rotation.copy(avatar.rotation);
+					this._localWebcamScreen.rotation.copy(avatar.rotation);
 				}
 			}
 		}
 
 		if (
-			this.localShare &&
-			this.localShare.readyState === this.localShare.HAVE_ENOUGH_DATA
+			this._localShare &&
+			this._localShare.readyState === this._localShare.HAVE_ENOUGH_DATA
 		) {
-			this.localShareImageContext.drawImage(
-				this.localShare,
+			this._localShareImageContext.drawImage(
+				this._localShare,
 				0,
 				0,
-				this.localShareImage.width,
-				this.localShareImage.height,
+				this._localShareImage.width,
+				this._localShareImage.height,
 			);
-			if (this.localShareTexture) {
-				this.localShareTexture.needsUpdate = true;
+			if (this._localShareTexture) {
+				this._localShareTexture.needsUpdate = true;
 			}
 		}
 
-		if (this.remoteWebcamKeyList.length > 0) {
-			this.remoteWebcamKeyList.forEach((remoteWebcamKey) => {
+		if (this._remoteWebcamKeyList.length > 0) {
+			this._remoteWebcamKeyList.forEach((remoteWebcamKey) => {
 				const remoteWebcamInfo: RemoteWebcamInfo =
-					this.remoteWebcamMap.get(remoteWebcamKey);
+					this._remoteWebcamMap.get(remoteWebcamKey);
 
-				const targetAvatar = this.world.getTargetAvatar(
+				const targetAvatar = this._world.findTargetAvatar(
 					remoteWebcamInfo.remoteWebcamSocketId,
 				);
 				remoteWebcamInfo.remoteWebcamImageContext.drawImage(
@@ -1028,10 +1028,10 @@ export class MediasoupAdapter implements IUpdatable {
 			});
 		}
 
-		if (this.remoteShareKeyList.length > 0) {
-			this.remoteShareKeyList.forEach((remoteShareKey) => {
+		if (this._remoteShareKeyList.length > 0) {
+			this._remoteShareKeyList.forEach((remoteShareKey) => {
 				const remoteShareInfo: RemoteShareInfo =
-					this.remoteShareMap.get(remoteShareKey);
+					this._remoteShareMap.get(remoteShareKey);
 
 				remoteShareInfo.remoteShareImageContext.drawImage(
 					remoteShareInfo.remoteShare,

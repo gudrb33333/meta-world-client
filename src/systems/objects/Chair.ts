@@ -18,23 +18,23 @@ export class Chair
 	public entityType: EntityType;
 	public actions: { [action: string]: KeyBinding } = {};
 	public controllingAvatar: Avatar;
-	private rayCastVehicle: CANNON.RaycastVehicle;
-	private world: World;
-	private collision: CANNON.Body;
-	private materials: THREE.Material[] = [];
-	private spawnPoint: THREE.Object3D;
-	private modelContainer: THREE.Group;
+	private _rayCastVehicle: CANNON.RaycastVehicle;
+	private _world: World;
+	private _collision: CANNON.Body;
+	private _materials: THREE.Material[] = [];
+	private _spawnPoint: THREE.Object3D;
+	private _modelContainer: THREE.Group;
 
 	//public vehicle: IControllable;
-	private seatPointObject: THREE.Object3D;
+	private _seatPointObject: THREE.Object3D;
 
 	// String of names of connected seats
-	private connectedSeatsString: string;
+	private _connectedSeatsString: string;
 	// Actual seatPoint objects, need to be identified
 	// by parsing connectedSeatsString *after* all seats are imported
 
-	private entryPoints: THREE.Object3D;
-	private occupiedBy: Avatar = null;
+	private _entryPoints: THREE.Object3D;
+	private _occupiedBy: Avatar = null;
 
 	constructor(gltf: any, object: THREE.Object3D) {
 		super();
@@ -44,20 +44,20 @@ export class Chair
 		mat.friction = 0.01;
 
 		// Collision body
-		this.collision = new CANNON.Body({ mass: 0 });
-		this.collision.material = mat;
+		this._collision = new CANNON.Body({ mass: 0 });
+		this._collision.material = mat;
 
 		// Read GLTF
 		this.readChairData(gltf);
 
-		this.modelContainer = new THREE.Group();
-		this.add(this.modelContainer);
-		this.modelContainer.add(gltf.scene);
-		// this.setModel(gltf.scene);
+		this._modelContainer = new THREE.Group();
+		this.add(this._modelContainer);
+		this._modelContainer.add(gltf.scene);
+		// this._setModel(gltf.scene);
 
 		// Raycast vehicle component
-		this.rayCastVehicle = new CANNON.RaycastVehicle({
-			chassisBody: this.collision,
+		this._rayCastVehicle = new CANNON.RaycastVehicle({
+			chassisBody: this._collision,
 			indexUpAxis: 0,
 			indexRightAxis: 0,
 			indexForwardAxis: 0,
@@ -80,10 +80,10 @@ export class Chair
 	public update(timeStep: number): void {}
 
 	public allowSleep(value: boolean): void {
-		this.collision.allowSleep = value;
+		this._collision.allowSleep = value;
 
 		if (value === false) {
-			this.collision.wakeUp();
+			this._collision.wakeUp();
 		}
 	}
 
@@ -96,7 +96,7 @@ export class Chair
 			if (this.actions.hasOwnProperty(action)) {
 				const binding = this.actions[action];
 				if (_.includes(binding.eventCodes, code)) {
-					//this.triggerAction(action, pressed);
+					//this._triggerAction(action, pressed);
 				}
 			}
 		}
@@ -115,58 +115,58 @@ export class Chair
 		deltaX: number,
 		deltaY: number,
 	): void {
-		this.world.getCameraOperator().move(deltaX, deltaY);
+		this._world.cameraOperator.move(deltaX, deltaY);
 	}
 
 	public handleMouseWheel(event: WheelEvent, value: number): void {
-		//this.world.scrollTheTimeScale(value);
+		//this._world.scrollTheTimeScale(value);
 	}
 
 	public inputReceiverInit(): void {
-		this.collision.allowSleep = false;
+		this._collision.allowSleep = false;
 	}
 
 	public inputReceiverUpdate(timeStep: number): void {
 		// Position camera
-		this.world
-			.getCameraOperator()
+		this._world
+			.cameraOperator
 			.getTarget()
 			.set(this.position.x, this.position.y + 5.5, this.position.z);
 	}
 
 	public setPosition(x: number, y: number, z: number): void {
-		this.collision.position.x = x;
-		this.collision.position.y = y;
-		this.collision.position.z = z;
+		this._collision.position.x = x;
+		this._collision.position.y = y;
+		this._collision.position.z = z;
 	}
 
 	public addToWorld(world: World): void {
-		const chairs = world.getChairs();
+		const chairs = world.chairs;
 		if (_.includes(chairs, this)) {
 			console.warn('Adding avatar to a world in which it already exists.');
-		} else if (this.rayCastVehicle === undefined) {
+		} else if (this._rayCastVehicle === undefined) {
 			console.error('Trying to create chair without raycastChairComponent');
 		} else {
-			this.world = world;
+			this._world = world;
 			chairs.push(this);
-			world.getGraphicsWorld().add(this);
-			this.rayCastVehicle.addToWorld(world.getPhysicsWorld());
+			world.graphicsWorld.add(this);
+			this._rayCastVehicle.addToWorld(world.physicsWorld);
 
-			// this.materials.forEach((mat) => {
+			// this._materials.forEach((mat) => {
 			// 	world.getSky().csm.setupMaterial(mat);
 			// });
 		}
 	}
 
 	public removeFromWorld(world: World): void {
-		const chairs = world.getChairs();
+		const chairs = world.chairs;
 		if (!_.includes(chairs, this)) {
 			console.warn("Removing avatar from a world in which it isn't present.");
 		} else {
-			this.world = undefined;
+			this._world = undefined;
 			_.pull(chairs, this);
-			world.getGraphicsWorld().remove(this);
-			this.rayCastVehicle.removeFromWorld(world.getPhysicsWorld());
+			world.graphicsWorld.remove(this);
+			this._rayCastVehicle.removeFromWorld(world.physicsWorld);
 		}
 	}
 
@@ -176,14 +176,14 @@ export class Chair
 				Utils.setupMeshProperties(child);
 
 				if (child.material !== undefined) {
-					this.materials.push(child.material);
+					this._materials.push(child.material);
 				}
 			}
 
 			if (child.hasOwnProperty('userData')) {
 				if (child.userData.hasOwnProperty('data')) {
 					if (child.userData.data === 'seat') {
-						this.seatPointObject = child;
+						this._seatPointObject = child;
 					}
 					if (child.userData.data === 'collision') {
 						if (child.userData.shape === 'box') {
@@ -193,7 +193,7 @@ export class Chair
 								new CANNON.Vec3(child.scale.x, child.scale.y, child.scale.z),
 							);
 							phys.collisionFilterMask = ~CollisionGroups.TrimeshColliders;
-							this.collision.addShape(
+							this._collision.addShape(
 								phys,
 								new CANNON.Vec3(
 									child.position.x,
@@ -206,7 +206,7 @@ export class Chair
 
 							const phys = new CANNON.Sphere(child.scale.x);
 							phys.collisionFilterGroup = CollisionGroups.TrimeshColliders;
-							this.collision.addShape(
+							this._collision.addShape(
 								phys,
 								new CANNON.Vec3(
 									child.position.x,
@@ -217,7 +217,7 @@ export class Chair
 						}
 					}
 					if (child.userData.hasOwnProperty('entry_points')) {
-						this.entryPoints = gltf.scene.getObjectByName(
+						this._entryPoints = gltf.scene.getObjectByName(
 							child.userData.entry_points,
 						);
 					}
@@ -229,40 +229,41 @@ export class Chair
 			}
 		});
 
-		if (this.collision.shapes.length === 0) {
+		if (this._collision.shapes.length === 0) {
 			console.warn('Chair ' + typeof this + ' has no collision data.');
 		}
 	}
 
-	public getSpawnPoint(): THREE.Object3D {
-		return this.spawnPoint;
+	//getter,setter
+	get spawnPoint(): THREE.Object3D {
+		return this._spawnPoint;
 	}
 
-	public setSpawnPoint(spawnPoint: THREE.Object3D) {
-		this.spawnPoint = spawnPoint;
+	set spawnPoint(spawnPoint: THREE.Object3D) {
+		this._spawnPoint = spawnPoint;
 	}
 
-	public getCollision(): CANNON.Body {
-		return this.collision;
+	get collision(): CANNON.Body {
+		return this._collision;
 	}
 
-	public getEntryPoints(): THREE.Object3D {
-		return this.entryPoints;
+	get entryPoints(): THREE.Object3D {
+		return this._entryPoints;
 	}
 
-	public getRayCastVehicle(): CANNON.RaycastVehicle {
-		return this.rayCastVehicle;
+	get rayCastVehicle(): CANNON.RaycastVehicle {
+		return this._rayCastVehicle;
 	}
 
-	public getSeatPointObject(): THREE.Object3D {
-		return this.seatPointObject;
+	get seatPointObject(): THREE.Object3D {
+		return this._seatPointObject;
 	}
 
-	public getOccupiedBy(): Avatar {
-		return this.occupiedBy;
+	get occupiedBy(): Avatar {
+		return this._occupiedBy;
 	}
 
-	public setOccupiedBy(avatar: Avatar) {
-		this.occupiedBy = avatar;
+	set occupiedBy(avatar: Avatar) {
+		this._occupiedBy = avatar;
 	}
 }

@@ -44,7 +44,7 @@ export class Walk extends AvatarStateBase {
 		}
 
 		if (this.noDirection()) {
-			if (this.avatar.getVelocity().length() > 1) {
+			if (this.avatar.velocity.length() > 1) {
 				this.avatar.setState(new EndWalk(this.avatar));
 			} else {
 				this.avatar.setState(new Idle(this.avatar));

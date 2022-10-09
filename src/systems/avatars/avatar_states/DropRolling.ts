@@ -6,8 +6,8 @@ export class DropRolling extends AvatarStateBase {
 	constructor(avatar: Avatar) {
 		super(avatar);
 
-		this.avatar.getVelocitySimulator().mass = 1;
-		this.avatar.getVelocitySimulator().damping = 0.6;
+		this.avatar.velocitySimulator.mass = 1;
+		this.avatar.velocitySimulator.damping = 0.6;
 
 		this.avatar.setArcadeVelocityTarget(0.8);
 		this.playAnimation('drop_running_roll', 0.03);

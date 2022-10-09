@@ -26,16 +26,16 @@ export abstract class ExitingStateBase extends AvatarStateBase {
 	}
 
 	public detachAvatarFromChair(): void {
-		this.avatar.setControlledObject(undefined);
+		this.avatar.controlledObject = undefined;
 		this.avatar.resetOrientation();
-		this.avatar.getWorld().getGraphicsWorld().attach(this.avatar);
+		this.avatar.world.graphicsWorld.attach(this.avatar);
 		this.avatar.resetVelocity();
 		this.avatar.setPhysicsEnabled(true);
 		this.avatar.inputReceiverUpdate(0);
 		this.avatar
-			.getAvatarCapsule()
+			.avatarCapsule
 			.body.velocity.copy(
-				(this.chair as unknown as Chair).getRayCastVehicle().chassisBody
+				(this.chair as unknown as Chair).rayCastVehicle.chassisBody
 					.velocity,
 			);
 		this.avatar.feetRaycast();
@@ -46,11 +46,11 @@ export abstract class ExitingStateBase extends AvatarStateBase {
 		forward.y = 0;
 		forward.normalize();
 
-		this.avatar.getWorld().getGraphicsWorld().attach(this.dummyObj);
+		this.avatar.world.graphicsWorld.attach(this.dummyObj);
 		this.exitPoint.getWorldPosition(this.dummyObj.position);
 		const target = this.dummyObj.position.clone().add(forward);
 		this.dummyObj.lookAt(target);
-		this.chair.getSeatPointObject().parent.attach(this.dummyObj);
+		this.chair.seatPointObject.parent.attach(this.dummyObj);
 		this.endRotation.copy(this.dummyObj.quaternion);
 	}
 }

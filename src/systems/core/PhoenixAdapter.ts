@@ -11,14 +11,14 @@ import { Vector3 } from 'three';
 export class PhoenixAdapter implements IUpdatable {
 	public updateOrder = 6;
 
-	private world: World;
-	private sessionId: string;
-	private socket: Socket;
-	private channel: Channel;
-	private presence: Presence;
+	private _world: World;
+	private _sessionId: string;
+	private _socket: Socket;
+	private _channel: Channel;
+	private _presence: Presence;
+	private _animationMap = new Map<string, Array<any>>();
 
-	public animationMap = new Map<string, Array<any>>();
-	private idleState = 0;
+	private _idleState = 0;
 
 	constructor(
 		world: World,
@@ -26,29 +26,29 @@ export class PhoenixAdapter implements IUpdatable {
 		channerTopic: string,
 		profile: object,
 	) {
-		this.world = world;
-		this.socket = new Socket(serverUrl);
-		this.channel = this.socket.channel(channerTopic, { profile: profile });
-		this.presence = new Presence(this.channel);
+		this._world = world;
+		this._socket = new Socket(serverUrl);
+		this._channel = this._socket.channel(channerTopic, { profile: profile });
+		this._presence = new Presence(this._channel);
 
 		//AnimationMap Initialization
-		this.animationMap.set('idle', ['idle', 0.1]);
-		this.animationMap.set('drop_idle', ['drop_idle', 0.1]);
-		this.animationMap.set('drop_running_roll', ['drop_running_roll', 0.03]);
-		this.animationMap.set('drop_running', ['drop_running', 0.1]);
-		this.animationMap.set('stop', ['stop', 0.1]);
-		this.animationMap.set('falling', ['falling', 0.3]);
-		this.animationMap.set('jump_idle', ['jump_idle', 0.1]);
-		this.animationMap.set('jump_running', ['jump_running', 0.03]);
-		this.animationMap.set('sprint', ['sprint', 0.1]);
-		this.animationMap.set('run', ['run', 0.1]);
-		this.animationMap.set('sit_down_right', ['sit_down_right', 0.1]);
-		this.animationMap.set('sit_down_left', ['sit_down_left', 0.1]);
-		this.animationMap.set('stand_up_right', ['stand_up_right', 0.1]);
-		this.animationMap.set('sitting', ['sitting', 0.1]);
-		this.animationMap.set('stand_clap',['stand_clap', 0.3]);
-		this.animationMap.set('stand_wave',['stand_wave', 0.3]);
-		this.animationMap.set('stand_dance',['stand_dance', 0.3]);
+		this._animationMap.set('idle', ['idle', 0.1]);
+		this._animationMap.set('drop_idle', ['drop_idle', 0.1]);
+		this._animationMap.set('drop_running_roll', ['drop_running_roll', 0.03]);
+		this._animationMap.set('drop_running', ['drop_running', 0.1]);
+		this._animationMap.set('stop', ['stop', 0.1]);
+		this._animationMap.set('falling', ['falling', 0.3]);
+		this._animationMap.set('jump_idle', ['jump_idle', 0.1]);
+		this._animationMap.set('jump_running', ['jump_running', 0.03]);
+		this._animationMap.set('sprint', ['sprint', 0.1]);
+		this._animationMap.set('run', ['run', 0.1]);
+		this._animationMap.set('sit_down_right', ['sit_down_right', 0.1]);
+		this._animationMap.set('sit_down_left', ['sit_down_left', 0.1]);
+		this._animationMap.set('stand_up_right', ['stand_up_right', 0.1]);
+		this._animationMap.set('sitting', ['sitting', 0.1]);
+		this._animationMap.set('stand_clap',['stand_clap', 0.3]);
+		this._animationMap.set('stand_wave',['stand_wave', 0.3]);
+		this._animationMap.set('stand_dance',['stand_dance', 0.3]);
 
 		world.registerUpdatable(this);
 	}
@@ -56,7 +56,7 @@ export class PhoenixAdapter implements IUpdatable {
 	public phoenixSocketConnect(): Promise<void> {
 		return new Promise((resolve, reject) => {
 			try {
-				this.socket.connect();
+				this._socket.connect();
 				resolve();
 			} catch (error) {
 				reject();
@@ -66,15 +66,15 @@ export class PhoenixAdapter implements IUpdatable {
 
 	public phoenixChannelJoin(): Promise<void> {
 		return new Promise((resolve, reject) => {
-			this.channel
+			this._channel
 				.join()
 				.receive('ok', (resp) => {
 					console.log('Joined successfully', resp);
-					this.sessionId = resp;
-					this.world.setUserAvatar(this.sessionId);
+					this._sessionId = resp;
+					this._world.setUserAvatarAndAvatarMap(this._sessionId);
 
-					this.channel.on('networkedData', this.handleNetworkedData);
-					this.channel.on(
+					this._channel.on('networkedData', this.handleNetworkedData);
+					this._channel.on(
 						'networkedDataInChair',
 						this.handleNetworkedDataInChair,
 					);
@@ -88,19 +88,15 @@ export class PhoenixAdapter implements IUpdatable {
 		});
 	}
 
-	public getChannel() {
-		return this.channel;
-	}
-
 	public onJoin(avatarLoadingManager: LoadingManager) {
-		this.presence.onJoin((id, beforeJoin, afterJoin) => {
+		this._presence.onJoin((id, beforeJoin, afterJoin) => {
 			if (beforeJoin === undefined) {
 				console.log('onJoin', ':', afterJoin.metas[0]);
-				if (id != this.sessionId) {
+				if (id != this._sessionId) {
 					const avatarSpawnPoint = new AvatarSpawnPoint(new THREE.Object3D());
 					avatarSpawnPoint.spawnOtherAvatar(
 						avatarLoadingManager,
-						this.world,
+						this._world,
 						id,
 						afterJoin.metas[0].profile,
 					);
@@ -110,37 +106,37 @@ export class PhoenixAdapter implements IUpdatable {
 	}
 
 	public onLeave() {
-		this.presence.onLeave((id, remaining, afteremovedrJoin) => {
+		this._presence.onLeave((id, remaining, afteremovedrJoin) => {
 			let leaveAvatar: Avatar;
-			this.world.getAvatars().forEach((avatar) => {
-				if (avatar.getSessionId() == id) {
+			this._world.avatars.forEach((avatar) => {
+				if (avatar.sessionId == id) {
 					leaveAvatar = avatar;
-					this.world.getAvatarMap().delete(id);
+					this._world.avatarMap.delete(id);
 				}
 			});
 
-			this.world.remove(leaveAvatar);
+			this._world.remove(leaveAvatar);
 		});
 	}
 
 	public onSync() {
-		this.presence.onSync(() => {
-			const users = this.presence.list();
+		this._presence.onSync(() => {
+			const users = this._presence.list();
 			console.log('users:', users);
 		});
 	}
 
 	public disconnect() {
-		this.socket.disconnect();
+		this._socket.disconnect();
 	}
 
 	public handleNetworkedData = (data) => {
-		const targetAvatar: Avatar = this.world.getAvatarMap().get(data.sessionId);
+		const targetAvatar: Avatar = this._world.avatarMap.get(data.sessionId);
 		if (targetAvatar) {
 			targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
 			targetAvatar.setOtherAvatarAnimation(
-				this.animationMap.get(data.animation)[0],
-				this.animationMap.get(data.animation)[1],
+				this._animationMap.get(data.animation)[0],
+				this._animationMap.get(data.animation)[1],
 			);
 			targetAvatar.rotation.x = data.rotationX;
 			targetAvatar.rotation.y = data.rotationY;
@@ -149,13 +145,13 @@ export class PhoenixAdapter implements IUpdatable {
 	};
 
 	public handleNetworkedDataInChair = (data) => {
-		const targetAvatar: Avatar = this.world.getAvatarMap().get(data.sessionId);
+		const targetAvatar: Avatar = this._world.avatarMap.get(data.sessionId);
 
 		if (targetAvatar) {
 			targetAvatar.setPosition(data.positionX, data.positionY, data.positionZ);
 			targetAvatar.setOtherAvatarAnimation(
-				this.animationMap.get(data.animation)[0],
-				this.animationMap.get(data.animation)[1],
+				this._animationMap.get(data.animation)[0],
+				this._animationMap.get(data.animation)[1],
 			);
 			targetAvatar.rotation.x = data.chairRotationX;
 			targetAvatar.rotation.y = data.chairRotationY;
@@ -164,35 +160,39 @@ export class PhoenixAdapter implements IUpdatable {
 	};
 
 	public update(timestep: number, unscaledTimeStep: number): void {
-		const userAvatar = this.world.getUserAvatar();
-		const chairs = this.world.getChairs();
+		const userAvatar = this._world.userAvatar;
+		const chairs = this._world.chairs;
 		const userEnteredChair = chairs.filter(
 			(chair) => chair.children.length > 1,
 		);
 
 		if (userAvatar != null && userEnteredChair[0] != null) {
-			this.channel.push('networkedDataInChair', {
-				sessionId: userAvatar.getSessionId(),
+			this._channel.push('networkedDataInChair', {
+				sessionId: userAvatar.sessionId,
 				positionX: userEnteredChair[0].position.x,
 				positionY: userEnteredChair[0].position.y + 0.5,
 				positionZ: userEnteredChair[0].position.z,
-				animation: userAvatar.getAvatarAnimationState(),
+				animation: userAvatar.avatarAnimationState,
 				chairRotationX: userEnteredChair[0].rotation.x,
 				chairRotationY: userEnteredChair[0].rotation.y,
 				chairRotationZ: userEnteredChair[0].rotation.z,
-				vehicleSpawnName: userEnteredChair[0].getSpawnPoint().name,
+				vehicleSpawnName: userEnteredChair[0].spawnPoint.name,
 			});
 		} else if (userAvatar != null) {
-			this.channel.push('networkedData', {
-				sessionId: userAvatar.getSessionId(),
+			this._channel.push('networkedData', {
+				sessionId: userAvatar.sessionId,
 				positionX: userAvatar.position.x,
 				positionY: userAvatar.position.y,
 				positionZ: userAvatar.position.z,
-				animation: userAvatar.getAvatarAnimationState(),
+				animation: userAvatar.avatarAnimationState,
 				rotationX: userAvatar.rotation.x,
 				rotationY: userAvatar.rotation.y,
 				rotationZ: userAvatar.rotation.z,
 			});
 		}
+	}
+
+	get channel() {
+		return this._channel;
 	}
 }

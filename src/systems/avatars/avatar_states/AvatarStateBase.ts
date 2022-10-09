@@ -23,17 +23,17 @@ export abstract class AvatarStateBase implements IAvatarState {
 	constructor(avatar: Avatar) {
 		this.avatar = avatar;
 
-		this.avatar.getVelocitySimulator().damping =
-			this.avatar.getDefaultVelocitySimulatorDamping();
-		this.avatar.getVelocitySimulator().mass =
-			this.avatar.getDefaultVelocitySimulatorMass();
+		this.avatar.velocitySimulator.damping =
+			this.avatar.defaultVelocitySimulatorDamping;
+		this.avatar.velocitySimulator.mass =
+			this.avatar.defaultVelocitySimulatorMass;
 
-		this.avatar.getRotationSimulator().damping =
-			this.avatar.getDefaultRotationSimulatorDamping();
-		this.avatar.getRotationSimulator().mass =
-			this.avatar.getDefaultRotationSimulatorMass();
+		this.avatar.rotationSimulator.damping =
+			this.avatar.defaultRotationSimulatorDamping;
+		this.avatar.rotationSimulator.mass =
+			this.avatar.defaultRotationSimulatorMass;
 
-		this.avatar.setArcadeVelocityIsAdditive(false);
+		this.avatar.arcadeVelocityIsAdditive = false;
 		this.avatar.setArcadeVelocityInfluence(1, 0, 1);
 
 		this.canFindChairsToEnter = true;
@@ -57,7 +57,7 @@ export abstract class AvatarStateBase implements IAvatarState {
 			this.avatar.findChairToEnter(false);
 		} else if (
 			this.canEnterChairs &&
-			this.avatar.getChairEntryInstance() !== null
+			this.avatar.chairEntryInstance !== null
 		) {
 			if (
 				this.avatar.actions.up.justPressed ||
@@ -65,7 +65,7 @@ export abstract class AvatarStateBase implements IAvatarState {
 				this.avatar.actions.left.justPressed ||
 				this.avatar.actions.right.justPressed
 			) {
-				this.avatar.setChairEntryInstance(null);
+				this.avatar.chairEntryInstance = null;
 				this.avatar.actions.up.isPressed = false;
 			}
 		}
@@ -114,13 +114,13 @@ export abstract class AvatarStateBase implements IAvatarState {
 	}
 
 	public fallInAir(): void {
-		if (!this.avatar.getRayHasHit()) {
+		if (!this.avatar.rayHasHit) {
 			this.avatar.setState(new Falling(this.avatar));
 		}
 	}
 
 	public animationEnded(timeStep: number): boolean {
-		if (this.avatar.getMixer() !== undefined) {
+		if (this.avatar.mixer !== undefined) {
 			if (this.animationLength === undefined) {
 				console.error(
 					this.constructor.name +
@@ -136,10 +136,10 @@ export abstract class AvatarStateBase implements IAvatarState {
 	}
 
 	public setAppropriateDropState(): void {
-		if (this.avatar.getGroundImpactData().velocity.y < -6) {
+		if (this.avatar.groundImpactData.velocity.y < -6) {
 			this.avatar.setState(new DropRolling(this.avatar));
 		} else if (this.anyDirection()) {
-			if (this.avatar.getGroundImpactData().velocity.y < -2) {
+			if (this.avatar.groundImpactData.velocity.y < -2) {
 				this.avatar.setState(new DropRunning(this.avatar));
 			} else {
 				if (this.avatar.actions.run.isPressed) {

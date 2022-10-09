@@ -32,41 +32,53 @@ import { Joystick } from '../core/Joystick';
 import checkIsMobile, { isIOS } from '../../utils/isMobile';
 import { DirectionalLight, HemisphereLight } from 'three';
 
+export interface WorldParams {
+	Pointer_Lock: boolean;
+	Mouse_Sensitivity: number;
+	Time_Scale: number;
+	Shadows: boolean;
+	FXAA: boolean;
+	Debug_Physics: boolean;
+	Debug_FPS: boolean;
+	Sun_Elevation: number;
+	Sun_Rotation: number;
+}
+
 export class World {
-	private requestAnimationFrameId;
-	private renderer: THREE.WebGLRenderer;
-	private camera: THREE.PerspectiveCamera;
-	private cameraOperator: CameraOperator;
-	private sky: Sky;
-	private composer: EffectComposer;
-	private graphicsWorld: THREE.Scene;
-	private physicsWorld: CANNON.World;
-	private physicsFrameRate: number;
-	private physicsFrameTime: number;
-	private physicsMaxPrediction: number;
-	private clock: THREE.Clock;
-	private renderDelta: number;
-	private logicDelta: number;
-	private requestDelta: number;
-	private sinceLastFrame: number;
-	private justRendered: boolean;
-	private params: WorldParams;
-	private timeScaleTarget = 1;
+	private _requestAnimationFrameId;
+	private _renderer: THREE.WebGLRenderer;
+	private _camera: THREE.PerspectiveCamera;
+	private _cameraOperator: CameraOperator;
+	private _sky: Sky;
+	private _composer: EffectComposer;
+	private _graphicsWorld: THREE.Scene;
+	private _physicsWorld: CANNON.World;
+	private _physicsFrameRate: number;
+	private _physicsFrameTime: number;
+	private _physicsMaxPrediction: number;
+	private _clock: THREE.Clock;
+	private _renderDelta: number;
+	private _logicDelta: number;
+	private _requestDelta: number;
+	private _sinceLastFrame: number;
+	private _justRendered: boolean;
+	private _params: WorldParams;
+	private _timeScaleTarget = 1;
 
-	private inputManager: InputManager;
+	private _inputManager: InputManager;
 
-	private spawnPoints: ISpawnPoint[] = [];
-	private userAvatar: Avatar;
-	private avatars: Avatar[] = [];
-	private avatarMap = new Map<string, Avatar>();
-	private chairs: Chair[] = [];
+	private _spawnPoints: ISpawnPoint[] = [];
+	private _userAvatar: Avatar;
+	private _avatars: Avatar[] = [];
+	private _avatarMap = new Map<string, Avatar>();
+	private _chairs: Chair[] = [];
 
-	private stats: Stats;
-	private scenarioGUIFolder: GUI;
-	private cannonDebugRenderer: CannonDebugRenderer;
+	private _stats: Stats;
+	private _scenarioGUIFolder: GUI;
+	private _cannonDebugRenderer: CannonDebugRenderer;
 
-	private phoenixAdapter: PhoenixAdapter;
-	private mediasoupAdapter: MediasoupAdapter;
+	private _phoenixAdapter: PhoenixAdapter;
+	private _mediasoupAdapter: MediasoupAdapter;
 
 	public updatables: IUpdatable[] = [];
 
@@ -74,29 +86,29 @@ export class World {
 		const scope = this;
 
 		// Renderer
-		this.renderer = new THREE.WebGLRenderer();
-		this.renderer.setPixelRatio(window.devicePixelRatio);
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		this.renderer.toneMapping = THREE.ReinhardToneMapping;
-		this.renderer.toneMappingExposure = 1;
-		this.renderer.shadowMap.enabled = false;
-		this.renderer.shadowMap.type = THREE.BasicShadowMap;
+		this._renderer = new THREE.WebGLRenderer();
+		this._renderer.setPixelRatio(window.devicePixelRatio);
+		this._renderer.setSize(window.innerWidth, window.innerHeight);
+		this._renderer.toneMapping = THREE.ReinhardToneMapping;
+		this._renderer.toneMappingExposure = 1;
+		this._renderer.shadowMap.enabled = false;
+		this._renderer.shadowMap.type = THREE.BasicShadowMap;
 
 		// Canvas
-		this.renderer.domElement.id = 'main-canvas';
-		this.renderer.domElement.tabIndex = 1;
-		document.body.appendChild(this.renderer.domElement);
+		this._renderer.domElement.id = 'main-canvas';
+		this._renderer.domElement.tabIndex = 1;
+		document.body.appendChild(this._renderer.domElement);
 
 		// Auto window resize
 		function onWindowResize(): void {
-			scope.camera.aspect = window.innerWidth / window.innerHeight;
-			scope.camera.updateProjectionMatrix();
-			scope.renderer.setSize(window.innerWidth, window.innerHeight);
+			scope._camera.aspect = window.innerWidth / window.innerHeight;
+			scope._camera.updateProjectionMatrix();
+			scope._renderer.setSize(window.innerWidth, window.innerHeight);
 			fxaaPass.uniforms['resolution'].value.set(
 				1 / (window.innerWidth * pixelRatio),
 				1 / (window.innerHeight * pixelRatio),
 			);
-			scope.composer.setSize(
+			scope._composer.setSize(
 				window.innerWidth * pixelRatio,
 				window.innerHeight * pixelRatio,
 			);
@@ -196,15 +208,15 @@ export class World {
 			canvas.style.width = canvasRect.width + 'px';
 			canvas.style.height = canvasRect.height + 'px';
 
-			scope.renderer.setSize(rendererSize.width, rendererSize.height, false);
+			scope._renderer.setSize(rendererSize.width, rendererSize.height, false);
 
 			fxaaPass.uniforms['resolution'].value.set(
 				1 / (window.innerWidth * pixelRatio),
 				1 / (window.innerHeight * pixelRatio),
 			);
 
-			scope.camera.aspect = rendererSize.width / rendererSize.height;
-			scope.camera.updateProjectionMatrix();
+			scope._camera.aspect = rendererSize.width / rendererSize.height;
+			scope._camera.updateProjectionMatrix();
 
 			scope.render(this);
 		});
@@ -214,8 +226,8 @@ export class World {
 		//window.addEventListener('resize', onWindowResize, false);
 
 		// Three.js scene
-		this.graphicsWorld = new THREE.Scene();
-		this.camera = new THREE.PerspectiveCamera(
+		this._graphicsWorld = new THREE.Scene();
+		this._camera = new THREE.PerspectiveCamera(
 			80,
 			window.innerWidth / window.innerHeight,
 			0.1,
@@ -223,50 +235,50 @@ export class World {
 		);
 
 		// Passes
-		const renderPass = new RenderPass(this.graphicsWorld, this.camera);
+		const renderPass = new RenderPass(this._graphicsWorld, this._camera);
 		const fxaaPass = new ShaderPass(FXAAShader);
 
 		// FXAA
-		const pixelRatio = this.renderer.getPixelRatio();
+		const pixelRatio = this._renderer.getPixelRatio();
 		fxaaPass.material['uniforms'].resolution.value.x =
 			1 / (window.innerWidth * pixelRatio);
 		fxaaPass.material['uniforms'].resolution.value.y =
 			1 / (window.innerHeight * pixelRatio);
 
 		// Composer
-		this.composer = new EffectComposer(this.renderer);
-		this.composer.addPass(renderPass);
-		this.composer.addPass(fxaaPass);
+		this._composer = new EffectComposer(this._renderer);
+		this._composer.addPass(renderPass);
+		this._composer.addPass(fxaaPass);
 
 		// Physics
-		this.physicsWorld = new CANNON.World();
-		this.physicsWorld.gravity.set(0, -9.81, 0);
-		this.physicsWorld.broadphase = new CANNON.SAPBroadphase(this.physicsWorld);
-		this.physicsWorld.solver.iterations = 10;
-		this.physicsWorld.allowSleep = true;
+		this._physicsWorld = new CANNON.World();
+		this._physicsWorld.gravity.set(0, -9.81, 0);
+		this._physicsWorld.broadphase = new CANNON.SAPBroadphase(this._physicsWorld);
+		this._physicsWorld.solver.iterations = 10;
+		this._physicsWorld.allowSleep = true;
 
-		this.physicsFrameRate = 60;
-		this.physicsFrameTime = 1 / this.physicsFrameRate;
-		this.physicsMaxPrediction = this.physicsFrameRate;
+		this._physicsFrameRate = 60;
+		this._physicsFrameTime = 1 / this._physicsFrameRate;
+		this._physicsMaxPrediction = this._physicsFrameRate;
 
 		// RenderLoop
-		this.clock = new THREE.Clock();
-		this.renderDelta = 0;
-		this.logicDelta = 0;
-		this.sinceLastFrame = 0;
-		this.justRendered = false;
+		this._clock = new THREE.Clock();
+		this._renderDelta = 0;
+		this._logicDelta = 0;
+		this._sinceLastFrame = 0;
+		this._justRendered = false;
 
 		// Stats (FPS, Frame time, Memory)
-		this.stats = Stats();
+		this._stats = Stats();
 		// Create right panel GUI
 		this.createParamsGUI(scope);
 
 		// Initialization
-		this.inputManager = new InputManager(this, this.renderer.domElement);
-		this.cameraOperator = new CameraOperator(
+		this._inputManager = new InputManager(this, this._renderer.domElement);
+		this._cameraOperator = new CameraOperator(
 			this,
-			this.camera,
-			this.params.Mouse_Sensitivity,
+			this._camera,
+			this._params.Mouse_Sensitivity,
 		);
 
 		// this.sky = new Sky(this);
@@ -279,11 +291,11 @@ export class World {
 			'darkslategrey', // dim ground color
 			5, // intensity
 		);
-		this.graphicsWorld.add(ambientLight)
+		this._graphicsWorld.add(ambientLight)
 
 		const mainLight = new DirectionalLight('white', 5);
 		mainLight.position.set(10, 10, 10);
-		this.graphicsWorld.add(mainLight)
+		this._graphicsWorld.add(mainLight)
 
 		const loader = new THREE.TextureLoader();
 		const texture = loader.load(
@@ -304,10 +316,10 @@ export class World {
 		const sphere = new THREE.SphereBufferGeometry(100, 100, 100);
 		const bgMesh = new THREE.Mesh(sphere, material);
 		bgMesh.position.set(0, 0, 0)
-		this.graphicsWorld.add(bgMesh);
+		this._graphicsWorld.add(bgMesh);
 
 		if (checkIsMobile()) {
-			new Joystick(this, this.inputManager);
+			new Joystick(this, this._inputManager);
 		}
 
 		// Load scene if path is supplied
@@ -332,20 +344,20 @@ export class World {
 					profile.avatar_name = localStorage.getItem('avatar_name');
 				}
 
-				this.phoenixAdapter = new PhoenixAdapter(
+				this._phoenixAdapter = new PhoenixAdapter(
 					this,
 					process.env.PHOENIX_SERVER_URL,
 					process.env.PHOENIX_CHANNER_TOPIC,
 					profile,
 				);
-				await this.phoenixAdapter.phoenixSocketConnect();
-				await this.phoenixAdapter.phoenixChannelJoin();
+				await this._phoenixAdapter.phoenixSocketConnect();
+				await this._phoenixAdapter.phoenixChannelJoin();
 
-				this.phoenixAdapter.onJoin(avatarLoadingManager);
-				this.phoenixAdapter.onLeave();
-				this.phoenixAdapter.onSync();
+				this._phoenixAdapter.onJoin(avatarLoadingManager);
+				this._phoenixAdapter.onLeave();
+				this._phoenixAdapter.onSync();
 
-				this.mediasoupAdapter = new MediasoupAdapter(
+				this._mediasoupAdapter = new MediasoupAdapter(
 					this,
 					process.env.MEDIASOUP_SERVER_URL,
 				);
@@ -394,10 +406,10 @@ export class World {
 									shape.collisionFilterMask = ~CollisionGroups.TrimeshColliders;
 								});
 
-								this.physicsWorld.addBody(phys.body);
+								this._physicsWorld.addBody(phys.body);
 							} else if (child.userData.type === 'trimesh') {
 								const phys = new TrimeshCollider(child, {});
-								this.physicsWorld.addBody(phys.body);
+								this._physicsWorld.addBody(phys.body);
 							}
 
 							child.visible = false;
@@ -409,29 +421,35 @@ export class World {
 							const sp = new ObjectSpawnPoint(child);
 
 							if (child.userData.hasOwnProperty('type')) {
-								sp.setType(child.userData.type);
+								sp.type = child.userData.type;
 							}
 
-							this.spawnPoints.push(sp);
+							this._spawnPoints.push(sp);
 						} else if (child.userData.type === 'player') {
 							const sp = new AvatarSpawnPoint(child);
-							this.spawnPoints.push(sp);
+							this._spawnPoints.push(sp);
 						}
 					}
 				}
 			}
 		});
 
-		this.graphicsWorld.add(gltf.scene);
+		this._graphicsWorld.add(gltf.scene);
 
-		this.spawnPoints.forEach((sp) => {
+		this._spawnPoints.forEach((sp) => {
 			sp.spawn(loadingManager, this);
 		});
 	}
 
 	public setTimeScale(value: number): void {
-		this.params.Time_Scale = value;
-		this.timeScaleTarget = value;
+		this._params.Time_Scale = value;
+		this._timeScaleTarget = value;
+	}
+	
+	public setUserAvatarAndAvatarMap(sessionId: string) {
+		this._userAvatar = this.avatars[0];
+		this._userAvatar.sessionId = sessionId;
+		this._avatarMap.set(sessionId, this._userAvatar);
 	}
 
 	public add(worldEntity: IWorldEntity): void {
@@ -454,19 +472,19 @@ export class World {
 	}
 
 	public clearEntities(): void {
-		for (let i = 0; i < this.avatars.length; i++) {
-			this.remove(this.avatars[i]);
+		for (let i = 0; i < this._avatars.length; i++) {
+			this.remove(this._avatars[i]);
 			i--;
 		}
 
-		for (let i = 0; i < this.chairs.length; i++) {
-			this.remove(this.chairs[i]);
+		for (let i = 0; i < this._chairs.length; i++) {
+			this.remove(this._chairs[i]);
 			i--;
 		}
 	}
 
 	private createParamsGUI(scope: World): void {
-		this.params = {
+		this._params = {
 			Pointer_Lock: true,
 			Mouse_Sensitivity: 0.3,
 			Time_Scale: 1,
@@ -481,33 +499,33 @@ export class World {
 		const gui = new GUI.GUI();
 
 		// Scenario
-		this.scenarioGUIFolder = gui.addFolder('Scenarios');
-		this.scenarioGUIFolder.open();
+		this._scenarioGUIFolder = gui.addFolder('Scenarios');
+		this._scenarioGUIFolder.open();
 
 		// World
 		const worldFolder = gui.addFolder('World');
 		worldFolder
-			.add(this.params, 'Time_Scale', 0, 1)
+			.add(this._params, 'Time_Scale', 0, 1)
 			.listen()
 			.onChange((value) => {
-				scope.timeScaleTarget = value;
+				scope._timeScaleTarget = value;
 			});
 		worldFolder
-			.add(this.params, 'Sun_Elevation', 0, 180)
+			.add(this._params, 'Sun_Elevation', 0, 180)
 			.listen()
 			.onChange((value) => {
-				scope.sky.phi = value;
+				scope._sky.phi = value;
 			});
 		worldFolder
-			.add(this.params, 'Sun_Rotation', 0, 360)
+			.add(this._params, 'Sun_Rotation', 0, 360)
 			.listen()
 			.onChange((value) => {
-				scope.sky.theta = value;
+				scope._sky.theta = value;
 			});
 
 		// Input
 		const settingsFolder = gui.addFolder('Settings');
-		settingsFolder.add(this.params, 'FXAA');
+		settingsFolder.add(this._params, 'FXAA');
 		// settingsFolder.add(this.params, 'Shadows').onChange((enabled) => {
 		// 	if (enabled) {
 		// 		this.sky.csm.lights.forEach((light) => {
@@ -519,100 +537,42 @@ export class World {
 		// 		});
 		// 	}
 		// });
-		settingsFolder.add(this.params, 'Pointer_Lock').onChange((enabled) => {
-			scope.inputManager.setPointerLock(enabled);
+		settingsFolder.add(this._params, 'Pointer_Lock').onChange((enabled) => {
+			scope._inputManager.setPointerLock(enabled);
 		});
 		settingsFolder
-			.add(this.params, 'Mouse_Sensitivity', 0, 1)
+			.add(this._params, 'Mouse_Sensitivity', 0, 1)
 			.onChange((value) => {
-				scope.cameraOperator.setSensitivity(value, value * 0.8);
+				scope._cameraOperator.setSensitivity(value, value * 0.8);
 			});
-		settingsFolder.add(this.params, 'Debug_Physics').onChange((enabled) => {
+		settingsFolder.add(this._params, 'Debug_Physics').onChange((enabled) => {
 			if (enabled) {
-				this.cannonDebugRenderer = new CannonDebugRenderer(
-					this.graphicsWorld,
-					this.physicsWorld,
+				this._cannonDebugRenderer = new CannonDebugRenderer(
+					this._graphicsWorld,
+					this._physicsWorld,
 				);
 			} else {
-				this.cannonDebugRenderer.clearMeshes();
-				this.cannonDebugRenderer = undefined;
+				this._cannonDebugRenderer.clearMeshes();
+				this._cannonDebugRenderer = undefined;
 			}
 
-			scope.avatars.forEach((avatar) => {
-				avatar.getRaycastBox().visible = enabled;
+			scope._avatars.forEach((avatar) => {
+				avatar.raycastBox.visible = enabled;
 			});
 		});
-		settingsFolder.add(this.params, 'Debug_FPS').onChange((enabled) => {
+		settingsFolder.add(this._params, 'Debug_FPS').onChange((enabled) => {
 			UIManager.setFPSVisible(enabled);
 		});
 
 		gui.open();
 	}
 
-	public getParams(): WorldParams {
-		return this.params;
-	}
-
-	public getCamera(): THREE.PerspectiveCamera {
-		return this.camera;
-	}
-
-	public getCameraOperator(): CameraOperator {
-		return this.cameraOperator;
-	}
-
-	public getInputManager(): InputManager {
-		return this.inputManager;
-	}
-
-	public getPhysicsFrameRate(): number {
-		return this.physicsFrameRate;
-	}
-
-	public getSky(): Sky {
-		return this.sky;
-	}
-
-	public getGraphicsWorld(): THREE.Scene {
-		return this.graphicsWorld;
-	}
-
-	public getPhysicsWorld(): CANNON.World {
-		return this.physicsWorld;
-	}
-
-	public setUserAvatar(sessionId: string) {
-		this.userAvatar = this.avatars[0];
-		this.userAvatar.setSessionId(sessionId);
-		this.avatarMap.set(sessionId, this.userAvatar);
-	}
-
-	public getUserAvatar(): Avatar {
-		return this.userAvatar;
-	}
-
-	public getAvatars(): Avatar[] {
-		return this.avatars;
-	}
-
-	public getAvatarMap(): Map<string, Avatar> {
-		return this.avatarMap;
-	}
-
-	public getTargetAvatar(sessionId: string): Avatar {
-		return this.avatarMap.get(sessionId);
-	}
-
-	public getChairs(): Chair[] {
-		return this.chairs;
-	}
-
-	public getMediasoupAdapter() {
-		return this.mediasoupAdapter;
+	public findTargetAvatar(sessionId: string): Avatar {
+		return this._avatarMap.get(sessionId);
 	}
 
 	public disconnectPhoenixAdapter(): void{
-		this.phoenixAdapter.disconnect();
+		this._phoenixAdapter.disconnect();
 	}
 
 	// Update
@@ -626,19 +586,19 @@ export class World {
 		});
 
 		// Lerp time scale
-		this.params.Time_Scale = THREE.MathUtils.lerp(
-			this.params.Time_Scale,
-			this.timeScaleTarget,
+		this._params.Time_Scale = THREE.MathUtils.lerp(
+			this._params.Time_Scale,
+			this._timeScaleTarget,
 			0.2,
 		);
 
 		// Physics debug
-		if (this.params.Debug_Physics) this.cannonDebugRenderer.update();
+		if (this._params.Debug_Physics) this._cannonDebugRenderer.update();
 	}
 
 	public updatePhysics(timeStep: number): void {
 		// Step the physics world
-		this.physicsWorld.step(this.physicsFrameTime, timeStep);
+		this._physicsWorld.step(this._physicsFrameTime, timeStep);
 	}
 
 	public isOutOfBounds(position: CANNON.Vec3): boolean {
@@ -666,7 +626,7 @@ export class World {
 	}
 
 	public stopRendering() {
-		cancelAnimationFrame(this.requestAnimationFrameId);
+		cancelAnimationFrame(this._requestAnimationFrameId);
 	}
 
 	/**
@@ -676,39 +636,92 @@ export class World {
 	 * @param {World} world
 	 */
 	public render(world: World): void {
-		this.requestDelta = this.clock.getDelta();
+		this._requestDelta = this._clock.getDelta();
 
-		this.requestAnimationFrameId = requestAnimationFrame(() => {
+		this._requestAnimationFrameId = requestAnimationFrame(() => {
 			world.render(world);
 		});
 
 		// Getting timeStep
 		const unscaledTimeStep =
-			this.requestDelta + this.renderDelta + this.logicDelta;
-		let timeStep = unscaledTimeStep * this.params.Time_Scale;
+			this._requestDelta + this._renderDelta + this._logicDelta;
+		let timeStep = unscaledTimeStep * this._params.Time_Scale;
 		timeStep = Math.min(timeStep, 1 / 30); // min 30 fps
 
 		// Logic
 		world.update(timeStep, unscaledTimeStep);
 
 		// Measuring logic time
-		this.logicDelta = this.clock.getDelta();
+		this._logicDelta = this._clock.getDelta();
 
 		// Frame limiting
 		const interval = 1 / 60;
-		this.sinceLastFrame +=
-			this.requestDelta + this.renderDelta + this.logicDelta;
-		this.sinceLastFrame %= interval;
+		this._sinceLastFrame +=
+			this._requestDelta + this._renderDelta + this._logicDelta;
+		this._sinceLastFrame %= interval;
 
 		// Stats end
-		this.stats.end();
-		this.stats.begin();
+		this._stats.end();
+		this._stats.begin();
 
 		// Actual rendering with a FXAA ON/OFF switch
-		if (this.params.FXAA) this.composer.render();
-		else this.renderer.render(this.graphicsWorld, this.camera);
+		if (this._params.FXAA) this._composer.render();
+		else this._renderer.render(this._graphicsWorld, this._camera);
 
 		// Measuring render time
-		this.renderDelta = this.clock.getDelta();
+		this._renderDelta = this._clock.getDelta();
+	}
+
+	//getter,setter
+	get params(): WorldParams {
+		return this._params;
+	}
+
+	get camera(): THREE.PerspectiveCamera {
+		return this._camera;
+	}
+
+	get cameraOperator(): CameraOperator {
+		return this._cameraOperator;
+	}
+
+	get inputManager(): InputManager {
+		return this._inputManager;
+	}
+
+	get physicsFrameRate(): number {
+		return this._physicsFrameRate;
+	}
+
+	get sky(): Sky {
+		return this._sky;
+	}
+
+	get graphicsWorld(): THREE.Scene {
+		return this._graphicsWorld;
+	}
+
+	get physicsWorld(): CANNON.World {
+		return this._physicsWorld;
+	}
+
+	get avatars(): Avatar[] {
+		return this._avatars;
+	}
+
+	get userAvatar(): Avatar {
+		return this._userAvatar;
+	}
+
+	get chairs(): Chair[] {
+		return this._chairs;
+	}
+
+	get mediasoupAdapter() {
+		return this._mediasoupAdapter;
+	}
+
+	get avatarMap(): Map<string, Avatar> {
+		return this._avatarMap;
 	}
 }

@@ -12,24 +12,24 @@ export class LoadingManager {
 	public firstLoad = true;
 	public onFinishedCallback: () => void;
 
-	private world: World;
-	private gltfLoader: GLTFLoader;
-	private dracoLoader: DRACOLoader;
-	private loadingTracker: LoadingTrackerEntry[] = [];
+	private _world: World;
+	private _gltfLoader: GLTFLoader;
+	private _dracoLoader: DRACOLoader;
+	private _loadingTracker: LoadingTrackerEntry[] = [];
 
 	constructor(world: World) {
-		this.world = world;
-		this.gltfLoader = new GLTFLoader();
+		this._world = world;
+		this._gltfLoader = new GLTFLoader();
 
-		this.dracoLoader = new DRACOLoader();
-		this.dracoLoader.setDecoderPath(
+		this._dracoLoader = new DRACOLoader();
+		this._dracoLoader.setDecoderPath(
 			'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/libs/draco/',
 		);
-		this.dracoLoader.setDecoderConfig({ type: 'js' });
+		this._dracoLoader.setDecoderConfig({ type: 'js' });
 
-		this.gltfLoader.setDRACOLoader(this.dracoLoader);
+		this._gltfLoader.setDRACOLoader(this._dracoLoader);
 
-		this.world.setTimeScale(0);
+		this._world.setTimeScale(0);
 		UIManager.setUserInterfaceVisible(false);
 		UIManager.setLoadingScreenVisible(true);
 	}
@@ -37,7 +37,7 @@ export class LoadingManager {
 	public loadGLTF(path: string, onLoadingFinished: (gltf: any) => void): void {
 		const trackerEntry = this.addLoadingEntry(path);
 
-		this.gltfLoader.load(
+		this._gltfLoader.load(
 			path,
 			(gltf) => {
 				onLoadingFinished(gltf);
@@ -58,7 +58,7 @@ export class LoadingManager {
 		const trackerEntry = this.addLoadingEntry(path);
 
 		return new Promise((resolve, reject) => {
-			this.gltfLoader.load(
+			this._gltfLoader.load(
 				path,
 				(gltf) => {
 					this.doneLoading(trackerEntry);
@@ -78,7 +78,7 @@ export class LoadingManager {
 
 	public addLoadingEntry(path: string): LoadingTrackerEntry {
 		const entry = new LoadingTrackerEntry(path);
-		this.loadingTracker.push(entry);
+		this._loadingTracker.push(entry);
 
 		return entry;
 	}
@@ -101,7 +101,7 @@ export class LoadingManager {
 	public createWelcomeScreenCallback(): void {
 		if (this.onFinishedCallback === undefined) {
 			this.onFinishedCallback = () => {
-				this.world.update(1, 1);
+				this._world.update(1, 1);
 			};
 		}
 	}
@@ -111,7 +111,7 @@ export class LoadingManager {
 		let total = 0;
 		let finished = 0;
 
-		for (const item of this.loadingTracker) {
+		for (const item of this._loadingTracker) {
 			total++;
 			finished += item.progress;
 			if (!item.finished) done = false;
@@ -121,7 +121,7 @@ export class LoadingManager {
 	}
 
 	private isLoadingDone(): boolean {
-		for (const entry of this.loadingTracker) {
+		for (const entry of this._loadingTracker) {
 			if (!entry.finished) return false;
 		}
 		return true;
