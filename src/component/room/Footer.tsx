@@ -59,16 +59,19 @@ function Footer(props) {
 	const shareButtonClicked = async () => {
 		const world = props.getWorld();
 		const mediasoupAdapter = world.mediasoupAdapter;
+
 		if (isShareOn) {
-			if (await mediasoupAdapter.disableShare()) {
+			try {
+				await mediasoupAdapter.disableShare();
 				setIsShareOn(false);
-			} else {
+			} catch (e: any){
 				setIsShareOn(true);
 			}
 		} else {
-			if (await mediasoupAdapter.enableShare()) {
+			try {
+				await mediasoupAdapter.enableShare();
 				setIsShareOn(true);
-			} else {
+			} catch (e: any){
 				setIsShareOn(false);
 			}
 		}
