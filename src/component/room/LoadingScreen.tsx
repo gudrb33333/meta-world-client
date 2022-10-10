@@ -4,10 +4,23 @@ import classNames from 'classnames';
 
 function LoadingScreen(props) {
 	const [isLoading, setIsLoading] = useState(props.isLoading);
+	const [doneLoading, setDoneLoading] = useState(0);
 
 	useEffect(() => {
 		setIsLoading(props.isLoading);
 	}, [props.isLoading]);
+
+	useEffect(() => {
+		const doneLoadingStatusCallback = (e: CustomEvent) => {
+			setDoneLoading(e.detail.doneLoading);
+		};
+
+		document.addEventListener('done-loading-status', doneLoadingStatusCallback);
+
+		return () => {
+			document.removeEventListener('done-loading-status', doneLoadingStatusCallback);
+		};
+	})
 
 	return (
 		<div
@@ -25,6 +38,9 @@ function LoadingScreen(props) {
 				className={classNames([styles.loadingText, styles.trackingInContract])}
 			>
 				Loading...
+			</div>
+			<div>
+				<p>{doneLoading}%</p>
 			</div>
 		</div>
 	);

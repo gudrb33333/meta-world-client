@@ -83,6 +83,10 @@ export class LoadingManager {
 		trackerEntry.finished = true;
 		trackerEntry.progress = 1;
 
+		document.dispatchEvent(new CustomEvent('done-loading-status',
+			{'detail': {'doneLoading': this.getLoadingPercentage()}}
+		));
+
 		if (this.isLoadingDone()) {
 			if (this.onFinishedCallback !== undefined) {
 				this.onFinishedCallback();
@@ -113,7 +117,7 @@ export class LoadingManager {
 			if (!item.finished) done = false;
 		}
 
-		return (finished / total) * 100;
+		return Math.floor((finished / 50) * 100);
 	}
 
 	private isLoadingDone(): boolean {
