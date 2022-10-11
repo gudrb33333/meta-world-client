@@ -175,6 +175,14 @@ export class Avatar
 
 		// States
 		this.setState(new Idle(this));
+
+		document.addEventListener('toggle-out-event', () => {
+			this.triggerAction('up', false);
+			this.triggerAction('down', false);
+			this.triggerAction('left', false);
+			this.triggerAction('right', false);
+			this.triggerAction('run', false);
+		});
 	}
 
 	public setAnimations(animations: THREE.AnimationClip[]): void {
@@ -400,7 +408,7 @@ export class Avatar
 			else action.justReleased = true;
 
 			// Tell player to handle states according to new input
-			this.avatarState.onInputChange();
+			this._avatarState.onInputChange();
 
 			// Reset the 'just' attributes
 			action.justPressed = false;

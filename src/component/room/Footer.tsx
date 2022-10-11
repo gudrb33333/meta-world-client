@@ -45,6 +45,7 @@ function Footer(props) {
 	};
 
 	const webcamButtonClicked = () => {
+		document.dispatchEvent(new Event('toggle-out-event'));
 		const world = props.getWorld();
 		const mediasoupAdapter = world.mediasoupAdapter;
 		if (isWebcamOn) {
@@ -57,6 +58,7 @@ function Footer(props) {
 	};
 
 	const shareButtonClicked = async () => {
+		document.dispatchEvent(new Event('toggle-out-event'));
 		const world = props.getWorld();
 		const mediasoupAdapter = world.mediasoupAdapter;
 
