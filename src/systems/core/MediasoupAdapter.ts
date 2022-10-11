@@ -934,6 +934,7 @@ export class MediasoupAdapter implements IUpdatable {
 						producerId: this._shareProducer.id,
 					});
 					this._shareProducer = null;
+					this._world.graphicsWorld.remove(this._localShareScreen);
 					resolve(true);
 				} catch (error) {
 					console.error(`Error closing server-side webcam Producer: ${error}`);
