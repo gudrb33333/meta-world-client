@@ -19,7 +19,7 @@ export class LoadingManager {
 
 		this._dracoLoader = new DRACOLoader();
 		this._dracoLoader.setDecoderPath(
-			'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/js/libs/draco/',
+			'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/jsm/libs/draco/',
 		);
 		this._dracoLoader.setDecoderConfig({ type: 'js' });
 
