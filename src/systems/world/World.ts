@@ -17,6 +17,7 @@ import { IUpdatable } from '../interfaces/IUpdatable';
 import { AvatarSpawnPoint } from './AvatarSpawnPoint';
 import { ISpawnPoint } from '../interfaces/ISpawnPoint';
 import { Chair } from '../objects/Chair';
+import { Clothing } from '../objects/Clothing';
 import { Avatar } from '../avatars/Avatar';
 import { IWorldEntity } from '../interfaces/IWorldEntity';
 import { Detector } from '../../lib/utils/Detector';
@@ -72,6 +73,7 @@ export class World {
 	private _avatars: Avatar[] = [];
 	private _avatarMap = new Map<string, Avatar>();
 	private _chairs: Chair[] = [];
+	private _clothing: Clothing[] = [];
 
 	private _stats: Stats;
 	private _scenarioGUIFolder: GUI;
@@ -424,6 +426,14 @@ export class World {
 							}
 
 							this._spawnPoints.push(sp);
+						} else if(child.userData.type === 'clothing') {
+							const sp = new ObjectSpawnPoint(child);
+
+							if (child.userData.hasOwnProperty('type')) {
+								sp.type = child.userData.type;
+							}
+
+							this._spawnPoints.push(sp);
 						} else if (child.userData.type === 'player') {
 							const sp = new AvatarSpawnPoint(child);
 							this._spawnPoints.push(sp);
@@ -478,6 +488,11 @@ export class World {
 
 		for (let i = 0; i < this._chairs.length; i++) {
 			this.remove(this._chairs[i]);
+			i--;
+		}
+
+		for (let i = 0; i < this._clothing.length; i++) {
+			this.remove(this._clothing[i]);
 			i--;
 		}
 	}
@@ -714,6 +729,10 @@ export class World {
 
 	get chairs(): Chair[] {
 		return this._chairs;
+	}
+
+	get clothing(): Clothing[] {
+		return this._clothing;
 	}
 
 	get mediasoupAdapter() {
