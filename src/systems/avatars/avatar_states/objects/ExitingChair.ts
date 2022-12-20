@@ -30,6 +30,7 @@ export class ExitingChair extends ExitingStateBase {
 
 			this.avatar.setState(new Idle(this.avatar));
 			this.avatar.leaveSeat();
+			this.chair.isSeated = false;
 		} else {
 			// Rotation
 			this.updateEndRotation();

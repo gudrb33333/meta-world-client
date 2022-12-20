@@ -25,6 +25,7 @@ export class EnteringChair extends AvatarStateBase {
 		this.avatar.resetVelocity();
 		this.avatar.setPhysicsEnabled(false);
 		(this._chair as unknown as THREE.Object3D).attach(this.avatar);
+		this._chair.isSeated = true;
 
 		this._startPosition.copy(entryPoint.position);
 		this._endPosition.copy(chair.seatPointObject.position);
