@@ -3,6 +3,7 @@ import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import Home from './component/home/Home';
 import Avatar from './component/avatar/Avatar';
 import Room from './component/room/Room';
+import Navbar from './component/room/Sidebar';
 
 function App() {
 	return (

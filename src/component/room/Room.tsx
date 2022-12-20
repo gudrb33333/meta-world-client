@@ -7,6 +7,7 @@ import { createBrowserHistory } from 'history';
 import { useNavigate } from 'react-router-dom';
 import screenfull from 'screenfull';
 import { useEffect, useState } from 'react';
+import Sidebar from './Sidebar';
 
 function Room() {
 	const [world, setWorld] = useState(null);
@@ -86,6 +87,7 @@ function Room() {
 				isUiContainerOn={isUiContainerOn}
 				setUiContainerOn={setUiContainerOn}
 			/>
+			<Sidebar children={"adasdasdsd"}/>
 		</>
 	);
 }
