@@ -43,7 +43,7 @@ function UiContainer(props) {
 				</div>
 				<div className={styles.ctrlRow}>
 					<span className={styles.ctrlKey}>F</span>
-					<span className={styles.ctrlDesc}>의자 앉기/일어나기</span>
+					<span className={styles.ctrlDesc}>상호작용</span>
 				</div>
 				<div className={styles.ctrlRow}>
 					<span className={styles.ctrlKey}>1</span>
