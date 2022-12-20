@@ -11,11 +11,8 @@ import { IWorldEntity } from '../interfaces/IWorldEntity';
 import { IControllable } from '../interfaces/IControllable';
 import { SpriteText2D, textAlign } from 'three-text2d';
 
-export class Chair
-	extends THREE.Object3D
-	implements IWorldEntity, IControllable
-{
-	public updateOrder = 50;
+export class Chair extends THREE.Object3D implements IWorldEntity, IControllable {
+    public updateOrder = 50;
 	public entityType: EntityType;
 	public actions: { [action: string]: KeyBinding } = {};
 	public controllingAvatar: Avatar;
@@ -26,18 +23,14 @@ export class Chair
 	private _spawnPoint: THREE.Object3D;
 	private _modelContainer: THREE.Group;
 	private _interactionMark: SpriteText2D;
-    private _interactionText: SpriteText2D;
-
+    private _interactionText: SpriteText2D;	
+    
 	//public vehicle: IControllable;
 	private _seatPointObject: THREE.Object3D;
-
-	// String of names of connected seats
-	private _connectedSeatsString: string;
-	// Actual seatPoint objects, need to be identified
-	// by parsing connectedSeatsString *after* all seats are imported
-
 	private _entryPoints: THREE.Object3D;
 	private _occupiedBy: Avatar = null;
+
+    private _isSeated: boolean = false;
 
 	constructor(gltf: any, object: THREE.Object3D) {
 		super();
@@ -312,4 +305,12 @@ export class Chair
 	set occupiedBy(avatar: Avatar) {
 		this._occupiedBy = avatar;
 	}
+
+	set isSeated(isSeated: boolean) {
+        this._isSeated = isSeated;
+    }
+
+    get isSeated(): boolean {
+        return this._isSeated;
+    }
 }
