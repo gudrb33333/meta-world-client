@@ -9,12 +9,13 @@ import { CollisionGroups } from '../enums/CollisionGroups';
 import { EntityType } from '../enums/EntityType';
 import { IWorldEntity } from '../interfaces/IWorldEntity';
 import { IControllable } from '../interfaces/IControllable';
+import { SpriteText2D, textAlign } from 'three-text2d';
 
 export class Chair
 	extends THREE.Object3D
 	implements IWorldEntity, IControllable
 {
-	public updateOrder = 2;
+	public updateOrder = 50;
 	public entityType: EntityType;
 	public actions: { [action: string]: KeyBinding } = {};
 	public controllingAvatar: Avatar;
@@ -24,6 +25,8 @@ export class Chair
 	private _materials: THREE.Material[] = [];
 	private _spawnPoint: THREE.Object3D;
 	private _modelContainer: THREE.Group;
+	private _interactionMark: SpriteText2D;
+    private _interactionText: SpriteText2D;
 
 	//public vehicle: IControllable;
 	private _seatPointObject: THREE.Object3D;
@@ -71,13 +74,45 @@ export class Chair
 		this.position.set(worldPos.x, worldPos.y, worldPos.z);
 
 		this.quaternion.set(worldQuat.x, worldQuat.y, worldQuat.z, worldQuat.w);
+
+		this._interactionMark = new SpriteText2D('[F]', {
+			align: textAlign.center,
+			font: '15px Arial',
+			fillStyle: '#ffffff',
+			antialias: true,
+            backgroundColor: '#000000'
+		});
+		this._interactionMark.scale.set(1/100, 1/100, 1);
+        this._interactionMark.position.y = this._interactionMark.position.y + 1.8
+		this.add(this._interactionMark);
+        this._interactionMark.visible = false;
+
+        this._interactionText = new SpriteText2D('상호작용', {
+			align: textAlign.center,
+			font: '15px Arial',
+			fillStyle: '#ffffff',
+			antialias: true,
+		});
+		this._interactionText.scale.set(1/100, 1/100, 1);
+        this._interactionText.position.y = this._interactionText.position.y + 2
+		this.add(this._interactionText);
+        this._interactionText.visible = false;
 	}
 
 	public noDirectionPressed(): boolean {
 		return true;
 	}
 
-	public update(timeStep: number): void {}
+	public update(timeStep: number): void {
+		if(this._world.userAvatar){
+			const distance = this.position.distanceTo(this._world.userAvatar.position);
+			if(distance < 2){
+			 this.visibleInteractionMark();
+			} else {
+			 this.unvisibleInteractionMark();
+			}
+		 }
+	}
 
 	public allowSleep(value: boolean): void {
 		this._collision.allowSleep = value;
@@ -231,6 +266,18 @@ export class Chair
 		if (this._collision.shapes.length === 0) {
 			console.warn('Chair ' + typeof this + ' has no collision data.');
 		}
+	}
+
+    private visibleInteractionMark () {
+        if(!this._interactionMark.visible && !this._interactionMark.visible){
+            this._interactionMark.visible = true;
+            this._interactionText.visible = true;
+        }
+	}
+
+    private unvisibleInteractionMark () {
+        this._interactionMark.visible = false;
+        this._interactionText.visible = false;
 	}
 
 	//getter,setter
