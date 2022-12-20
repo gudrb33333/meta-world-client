@@ -7,6 +7,7 @@ import { Avatar } from '../avatars/Avatar';
 import { AvatarSpawnPoint } from '../world/AvatarSpawnPoint';
 import { LoadingManager } from './LoadingManager';
 import { Vector3 } from 'three';
+import { Chair } from '../objects/Chair';
 
 export class PhoenixAdapter implements IUpdatable {
 	public updateOrder = 6;
@@ -163,7 +164,7 @@ export class PhoenixAdapter implements IUpdatable {
 		const userAvatar = this._world.userAvatar;
 		const chairs = this._world.chairs;
 		const userEnteredChair = chairs.filter(
-			(chair) => chair.children.length > 1,
+			(chair) => chair.isSeated
 		);
 
 		if (userAvatar != null && userEnteredChair[0] != null) {
