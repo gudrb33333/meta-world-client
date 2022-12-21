@@ -6,7 +6,7 @@ import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { DirectionalLight, HemisphereLight } from 'three';
+import { DirectionalLight, HemisphereLight, Object3D } from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 
 export class SidebarCanvas {
@@ -21,8 +21,9 @@ export class SidebarCanvas {
     private _renderer: THREE.WebGLRenderer;
     private _controls: OrbitControls;
     private _composer: EffectComposer;
+	private _model: THREE.Object3D;
 
-    private constructor(model: any){
+    private constructor(){
         const scope = this;
         this._container = document.getElementById('clothing-container');
         
@@ -107,17 +108,24 @@ export class SidebarCanvas {
 		this._gltfLoader.setDRACOLoader(this._dracoLoader);
 
 		this._controls = new OrbitControls( this._camera, this._renderer.domElement );
-    
+
+        this.render();
+    }
+
+	public loadClothing(name: string) {
+		if(this._model) {
+			this.removeModelObject();
+		}
         // model
         this._gltfLoader
-			.load( '/assets/adidas_jacket.glb',( gltf ) => {
-				const model = gltf.scene;
+			.load( `/assets/clothing/${name}.glb`,( gltf ) => {
+				this._model = gltf.scene;
 
 				this._graphicsWorld.add( gltf.scene );
 
-				this._controls.target.x = model.position.x
-				this._controls.target.y = model.position.y + 0.5
-				this._controls.target.z = model.position.z
+				this._controls.target.x = this._model.position.x
+				this._controls.target.y = this._model.position.y + 0.5
+				this._controls.target.z = this._model.position.z
 				this._controls.enableDamping = true;
 				this._controls.minDistance = 1;
 				this._controls.maxDistance = 5;
@@ -125,41 +133,33 @@ export class SidebarCanvas {
 
 				this._camera.position.set( 0, 0.5, 2 );
 			},
-            	// called while loading is progressing
-	        function ( xhr ) {
-
-		        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
+	        ( xhr ) => {
 	        },
-	        // called when loading has errors
-	        function ( error ) {
-
-		        console.log(error);
-
+	        ( error ) => {
+		        console.error(error);
 	        });
+	}
 
-        this.render();
-    }
+	public removeModelObject() {
+		if(this._model) {
+			this._graphicsWorld.remove(this._model);
+		}
+	}
 
     public static getInstance() {
         if (!SidebarCanvas.instance) {
-            SidebarCanvas.instance = new SidebarCanvas('test');
+            SidebarCanvas.instance = new SidebarCanvas();
         }
         return SidebarCanvas.instance;
     }
 
     public render() {
-            const str = this._container.parentElement.style.transform;
-            const regex = /[^0-9]/g;
-            const result = str.replace(regex, "");
-            const number = parseInt(result);
-
-                this._requestAnimationFrameId = requestAnimationFrame(() => {
-                    this.render();
-                });
+        this._requestAnimationFrameId = requestAnimationFrame(() => {
+            this.render();
+        });
     
-                this._controls.update(); // required if damping enabled
-                this._renderer.render( this._graphicsWorld, this._camera );
+        this._controls.update(); // required if damping enabled
+    	this._renderer.render( this._graphicsWorld, this._camera );
             
     }
 
