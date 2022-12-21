@@ -15,6 +15,7 @@ import { IControllable } from '../interfaces/IControllable';
 import { IAvatarState } from '../interfaces/IAvatarState';
 import { IWorldEntity } from '../interfaces/IWorldEntity';
 import { Chair } from '../objects/Chair';
+import { Clothing } from '../objects/Clothing';
 import { CollisionGroups } from '../enums/CollisionGroups';
 import { CapsuleCollider } from '../physics/colliders/CapsuleCollider';
 import { ChairEntryInstance } from './ChairEntryInstance';
@@ -24,6 +25,8 @@ import { Object3D } from 'three';
 import { EntityType } from '../enums/EntityType';
 import { IInputReceiver } from '../interfaces/IInputReceiver';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import { TargetObjectInstance } from './TargetObjectInstance';
+import { SidebarCanvas } from '../world/SidebarCanvas';
 
 export class Avatar
 	extends THREE.Object3D
@@ -77,6 +80,9 @@ export class Avatar
 	private _controlledObject: IControllable;
 	private _occupyingChair: Chair = null;
 	private _chairEntryInstance: ChairEntryInstance = null;
+	
+	//clothing
+	private _clothingObjectInstance: TargetObjectInstance = null;
 
 	private _sessionId: string;
 
@@ -84,6 +90,10 @@ export class Avatar
 
 	private _avatarAnimationState: string = null;
 	private _displacement: THREE.Vector3;
+
+	private _sidebarCanvas: SidebarCanvas;
+
+	private _canInteractObjectMap: Map<string, Chair|Clothing> = new Map<string, Chair|Clothing>();
 
 	constructor(gltf: GLTF) {
 		super();
@@ -435,6 +445,7 @@ export class Avatar
 	}
 
 	public update(timeStep: number): void {
+		this._clothingObjectInstance?.update(timeStep);
 		this._chairEntryInstance?.update(timeStep);
 		// console.log(this.occupyingSeat);
 		this.avatarState?.update(timeStep);
@@ -647,42 +658,73 @@ export class Avatar
 		this._initJumpSpeed = initJumpSpeed;
 	}
 
-	public findChairToEnter(wantsToSit: boolean): void {
+	public closestObject() {
+		let targetObject: Object3D;
+		let type: EntityType;
+		let closestDistance = 1000000;
+		this._canInteractObjectMap.forEach((mapObject) =>{
+			const tempDistance = this._world.userAvatar.position.distanceTo(mapObject.position);
+			if(closestDistance > tempDistance){
+				closestDistance = tempDistance;
+				targetObject = mapObject;
+				type = mapObject.entityType
+			}
+		})
+
+		if(targetObject){
+			if(type === EntityType.Chair){
+				this.findChairToEnter(targetObject as Chair);
+			} else if(type === EntityType.Clothing) {
+				this.findClothing(targetObject as Clothing);
+			}
+		}
+		
+	}
+	
+	public findClothing(targetObject: Clothing): void {
+		// reusable world position variable
+		const worldPos = new THREE.Vector3();
+
+		const targetObjectInstance = new TargetObjectInstance(this);
+		targetObjectInstance.targetObject = targetObject;
+	
+		const point = targetObject.targetPoint;
+		point.getWorldPosition(worldPos);
+		this._clothingObjectInstance = targetObjectInstance;
+
+		document.dispatchEvent(new Event('sidebar-toggle-open-event'));
+		this._sidebarCanvas = SidebarCanvas.getInstance();		
+		this._sidebarCanvas.loadClothing(targetObject.spawnPoint.name);
+		this.avatarState.canFindCloting = false;
+		document.exitPointerLock();
+	}
+
+	public findChairToEnter(targetObject: Chair): void {
 		// reusable world position variable
 		const worldPos = new THREE.Vector3();
 
 		// Find best chair
-		const chairFinder = new ClosestObjectFinder<Chair>(this.position, 2);
-		this._world.chairs.forEach((chair) => {
-			chairFinder.consider(chair, chair.position);
-		});
+		const chair = targetObject;
+		const chairEntryInstance = new ChairEntryInstance(this);
 
-		if (chairFinder.closestObject !== undefined) {
-			const chair = chairFinder.closestObject;
-			const chairEntryInstance = new ChairEntryInstance(this);
+		chair.seatPointObject.getWorldPosition(worldPos);
 
-			chair.seatPointObject.getWorldPosition(worldPos);
-			chairFinder.consider(chair, worldPos);
+		const targetChair = targetObject;
+		chairEntryInstance.targetChair = targetChair;
 
-			if (chairFinder.closestObject !== undefined) {
-				const targetChair = chairFinder.closestObject;
-				chairEntryInstance.targetChair = targetChair;
+		const entryPointFinder = new ClosestObjectFinder<Object3D>(
+			this.position,
+		);
 
-				const entryPointFinder = new ClosestObjectFinder<Object3D>(
-					this.position,
-				);
+		const point = targetChair.entryPoints;
+		point.getWorldPosition(worldPos);
+		entryPointFinder.consider(point, worldPos);
 
-				const point = targetChair.entryPoints;
-				point.getWorldPosition(worldPos);
-				entryPointFinder.consider(point, worldPos);
-
-				if (entryPointFinder.closestObject !== undefined) {
-					chairEntryInstance.entryPoint = entryPointFinder.closestObject;
-					this.triggerAction('up', true);
-					this._chairEntryInstance = chairEntryInstance;
-				}
-			}
-		}
+		if (entryPointFinder.closestObject !== undefined) {
+			chairEntryInstance.entryPoint = entryPointFinder.closestObject;
+			this.triggerAction('up', true);
+			this._chairEntryInstance = chairEntryInstance;
+		}	
 	}
 
 	public enterChair(chair: Chair, entryPoint: THREE.Object3D): void {
@@ -1026,6 +1068,14 @@ export class Avatar
 		this._chairEntryInstance = chairEntryInstance;
 	}
 
+	get clothingObjectInstance(): TargetObjectInstance{
+		return this._clothingObjectInstance;
+	}
+
+	set clothingObjectInstance(clothingObjectInstance: TargetObjectInstance) {
+		this._clothingObjectInstance = clothingObjectInstance;
+	}
+
 	get velocity(): THREE.Vector3 {
 		return this._velocity;
 	}
@@ -1076,5 +1126,17 @@ export class Avatar
 
 	get raycastBox(): THREE.Mesh {
 		return this._raycastBox;
+	}
+
+	get sidebarCanvas(): SidebarCanvas {
+		return this._sidebarCanvas;
+	}
+
+	set sidebarCanvas(sidebarCanvas: SidebarCanvas) {
+		this._sidebarCanvas = sidebarCanvas;
+	}
+
+	get canInteractObjectMap(): Map<string, Chair|Clothing> {
+		return this._canInteractObjectMap;
 	}
 }
