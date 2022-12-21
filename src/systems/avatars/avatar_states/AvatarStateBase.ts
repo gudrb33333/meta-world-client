@@ -17,6 +17,7 @@ export abstract class AvatarStateBase implements IAvatarState {
 	public canFindChairsToEnter: boolean;
 	public canEnterChairs: boolean;
 	public canLeaveChairs: boolean;
+	public canFindCloting: boolean;
 
 	constructor(avatar: Avatar) {
 		this.avatar = avatar;
@@ -37,6 +38,7 @@ export abstract class AvatarStateBase implements IAvatarState {
 		this.canFindChairsToEnter = true;
 		this.canEnterChairs = false;
 		this.canLeaveChairs = true;
+		this.canFindCloting = true;
 
 		this.timer = 0;
 	}
@@ -46,13 +48,16 @@ export abstract class AvatarStateBase implements IAvatarState {
 	}
 
 	public onInputChange(): void {
-		if (this.canFindChairsToEnter && this.avatar.actions.enter.justPressed) {
-			this.avatar.findChairToEnter(true);
+		if (this.canFindChairsToEnter &&
+			this.canFindCloting && 
+			this.avatar.actions.enter.justPressed
+		) {
+			this.avatar.closestObject();
 		} else if (
 			this.canFindChairsToEnter &&
 			this.avatar.actions.enter_passenger.justPressed
 		) {
-			this.avatar.findChairToEnter(false);
+			this.avatar.closestObject();
 		} else if (this.canEnterChairs && this.avatar.chairEntryInstance !== null) {
 			if (
 				this.avatar.actions.up.justPressed ||
@@ -63,7 +68,27 @@ export abstract class AvatarStateBase implements IAvatarState {
 				this.avatar.chairEntryInstance = null;
 				this.avatar.actions.up.isPressed = false;
 			}
+		} else if (!this.canFindCloting && this.avatar.clothingObjectInstance !== null) {
+			if (
+				this.avatar.actions.up.justPressed ||
+				this.avatar.actions.down.justPressed ||
+				this.avatar.actions.left.justPressed ||
+				this.avatar.actions.right.justPressed ||
+				this.avatar.actions.enter.justPressed
+			) {
+				this.sidebarClose();
+			}
 		}
+	}
+
+	public sidebarClose(): void {
+		this.avatar.clothingObjectInstance = null;
+		this.avatar.actions.up.isPressed = false;
+		document.dispatchEvent(new Event('sidebar-toggle-close-event'));
+		this.avatar.sidebarCanvas.removeModelObject();
+		this.avatar.sidebarCanvas = null;
+		this.avatar.avatarState.canFindCloting = true;
+		this.avatar.world.inputManager.domElement.requestPointerLock();
 	}
 
 	public noDirection(): boolean {
