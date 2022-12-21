@@ -13,7 +13,7 @@ import { SpriteText2D, textAlign } from 'three-text2d';
 
 export class Chair extends THREE.Object3D implements IWorldEntity, IControllable {
     public updateOrder = 50;
-	public entityType: EntityType;
+	public entityType: EntityType = EntityType.Chair;
 	public actions: { [action: string]: KeyBinding } = {};
 	public controllingAvatar: Avatar;
 	private _rayCastVehicle: CANNON.RaycastVehicle;
@@ -101,8 +101,10 @@ export class Chair extends THREE.Object3D implements IWorldEntity, IControllable
 			const distance = this.position.distanceTo(this._world.userAvatar.position);
 			if(distance < 2){
 			 this.visibleInteractionMark();
+			 this._world.userAvatar.canInteractObjectMap.set(this.uuid, this)
 			} else {
 			 this.unvisibleInteractionMark();
+			 this._world.userAvatar.canInteractObjectMap.delete(this.uuid)
 			}
 		 }
 	}
