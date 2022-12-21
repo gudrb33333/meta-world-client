@@ -10,7 +10,7 @@ import { SpriteText2D, textAlign } from 'three-text2d';
 export class Clothing extends THREE.Object3D implements IWorldEntity{
 
     public updateOrder: number = 51;
-    public entityType: EntityType;
+    public entityType: EntityType = EntityType.Clothing;
     private _spawnPoint: THREE.Object3D;
     private _collision: CANNON.Body;
     private _world: World;
@@ -103,10 +103,10 @@ export class Clothing extends THREE.Object3D implements IWorldEntity{
            const distance = this.position.distanceTo(this._world.userAvatar.position);
            if(distance < 2){
             this.visibleInteractionMark();
-            this._world.userAvatar.canInteractMap.set(this.uuid, this)
+            this._world.userAvatar.canInteractObjectMap.set(this.uuid, this)
            } else {
             this.unvisibleInteractionMark();
-            this._world.userAvatar.canInteractMap.delete(this.uuid)
+            this._world.userAvatar.canInteractObjectMap.delete(this.uuid)
            }
         }
 
