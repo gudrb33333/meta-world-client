@@ -252,4 +252,9 @@ export class InputManager implements IUpdatable {
 			this._inputReceiver.handleDomElementBlurEvent(event);
 		}
 	}
+
+	//getter, setter
+	get domElement(): HTMLElement{
+		return this._domElement;
+	}
 }
