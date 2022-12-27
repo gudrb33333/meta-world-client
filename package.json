@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.49",
+    "axios": "^1.2.1",
     "classnames": "^2.3.2",
     "dotenv-webpack": "^8.0.1",
     "jquery": "^3.6.0",
