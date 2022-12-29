@@ -80,7 +80,7 @@ export class Avatar
 	private _controlledObject: IControllable;
 	private _occupyingChair: Chair = null;
 	private _chairEntryInstance: ChairEntryInstance = null;
-	
+
 	//clothing
 	private _clothingObjectInstance: TargetObjectInstance = null;
 
@@ -93,7 +93,10 @@ export class Avatar
 
 	private _sidebarCanvas: SidebarCanvas;
 
-	private _canInteractObjectMap: Map<string, Chair|Clothing> = new Map<string, Chair|Clothing>();
+	private _canInteractObjectMap: Map<string, Chair | Clothing> = new Map<
+		string,
+		Chair | Clothing
+	>();
 
 	constructor(gltf: GLTF) {
 		super();
@@ -662,38 +665,39 @@ export class Avatar
 		let targetObject: Object3D;
 		let type: EntityType;
 		let closestDistance = 1000000;
-		this._canInteractObjectMap.forEach((mapObject) =>{
-			const tempDistance = this._world.userAvatar.position.distanceTo(mapObject.position);
-			if(closestDistance > tempDistance){
+		this._canInteractObjectMap.forEach((mapObject) => {
+			const tempDistance = this._world.userAvatar.position.distanceTo(
+				mapObject.position,
+			);
+			if (closestDistance > tempDistance) {
 				closestDistance = tempDistance;
 				targetObject = mapObject;
-				type = mapObject.entityType
+				type = mapObject.entityType;
 			}
-		})
+		});
 
-		if(targetObject){
-			if(type === EntityType.Chair){
+		if (targetObject) {
+			if (type === EntityType.Chair) {
 				this.findChairToEnter(targetObject as Chair);
-			} else if(type === EntityType.Clothing) {
+			} else if (type === EntityType.Clothing) {
 				this.findClothing(targetObject as Clothing);
 			}
 		}
-		
 	}
-	
+
 	public findClothing(targetObject: Clothing): void {
 		// reusable world position variable
 		const worldPos = new THREE.Vector3();
 
 		const targetObjectInstance = new TargetObjectInstance(this);
 		targetObjectInstance.targetObject = targetObject;
-	
+
 		const point = targetObject.targetPoint;
 		point.getWorldPosition(worldPos);
 		this._clothingObjectInstance = targetObjectInstance;
 
 		document.dispatchEvent(new Event('sidebar-toggle-open-event'));
-		this._sidebarCanvas = SidebarCanvas.getInstance();		
+		this._sidebarCanvas = SidebarCanvas.getInstance();
 		this._sidebarCanvas.loadClothing(targetObject.spawnPoint.name);
 		this.avatarState.canFindCloting = false;
 		document.exitPointerLock();
@@ -712,9 +716,7 @@ export class Avatar
 		const targetChair = targetObject;
 		chairEntryInstance.targetChair = targetChair;
 
-		const entryPointFinder = new ClosestObjectFinder<Object3D>(
-			this.position,
-		);
+		const entryPointFinder = new ClosestObjectFinder<Object3D>(this.position);
 
 		const point = targetChair.entryPoints;
 		point.getWorldPosition(worldPos);
@@ -724,7 +726,7 @@ export class Avatar
 			chairEntryInstance.entryPoint = entryPointFinder.closestObject;
 			this.triggerAction('up', true);
 			this._chairEntryInstance = chairEntryInstance;
-		}	
+		}
 	}
 
 	public enterChair(chair: Chair, entryPoint: THREE.Object3D): void {
@@ -1068,7 +1070,7 @@ export class Avatar
 		this._chairEntryInstance = chairEntryInstance;
 	}
 
-	get clothingObjectInstance(): TargetObjectInstance{
+	get clothingObjectInstance(): TargetObjectInstance {
 		return this._clothingObjectInstance;
 	}
 
@@ -1136,7 +1138,7 @@ export class Avatar
 		this._sidebarCanvas = sidebarCanvas;
 	}
 
-	get canInteractObjectMap(): Map<string, Chair|Clothing> {
+	get canInteractObjectMap(): Map<string, Chair | Clothing> {
 		return this._canInteractObjectMap;
 	}
 }

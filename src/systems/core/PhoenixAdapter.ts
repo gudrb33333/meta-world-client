@@ -163,9 +163,7 @@ export class PhoenixAdapter implements IUpdatable {
 	public update(timestep: number, unscaledTimeStep: number): void {
 		const userAvatar = this._world.userAvatar;
 		const chairs = this._world.chairs;
-		const userEnteredChair = chairs.filter(
-			(chair) => chair.isSeated
-		);
+		const userEnteredChair = chairs.filter((chair) => chair.isSeated);
 
 		if (userAvatar != null && userEnteredChair[0] != null) {
 			this._channel.push('networkedDataInChair', {

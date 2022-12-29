@@ -254,7 +254,7 @@ export class InputManager implements IUpdatable {
 	}
 
 	//getter, setter
-	get domElement(): HTMLElement{
+	get domElement(): HTMLElement {
 		return this._domElement;
 	}
 }

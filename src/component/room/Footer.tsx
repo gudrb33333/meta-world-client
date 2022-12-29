@@ -66,14 +66,14 @@ function Footer(props) {
 			try {
 				await mediasoupAdapter.disableShare();
 				setIsShareOn(false);
-			} catch (e: any){
+			} catch (e: any) {
 				setIsShareOn(true);
 			}
 		} else {
 			try {
 				await mediasoupAdapter.enableShare();
 				setIsShareOn(true);
-			} catch (e: any){
+			} catch (e: any) {
 				setIsShareOn(false);
 			}
 		}

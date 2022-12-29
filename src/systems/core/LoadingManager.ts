@@ -83,9 +83,11 @@ export class LoadingManager {
 		trackerEntry.finished = true;
 		trackerEntry.progress = 1;
 
-		document.dispatchEvent(new CustomEvent('done-loading-status',
-			{'detail': {'doneLoading': this.getLoadingPercentage()}}
-		));
+		document.dispatchEvent(
+			new CustomEvent('done-loading-status', {
+				detail: { doneLoading: this.getLoadingPercentage() },
+			}),
+		);
 
 		if (this.isLoadingDone()) {
 			if (this.onFinishedCallback !== undefined) {

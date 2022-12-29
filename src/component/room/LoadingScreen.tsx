@@ -18,9 +18,12 @@ function LoadingScreen(props) {
 		document.addEventListener('done-loading-status', doneLoadingStatusCallback);
 
 		return () => {
-			document.removeEventListener('done-loading-status', doneLoadingStatusCallback);
+			document.removeEventListener(
+				'done-loading-status',
+				doneLoadingStatusCallback,
+			);
 		};
-	})
+	});
 
 	return (
 		<div

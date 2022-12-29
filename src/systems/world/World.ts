@@ -426,7 +426,7 @@ export class World {
 							}
 
 							this._spawnPoints.push(sp);
-						} else if(child.userData.type === 'clothing') {
+						} else if (child.userData.type === 'clothing') {
 							const sp = new ObjectSpawnPoint(child);
 
 							if (child.userData.hasOwnProperty('type')) {

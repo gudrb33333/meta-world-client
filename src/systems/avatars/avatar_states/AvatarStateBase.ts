@@ -48,8 +48,9 @@ export abstract class AvatarStateBase implements IAvatarState {
 	}
 
 	public onInputChange(): void {
-		if (this.canFindChairsToEnter &&
-			this.canFindCloting && 
+		if (
+			this.canFindChairsToEnter &&
+			this.canFindCloting &&
 			this.avatar.actions.enter.justPressed
 		) {
 			this.avatar.closestObject();
@@ -68,7 +69,10 @@ export abstract class AvatarStateBase implements IAvatarState {
 				this.avatar.chairEntryInstance = null;
 				this.avatar.actions.up.isPressed = false;
 			}
-		} else if (!this.canFindCloting && this.avatar.clothingObjectInstance !== null) {
+		} else if (
+			!this.canFindCloting &&
+			this.avatar.clothingObjectInstance !== null
+		) {
 			if (
 				this.avatar.actions.up.justPressed ||
 				this.avatar.actions.down.justPressed ||
