@@ -23,7 +23,7 @@ export class SidebarCanvas {
 	private _composer: EffectComposer;
 	private _model: THREE.Object3D;
 
-	private constructor() {
+	constructor() {
 		const scope = this;
 		this._container = document.getElementById('clothing-container');
 
@@ -134,7 +134,9 @@ export class SidebarCanvas {
 
 				this._camera.position.set(0, 0.5, 2);
 			},
-			(xhr) => {},
+			(xhr) => {
+				xhr;
+			},
 			(error) => {
 				console.error(error);
 			},
