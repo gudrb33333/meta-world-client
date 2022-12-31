@@ -64,6 +64,13 @@ function Home() {
 		);
 	}, []);
 
+	useEffect(() => {
+		const qs = new URLSearchParams(location.search);
+		if (qs.get('profile-complete') === 'true') {
+			openProfileModal();
+		}
+	}, []);
+
 	if (isLoggedIn) {
 		return (
 			<div className={classNames([styles.home, styles.fadeIn])}>
@@ -98,6 +105,8 @@ function Home() {
 							<span className={styles.edge}></span>
 							<span className={styles.front}>프로필</span>
 						</button>
+					</div>
+					<div className={styles.homeButtonContainer}>
 						<Link to="/room?user-type=guest">
 							<button
 								className={classNames([styles.pushable, styles.slideInRight])}
@@ -149,6 +158,8 @@ function Home() {
 							<span className={styles.edge}></span>
 							<span className={styles.front}>회원가입</span>
 						</button>
+					</div>
+					<div className={styles.homeButtonContainer}>
 						<Link to="/room?user-type=guest">
 							<button
 								className={classNames([
@@ -168,7 +179,11 @@ function Home() {
 							loginComplete={loginComplete}
 							openProfileModal={openProfileModal}
 						/>
-						<SignupModal isModalOn={isSignupModalOn} close={closeSignupModal} />
+						<SignupModal 
+							isModalOn={isSignupModalOn} 
+							close={closeSignupModal} 
+							openSigninModal={openSigninModal}
+						/>
 					</div>
 				</div>
 			</div>

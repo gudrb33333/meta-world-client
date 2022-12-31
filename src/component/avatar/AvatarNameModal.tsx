@@ -36,7 +36,7 @@ function AvatarNameModal(props) {
 		setIsLoading(true);
 		await createAvatar(props.avatarUrl);
 		await createProfile(info.name);
-		navigate('/');
+		navigate('/?profile-complete=true');
 	};
 
 	const createAvatar = async (avatarUrl: string) => {
