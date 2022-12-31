@@ -24,14 +24,14 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 		} catch (error) {
 			if (error.response.status === 404) {
 				if (confirm('아바타가 없습니다. 아바타 생성 페이지로 이동 합니다.')) {
-
+					window.location.href = '/avatar';
 				}
 			} else if (error.response.status === 403) {
-				alert('권한이 없습니다. 로그인을 다시 해주세요.');
-
+				alert('로그인 정보가 없습니다. 로그인을 다시 해주세요.');
+				window.location.href = '/';
 			} else {
 				alert('알 수 없는 에러가 발생했습니다.');
-
+				window.location.href = '/';
 			}
 		}
 	};
@@ -46,9 +46,10 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			avatarName = '손님';
 		} else {
 			const data = await this.findProfile();
-			console.log(data);
-			avatarPath = data.signedAvatarUrl;
-			avatarName = data.nickname;
+			sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
+			sessionStorage.setItem('avatar_name', data.nickname);
+			avatarPath = sessionStorage.getItem('avatar_url');
+			avatarName = sessionStorage.getItem('avatar_name');
 		}
 
 		loadingManager.loadGLTF(avatarPath, (model) => {
