@@ -342,8 +342,8 @@ export class World {
 					profile.avatar_url = '/assets/male/readyDefaultMaleAvatar.glb';
 					profile.avatar_name = '손님';
 				} else {
-					profile.avatar_url = localStorage.getItem('avatar_url');
-					profile.avatar_name = localStorage.getItem('avatar_name');
+					profile.avatar_url = sessionStorage.getItem('avatar_url');
+					profile.avatar_name = sessionStorage.getItem('avatar_name');
 				}
 
 				this._phoenixAdapter = new PhoenixAdapter(
