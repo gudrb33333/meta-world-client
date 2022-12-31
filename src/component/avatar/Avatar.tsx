@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
@@ -11,33 +12,10 @@ function Avatar() {
 	const [showIFrame, setShowIFrame] = useState(true);
 	const [isNameModalOn, setIsNameModalOn] = useState(false);
 	const [isGuideModalOn, setIsGuideModalOn] = useState(true);
+	const [avatarUrl, setAvatarUrl] = useState(null);
+	const navigate = useNavigate();
 
-	useEffect(() => {
-		const iFrame = iFrameRef.current;
-		if (iFrame) {
-			iFrame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
-		}
-
-		const vh = window.innerHeight * 0.01;
-		document.documentElement.style.setProperty('--vh', `${vh}px`);
-	}, []);
-	useEffect(() => {
-		const resizeCallback = () => {
-			const vh = window.innerHeight * 0.01;
-			document.documentElement.style.setProperty('--vh', `${vh}px`);
-		};
-
-		window.addEventListener('message', subscribe);
-		document.addEventListener('message', subscribe);
-		window.addEventListener('resize', resizeCallback);
-		return () => {
-			window.removeEventListener('message', subscribe);
-			document.removeEventListener('message', subscribe);
-			window.removeEventListener('resize', resizeCallback);
-		};
-	});
-
-	const subscribe = (event) => {
+	const subscribe = async (event) => {
 		const json = parse(event);
 		if (json?.source !== 'readyplayerme') {
 			return;
@@ -59,7 +37,7 @@ function Avatar() {
 		}
 		// Get avatar GLB URL
 		if (json.eventName === 'v1.avatar.exported') {
-			localStorage.setItem('avatar_url', json.data.url);
+			setAvatarUrl(json.data.url);
 			setIsNameModalOn(true);
 		}
 		// Get user id
@@ -68,6 +46,7 @@ function Avatar() {
     		${JSON.stringify(json)}`);
 		}
 	};
+
 	const parse = (event) => {
 		try {
 			return JSON.parse(event.data);
@@ -87,6 +66,44 @@ function Avatar() {
 	const closeGuideModal = () => {
 		setIsGuideModalOn(false);
 	};
+
+	useEffect(() => {
+		const iFrame = iFrameRef.current;
+		if (iFrame) {
+			iFrame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
+		}
+
+		const vh = window.innerHeight * 0.01;
+		document.documentElement.style.setProperty('--vh', `${vh}px`);
+	}, []);
+
+	useEffect(() => {
+		const resizeCallback = () => {
+			const vh = window.innerHeight * 0.01;
+			document.documentElement.style.setProperty('--vh', `${vh}px`);
+		};
+
+		window.addEventListener('message', subscribe);
+		document.addEventListener('message', subscribe);
+		window.addEventListener('resize', resizeCallback);
+		return () => {
+			window.removeEventListener('message', subscribe);
+			document.removeEventListener('message', subscribe);
+			window.removeEventListener('resize', resizeCallback);
+		};
+	});
+
+	useEffect(() => {
+		axios.get('/api/v1/members/me').catch((error) => {
+			if (error.response.status == 403) {
+				alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
+				navigate('/');
+			} else {
+				alert('알 수 없는 에러가 발생했습니다.');
+				navigate('/');
+			}
+		});
+	}, []);
 
 	return (
 		<div className={styles.avatar}>
@@ -111,7 +128,11 @@ function Avatar() {
 				}}
 				title={'Ready Player Me'}
 			/>
-			<AvatarNameModal isNameModalOn={isNameModalOn} close={closeNameModal} />
+			<AvatarNameModal
+				isNameModalOn={isNameModalOn}
+				close={closeNameModal}
+				avatarUrl={avatarUrl}
+			/>
 			<AvatarGuideModal
 				isGuideModalOn={isGuideModalOn}
 				close={closeGuideModal}
