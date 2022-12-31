@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import axios from 'axios';
 import * as Utils from '../core/FunctionLibrary';
 import { ISpawnPoint } from '../interfaces/ISpawnPoint';
 import { World } from './World';
@@ -17,7 +18,25 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 		this._object = object;
 	}
 
-	public spawn(loadingManager: LoadingManager, world: World): void {
+	public async findProfile() {
+		try {
+			return (await axios.get('/api/v1/profiles/me')).data;
+		} catch (error) {
+			if (error.response.status === 404) {
+				if (confirm('아바타가 없습니다. 아바타 생성 페이지로 이동 합니다.')) {
+
+				}
+			} else if (error.response.status === 403) {
+				alert('권한이 없습니다. 로그인을 다시 해주세요.');
+
+			} else {
+				alert('알 수 없는 에러가 발생했습니다.');
+
+			}
+		}
+	};
+
+	public async spawn(loadingManager: LoadingManager, world: World): Promise<void> {
 		const qs = new URLSearchParams(location.search);
 		let avatarPath: string;
 		let avatarName: string;
@@ -26,8 +45,10 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			avatarPath = '/assets/male/readyDefaultMaleAvatar.glb';
 			avatarName = '손님';
 		} else {
-			avatarPath = localStorage.getItem('avatar_url');
-			avatarName = localStorage.getItem('avatar_name');
+			const data = await this.findProfile();
+			console.log(data);
+			avatarPath = data.signedAvatarUrl;
+			avatarName = data.nickname;
 		}
 
 		loadingManager.loadGLTF(avatarPath, (model) => {
