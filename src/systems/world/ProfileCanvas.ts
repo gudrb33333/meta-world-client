@@ -30,7 +30,7 @@ export class ProfileCanvas {
 		// Renderer
 		this._renderer = new THREE.WebGLRenderer({ antialias: true });
 		this._renderer.setPixelRatio(window.devicePixelRatio);
-		this._renderer.setSize(window.innerWidth / 5, window.innerHeight / 5);
+		this._renderer.setSize(500, 250);
 		this._renderer.toneMapping = THREE.ReinhardToneMapping;
 		this._renderer.toneMappingExposure = 1;
 		this._renderer.shadowMap.enabled = false;
@@ -38,21 +38,21 @@ export class ProfileCanvas {
 		this._container.appendChild(this._renderer.domElement);
 
 		// Auto window resize
-		function onWindowResize(): void {
-			scope._camera.aspect = window.innerWidth / window.innerHeight;
-			scope._camera.updateProjectionMatrix();
-			scope._renderer.setSize(window.innerWidth, window.innerHeight);
-			fxaaPass.uniforms['resolution'].value.set(
-				1 / (window.innerWidth * pixelRatio),
-				1 / (window.innerHeight * pixelRatio),
-			);
-			scope._composer.setSize(
-				window.innerWidth * pixelRatio,
-				window.innerHeight * pixelRatio,
-			);
-		}
+		// function onWindowResize(): void {
+		// 	scope._camera.aspect = window.innerWidth / window.innerHeight;
+		// 	scope._camera.updateProjectionMatrix();
+		// 	scope._renderer.setSize(window.innerWidth, window.innerHeight);
+		// 	fxaaPass.uniforms['resolution'].value.set(
+		// 		1 / (window.innerWidth * pixelRatio),
+		// 		1 / (window.innerHeight * pixelRatio),
+		// 	);
+		// 	scope._composer.setSize(
+		// 		window.innerWidth * pixelRatio,
+		// 		window.innerHeight * pixelRatio,
+		// 	);
+		// }
 
-		window.addEventListener('resize', onWindowResize, false);
+		// window.addEventListener('resize', onWindowResize, false);
 
 		this._graphicsWorld = new THREE.Scene();
 		this._camera = new THREE.PerspectiveCamera(
@@ -87,10 +87,29 @@ export class ProfileCanvas {
 		this._graphicsWorld.add(ambientLight);
 
 		const mainLight = new DirectionalLight('white', 5);
-		mainLight.position.set(0, 5, 5);
+		mainLight.position.set(10, 10, 10);
 		this._graphicsWorld.add(mainLight);
 
-		this._graphicsWorld.background = new THREE.Color(0xbbbbbb);
+
+
+		const loader = new THREE.TextureLoader();
+		const texture = loader.load('assets/zd218ru-lobby.jpeg');
+		texture.magFilter = THREE.LinearFilter;
+		texture.minFilter = THREE.LinearFilter;
+
+		const shader = THREE.ShaderLib.equirect;
+		const material = new THREE.ShaderMaterial({
+			fragmentShader: shader.fragmentShader,
+			vertexShader: shader.vertexShader,
+			uniforms: shader.uniforms,
+			depthWrite: false,
+			side: THREE.BackSide,
+		});
+		material.uniforms.tEquirect.value = texture;
+		const sphere = new THREE.SphereBufferGeometry(50, 50, 50);
+		const bgMesh = new THREE.Mesh(sphere, material);
+		bgMesh.position.set(0, 10, 0);
+		this._graphicsWorld.add(bgMesh);
 
 		this._gltfLoader = new GLTFLoader();
 
@@ -114,18 +133,19 @@ export class ProfileCanvas {
 			avatar_url,
 			(gltf) => {
 				this._model = gltf.scene;
+				this._model.scale.set(8,8,8);
 
 				this._graphicsWorld.add(gltf.scene);
 
-				this._controls.target.x = this._model.position.x;
-				this._controls.target.y = this._model.position.y + 1.4;
-				this._controls.target.z = this._model.position.z;
+				this._controls.target.x = this._model.position.x * 8;
+				this._controls.target.y = this._model.position.y * 8 + 12.4;
+				this._controls.target.z = this._model.position.z * 8;
 				this._controls.enableDamping = true;
-				this._controls.minDistance = 1;
-				this._controls.maxDistance = 5;
+				this._controls.minDistance = 5;
+				this._controls.maxDistance = 15;
 				this._controls.update();
 
-				this._camera.position.set(0, 1.4, 2);
+				this._camera.position.set(0, 12.4, 10);
 			},
 			(xhr) => {
 				xhr;
