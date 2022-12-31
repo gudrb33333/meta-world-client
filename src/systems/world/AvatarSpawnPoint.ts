@@ -34,9 +34,12 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 				window.location.href = '/';
 			}
 		}
-	};
+	}
 
-	public async spawn(loadingManager: LoadingManager, world: World): Promise<void> {
+	public async spawn(
+		loadingManager: LoadingManager,
+		world: World,
+	): Promise<void> {
 		const qs = new URLSearchParams(location.search);
 		let avatarPath: string;
 		let avatarName: string;

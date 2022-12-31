@@ -51,8 +51,8 @@ function ProfileModal(props) {
 	};
 
 	const navigateHandler = async () => {
-		navigate('/room')
-	}
+		navigate('/room');
+	};
 
 	return (
 		<Modal
@@ -85,25 +85,31 @@ function ProfileModal(props) {
 				},
 			}}
 		>
-			
 			<table className={styles.profileInfoTable}>
-					<thead className={styles.profileThead}>프로필</thead>
-					<tbody>
-						<tr> 
-							<td>
-								<div id="profile-container" className={styles.profileAvatarContent}></div>
-							</td>			
-						</tr>
-						<tr>
-							<td>
-								<h3 className={styles.profileText}>
-									<div className={styles.title}>닉네임</div>
-									<input className={styles.profileInput} disabled value={nickname}></input>
-								</h3>
-							</td>
-						</tr>
-						<tr>
-							<td>
+				<thead className={styles.profileThead}>프로필</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div
+								id="profile-container"
+								className={styles.profileAvatarContent}
+							></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h3 className={styles.profileText}>
+								<div className={styles.title}>닉네임</div>
+								<input
+									className={styles.profileInput}
+									disabled
+									value={nickname}
+								></input>
+							</h3>
+						</td>
+					</tr>
+					<tr>
+						<td>
 							<button
 								type="button"
 								className={classNames([styles.close, styles.profileInfoButton])}
@@ -118,10 +124,10 @@ function ProfileModal(props) {
 							>
 								닫기
 							</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</Modal>
 	);
 }

@@ -179,9 +179,9 @@ function Home() {
 							loginComplete={loginComplete}
 							openProfileModal={openProfileModal}
 						/>
-						<SignupModal 
-							isModalOn={isSignupModalOn} 
-							close={closeSignupModal} 
+						<SignupModal
+							isModalOn={isSignupModalOn}
+							close={closeSignupModal}
 							openSigninModal={openSigninModal}
 						/>
 					</div>

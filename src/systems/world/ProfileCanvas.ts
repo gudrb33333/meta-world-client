@@ -90,8 +90,6 @@ export class ProfileCanvas {
 		mainLight.position.set(10, 10, 10);
 		this._graphicsWorld.add(mainLight);
 
-
-
 		const loader = new THREE.TextureLoader();
 		const texture = loader.load('assets/zd218ru-lobby.jpeg');
 		texture.magFilter = THREE.LinearFilter;
@@ -133,7 +131,7 @@ export class ProfileCanvas {
 			avatar_url,
 			(gltf) => {
 				this._model = gltf.scene;
-				this._model.scale.set(8,8,8);
+				this._model.scale.set(8, 8, 8);
 
 				this._graphicsWorld.add(gltf.scene);
 
