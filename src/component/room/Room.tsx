@@ -87,7 +87,7 @@ function Room() {
 				isUiContainerOn={isUiContainerOn}
 				setUiContainerOn={setUiContainerOn}
 			/>
-			<Sidebar children={"adasdasdsd"}/>
+			<Sidebar getWorld={getWorld} />
 		</>
 	);
 }
