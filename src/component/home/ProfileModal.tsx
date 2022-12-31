@@ -50,7 +50,7 @@ function ProfileModal(props) {
 		}
 	};
 
-	const navigateHandler = () => {
+	const navigateHandler = async () => {
 		navigate('/room')
 	}
 
@@ -63,10 +63,10 @@ function ProfileModal(props) {
 			style={{
 				overlay: {
 					position: 'fixed',
-					top: 50,
-					left: 440,
-					right: 440,
-					bottom: 50,
+					top: 30,
+					left: 0,
+					right: 0,
+					bottom: 30,
 					backgroundColor: 'rgba(255, 255, 255, 0.1)',
 				},
 				content: {
@@ -85,23 +85,43 @@ function ProfileModal(props) {
 				},
 			}}
 		>
-			<header>프로필</header>
-			<div id="profile-container" className={styles.content}></div>
-			<input disabled value={nickname}></input>
-			<button
-				type="button"
-				className={classNames([styles.close, styles.profileInfoButton])}
-				onClick={navigateHandler}
-			>
-				공간으로 접속
-			</button>
-			<button
-				type="button"
-				className={classNames([styles.close, styles.profileInfoButton])}
-				onClick={closeModal}
-			>
-				닫기
-			</button>
+			
+			<table className={styles.profileInfoTable}>
+					<thead className={styles.profileThead}>프로필</thead>
+					<tbody>
+						<tr> 
+							<td>
+								<div id="profile-container" className={styles.profileAvatarContent}></div>
+							</td>			
+						</tr>
+						<tr>
+							<td>
+								<h3 className={styles.profileText}>
+									<div className={styles.title}>닉네임</div>
+									<input className={styles.profileInput} disabled value={nickname}></input>
+								</h3>
+							</td>
+						</tr>
+						<tr>
+							<td>
+							<button
+								type="button"
+								className={classNames([styles.close, styles.profileInfoButton])}
+								onClick={navigateHandler}
+							>
+								공간으로 접속
+							</button>
+							<button
+								type="button"
+								className={classNames([styles.close, styles.profileInfoButton])}
+								onClick={closeModal}
+							>
+								닫기
+							</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 		</Modal>
 	);
 }

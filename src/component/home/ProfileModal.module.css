@@ -1,3 +1,15 @@
+.profile-avatar-content {
+    padding: 10px;
+}
+
+.profile-thead {
+    border-bottom: 1px solid #444444;
+    padding: 10px;
+    font-size: 2.0rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
 .title {
     font-size: 1.5rem;
     font-weight: 500;
@@ -10,6 +22,7 @@
 
 .profile-info-table {
     width: 100%;
+    border-collapse: collapse;
 }
 
 .profile-info-button {
@@ -19,13 +32,15 @@
     border: none;
     border-radius: 10px;
     margin: 1%;
-    width: 60px;
+    width: 10%;
+    min-width: 147px;
     cursor: pointer;
 }
 
 
 .profile-input {
-    width: 70%;
+    width: 22%;
+    min-width: 300px;
     height: 32px;
     font-size: 15px;
     border: 0;

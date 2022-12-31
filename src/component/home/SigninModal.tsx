@@ -71,8 +71,8 @@ function SigninModal(props) {
 				overlay: {
 					position: 'fixed',
 					top: 50,
-					left: 440,
-					right: 440,
+					left: 0,
+					right: 0,
 					bottom: 50,
 					backgroundColor: 'rgba(255, 255, 255, 0.1)',
 				},
@@ -92,10 +92,9 @@ function SigninModal(props) {
 				},
 			}}
 		>
-			<header>로그인</header>
 			<form onSubmit={onSigninSubmitHandler}>
 				<table className={styles.signinInfoTable}>
-					<thead></thead>
+					<thead className={styles.signinThead}>로그인</thead>
 					<tbody>
 						<tr>
 							<td>
@@ -137,10 +136,6 @@ function SigninModal(props) {
 								>
 									로그인
 								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>
 								<button
 									type="button"
 									className={classNames([

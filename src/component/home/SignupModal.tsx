@@ -28,6 +28,7 @@ function SignupModal(props) {
 			() => {
 				if (confirm('회원가입을 완료했습니다.')) {
 					props.close();
+					props.openSigninModal();
 				}
 			},
 			(error) => {
@@ -70,8 +71,8 @@ function SignupModal(props) {
 				overlay: {
 					position: 'fixed',
 					top: 50,
-					left: 440,
-					right: 440,
+					left: 0,
+					right: 0,
 					bottom: 50,
 					backgroundColor: 'rgba(255, 255, 255, 0.1)',
 				},
@@ -91,10 +92,9 @@ function SignupModal(props) {
 				},
 			}}
 		>
-			<header>회원가입</header>
 			<form onSubmit={onSignupSubmitHandler}>
 				<table className={styles.signupInfoTable}>
-					<thead></thead>
+					<thead className={styles.signupThead}>회원가입</thead>
 					<tbody>
 						<tr>
 							<td>
@@ -151,10 +151,6 @@ function SignupModal(props) {
 								>
 									회원가입
 								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>
 								<button
 									type="button"
 									className={classNames([
