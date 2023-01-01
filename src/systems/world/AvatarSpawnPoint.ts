@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import axios from 'axios';
 import * as Utils from '../core/FunctionLibrary';
 import { ISpawnPoint } from '../interfaces/ISpawnPoint';
 import { World } from './World';
@@ -18,24 +17,6 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 		this._object = object;
 	}
 
-	public async findProfile() {
-		try {
-			return (await axios.get('/api/v1/profiles/me')).data;
-		} catch (error) {
-			if (error.response.status === 404) {
-				if (confirm('아바타가 없습니다. 아바타 생성 페이지로 이동 합니다.')) {
-					window.location.href = '/avatar';
-				}
-			} else if (error.response.status === 403) {
-				alert('로그인 정보가 없습니다. 로그인을 다시 해주세요.');
-				window.location.href = '/';
-			} else {
-				alert('알 수 없는 에러가 발생했습니다.');
-				window.location.href = '/';
-			}
-		}
-	}
-
 	public async spawn(
 		loadingManager: LoadingManager,
 		world: World,
@@ -48,9 +29,6 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			avatarPath = '/assets/male/readyDefaultMaleAvatar.glb';
 			avatarName = '손님';
 		} else {
-			const data = await this.findProfile();
-			sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
-			sessionStorage.setItem('avatar_name', data.nickname);
 			avatarPath = sessionStorage.getItem('avatar_url');
 			avatarName = sessionStorage.getItem('avatar_name');
 		}

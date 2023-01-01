@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import screenfull from 'screenfull';
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
+import axios from 'axios';
 
 function Room() {
 	const [world, setWorld] = useState(null);
@@ -17,18 +18,38 @@ function Room() {
 	const history = createBrowserHistory();
 
 	useEffect(() => {
-		setWorld(new World('/assets/virtual_reality_space_mountain_view_room.glb'));
+		 (async function() {
+			try {
+				const res = await axios.get('/api/v1/profiles/me');
+				sessionStorage.setItem('avatar_url', res.data.signedAvatarUrl);
+				sessionStorage.setItem('avatar_name', res.data.nickname);
 
-		document.addEventListener('loading-screen-event', function () {
-			setIsLoading(false);
-			setUiContainerOn(true);
-		});
+				setWorld(new World('/assets/virtual_reality_space_mountain_view_room.glb'));
 
-		history.listen(({ action }) => {
-			if (action === 'POP') {
-				listenBackEvent();
+				document.addEventListener('loading-screen-event', function () {
+					setIsLoading(false);
+					setUiContainerOn(true);
+				});
+		
+				history.listen(({ action }) => {
+					if (action === 'POP') {
+						listenBackEvent();
+					}
+				});
+			} catch (error) {
+				if (error.response.status === 404) {
+					if (confirm('아바타가 없습니다. 아바타 생성 페이지로 이동 합니다.')) {
+						window.location.href = '/avatar';
+					}
+				} else if (error.response.status === 403) {
+					alert('로그인 정보가 없습니다. 로그인을 다시 해주세요.');
+					window.location.href = '/';
+				} else {
+					alert('알 수 없는 에러가 발생했습니다.');
+					window.location.href = '/';
+				}
 			}
-		});
+		})();
 	}, []);
 
 	const listenBackEvent = () => {
