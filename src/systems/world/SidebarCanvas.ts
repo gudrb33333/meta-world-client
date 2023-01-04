@@ -30,7 +30,7 @@ export class SidebarCanvas {
 		// Renderer
 		this._renderer = new THREE.WebGLRenderer({ antialias: true });
 		this._renderer.setPixelRatio(window.devicePixelRatio);
-		this._renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
+		this._renderer.setSize(window.innerWidth / 2.5, window.innerHeight / 2.5);
 		this._renderer.toneMapping = THREE.ReinhardToneMapping;
 		this._renderer.toneMappingExposure = 1;
 		this._renderer.shadowMap.enabled = false;
@@ -44,12 +44,12 @@ export class SidebarCanvas {
 
 		// Auto window resize
 		function onWindowResize(): void {
-			scope._camera.aspect = window.innerWidth / window.innerHeight;
+			scope._camera.aspect = (window.innerWidth/ 2.5) / (window.innerHeight/ 2.5);
 			scope._camera.updateProjectionMatrix();
-			scope._renderer.setSize(window.innerWidth, window.innerHeight);
+			scope._renderer.setSize((window.innerWidth/ 2.5), (window.innerHeight/ 2.5));
 			fxaaPass.uniforms['resolution'].value.set(
-				1 / (window.innerWidth * pixelRatio),
-				1 / (window.innerHeight * pixelRatio),
+				1 / (window.innerWidth / 2.5 * pixelRatio),
+				1 / (window.innerHeight / 2.5 * pixelRatio),
 			);
 			scope._composer.setSize(
 				window.innerWidth * pixelRatio,
@@ -92,10 +92,21 @@ export class SidebarCanvas {
 		this._graphicsWorld.add(ambientLight);
 
 		const mainLight = new DirectionalLight('white', 5);
-		mainLight.position.set(0, 5, 5);
+		mainLight.position.set(10, 10, 10);
 		this._graphicsWorld.add(mainLight);
 
-		this._graphicsWorld.background = new THREE.Color(0xbbbbbb);
+		const geometry = new THREE.SphereGeometry( 15, 15, 15 );
+				// invert the geometry on the x-axis so that all of the faces point inward
+				geometry.scale( - 1, 1, 1 );
+
+		const loader = new THREE.TextureLoader();
+		const texture = loader.load('assets/zd218ru-lobby.jpeg');
+		texture.magFilter = THREE.LinearFilter;
+		texture.minFilter = THREE.LinearFilter;
+		const material = new THREE.MeshBasicMaterial( { map: texture } );
+
+		const mesh = new THREE.Mesh( geometry, material );
+		this._graphicsWorld.add(mesh);
 
 		this._gltfLoader = new GLTFLoader();
 
