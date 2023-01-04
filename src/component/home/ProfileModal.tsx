@@ -51,6 +51,8 @@ function ProfileModal(props) {
 	};
 
 	const navigateHandler = async () => {
+		profileCanvas.stopRendering();
+		setProfileCanvas(null);
 		navigate('/room');
 	};
 
