@@ -68,7 +68,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					player.setAvatarName(avatarName);
 
 					const worldPos = new THREE.Vector3();
-					this._object.getWorldPosition(worldPos);
+					this._object.parent.getWorldPosition(worldPos);
 					player.setPosition(worldPos.x, worldPos.y, worldPos.z);
 
 					const back = Utils.getBack(this._object);
