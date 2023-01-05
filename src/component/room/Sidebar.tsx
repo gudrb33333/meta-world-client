@@ -3,9 +3,17 @@ import styles from './Sidebar.module.css';
 import axios from 'axios';
 
 function Sidebar(props) {
-	const width = window.innerWidth / 2;
+	const width = window.innerWidth / 2.5;
 	const [isOpen, setOpen] = useState(false);
 	const [xPosition, setX] = useState(-width);
+	const [clothingName, setClothingName] = useState(null);
+	const [clothingBrand, setClothingBrand] = useState(null);
+	const [clothingSerialNumber, setClothingSerialNumber] = useState(null);
+	const [clothingGenderType, setClothingGenderType] = useState(null);
+	const [clothingPrice, setClothingPrice] = useState(null);
+	const [clothingAssociateLink, setClothingAssociateLink] = useState(null);
+	const [clothingDetailDescription, setClothingDetailDescription] =
+		useState(null);
 	const side = useRef<any>();
 
 	// button 클릭 시 토글
@@ -18,36 +26,6 @@ function Sidebar(props) {
 			world.userAvatar.avatarState.sidebarClose();
 			setX(-width);
 			setOpen(false);
-
-			await axios
-				.delete('/api/v1/auth/logout', {
-					withCredentials: true,
-				})
-				.then(
-					(res) => {
-						console.log('logout Complete');
-						console.log(res);
-					},
-					(error) => {
-						console.error('ERROR::logout');
-						console.error(error);
-					},
-				);
-
-			await axios
-				.delete('/api/v1/auth/logout', {
-					withCredentials: true,
-				})
-				.then(
-					(res) => {
-						console.log('logout Complete');
-						console.log(res);
-					},
-					(error) => {
-						console.error('ERROR::logout');
-						console.error(error);
-					},
-				);
 		}
 	};
 
@@ -68,10 +46,40 @@ function Sidebar(props) {
 	//   };
 	// })
 
+	const findClothing = async (uuid: string) => {
+		try {
+			return await axios.get('/api/v1/clothing/' + uuid);
+		} catch (error) {
+			if (error.response.status === 404) {
+				alert('정보가 없습니다.');
+			} else if (error.response.status === 403) {
+				alert('접근 권한이 없습니다.');
+			} else {
+				alert('알 수 없는 에러가 발생했습니다.');
+			}
+		}
+	};
+
 	useEffect(() => {
-		const toggleOpenEventCallBack = async () => {
+		const toggleOpenEventCallBack = async (e) => {
 			setX(0);
 			setOpen(true);
+			const res = await findClothing(e.detail.name);
+			e.detail.sidebarCanvas.loadClothing(res.data.signedClothingUrl);
+			setClothingName(res.data.name);
+			setClothingBrand(res.data.brand);
+			setClothingSerialNumber(res.data.serialNumber);
+			setClothingPrice(res.data.price);
+			setClothingAssociateLink(res.data.associateLink);
+			setClothingDetailDescription(res.data.detailDescription);
+
+			if (res.data.genderType === 'male') {
+				setClothingGenderType('남');
+			} else if (res.data.genderType === 'female') {
+				setClothingGenderType('여');
+			} else {
+				setClothingGenderType('남/여');
+			}
 		};
 
 		const toggleCloseEventCallBack = () => {
@@ -112,14 +120,50 @@ function Sidebar(props) {
 				}}
 			>
 				<button onClick={() => toggleMenu()} className={styles.button}>
-					<span>X</span>
+					<span>닫기</span>
 				</button>
-				<div id="clothing-container" className={styles.content}></div>
-				<ul>
-					<li>asdasdasd</li>
-					<li>asdasdasd</li>
-					<li>asdasdasd</li>
-				</ul>
+				<div
+					id="clothing-container"
+					className={styles.threeDimensionalContent}
+				></div>
+				<div className={styles.productInfo}>
+					<header className={styles.productHeader}>{clothingName}</header>
+					<table className={styles.productTable}>
+						<th colSpan={2} className={styles.productThead}>
+							Product Info - 제품정보
+						</th>
+						<tbody>
+							<tr>
+								<td className={styles.productTdTitle}>브랜드 / 품번</td>
+								<td className={styles.productTdInfo}>
+									{clothingBrand} / {clothingSerialNumber}
+								</td>
+							</tr>
+							<tr>
+								<td className={styles.productTdTitle}>성별</td>
+								<td className={styles.productTdInfo}>{clothingGenderType}</td>
+							</tr>
+							<tr>
+								<td className={styles.productTdTitle}>가격</td>
+								<td className={styles.productTdInfo}>{clothingPrice}</td>
+							</tr>
+							<tr>
+								<td colSpan={2} className={styles.productTdLink}>
+									<button>
+										<a href={clothingAssociateLink} target="_blank">
+											옷 보러가기
+										</a>
+									</button>
+								</td>
+							</tr>
+							<tr>
+								<td colSpan={2} className={styles.productTdInfo}>
+									{clothingDetailDescription}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	);
