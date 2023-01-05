@@ -695,10 +695,15 @@ export class Avatar
 		const point = targetObject.targetPoint;
 		point.getWorldPosition(worldPos);
 		this._clothingObjectInstance = targetObjectInstance;
-
-		document.dispatchEvent(new Event('sidebar-toggle-open-event'));
 		this._sidebarCanvas = SidebarCanvas.getInstance();
-		this._sidebarCanvas.loadClothing(targetObject.spawnPoint.name);
+		const openToggle = new CustomEvent('sidebar-toggle-open-event', {
+			detail: {
+				sidebarCanvas: this._sidebarCanvas,
+				name: targetObject.spawnPoint.name,
+			},
+		});
+
+		document.dispatchEvent(openToggle);
 		this.avatarState.canFindCloting = false;
 		document.exitPointerLock();
 	}
