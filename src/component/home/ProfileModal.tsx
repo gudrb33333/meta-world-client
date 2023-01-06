@@ -56,6 +56,10 @@ function ProfileModal(props) {
 		navigate('/room');
 	};
 
+	const changeProfileHandler = () => {
+		navigate('/avatar?edit-mode')
+	}
+
 	return (
 		<Modal
 			isOpen={isModalOn}
@@ -118,6 +122,13 @@ function ProfileModal(props) {
 								onClick={navigateHandler}
 							>
 								공간으로 접속
+							</button>
+							<button
+								type="button"
+								className={classNames([styles.close, styles.profileInfoButton])}
+								onClick={changeProfileHandler}
+							>
+								아바타 변경
 							</button>
 							<button
 								type="button"
