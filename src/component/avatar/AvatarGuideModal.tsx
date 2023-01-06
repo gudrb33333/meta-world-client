@@ -50,14 +50,7 @@ function AvatarGuideModal(props) {
 					<tr>
 						<td>
 							<h3 className={styles.avatarGuideText}>
-								1. Full-body 선택 / Half-body (지원 X)
-							</h3>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<h3 className={styles.avatarGuideText}>
-								2. Masculine - 남성 / Feminine - 여성
+								Masculine - 남성 / Feminine - 여성
 							</h3>
 						</td>
 					</tr>
