@@ -20,9 +20,15 @@ function Room() {
 	useEffect(() => {
 		 (async function() {
 			try {
-				const res = await axios.get('/api/v1/profiles/me');
-				sessionStorage.setItem('avatar_url', res.data.signedAvatarUrl);
-				sessionStorage.setItem('avatar_name', res.data.nickname);
+				const qs = new URLSearchParams(location.search);
+				if(qs.get('user-type') === 'guest'){
+					sessionStorage.setItem('avatar_url', '/assets/male/readyDefaultMaleAvatar.glb');
+					sessionStorage.setItem('avatar_name', '손님');
+				} else {
+					const res = await axios.get('/api/v1/profiles/me');
+					sessionStorage.setItem('avatar_url', res.data.signedAvatarUrl);
+					sessionStorage.setItem('avatar_name', res.data.nickname);
+				}
 
 				setWorld(new World('/assets/virtual_reality_space_mountain_view_room.glb'));
 

@@ -20,7 +20,6 @@ import { Chair } from '../objects/Chair';
 import { Clothing } from '../objects/Clothing';
 import { Avatar } from '../avatars/Avatar';
 import { IWorldEntity } from '../interfaces/IWorldEntity';
-import { Detector } from '../../lib/utils/Detector';
 import { Stats } from '../../lib/utils/Stats';
 import * as GUI from '../../lib/utils/dat.gui';
 import { CannonDebugRenderer } from '../../lib/cannon/CannonDebugRenderer';
@@ -332,19 +331,14 @@ export class World {
 			loadingManager.onFinishedCallback = async () => {
 				this.update(1, 1);
 				this.setTimeScale(1);
-				const qs = new URLSearchParams(location.search);
 				const profile = {
 					avatar_url: '',
 					avatar_name: '',
 				};
 
-				if (qs.get('user-type') === 'guest') {
-					profile.avatar_url = '/assets/male/readyDefaultMaleAvatar.glb';
-					profile.avatar_name = '손님';
-				} else {
-					profile.avatar_url = sessionStorage.getItem('avatar_url');
-					profile.avatar_name = sessionStorage.getItem('avatar_name');
-				}
+				profile.avatar_url = sessionStorage.getItem('avatar_url');
+				profile.avatar_name = sessionStorage.getItem('avatar_name');
+			
 
 				this._phoenixAdapter = new PhoenixAdapter(
 					this,
