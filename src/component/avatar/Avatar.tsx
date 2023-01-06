@@ -70,7 +70,7 @@ function Avatar() {
 	useEffect(() => {
 		const iFrame = iFrameRef.current;
 		if (iFrame) {
-			iFrame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
+			iFrame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi&clearCache`;
 		}
 
 		const vh = window.innerHeight * 0.01;
