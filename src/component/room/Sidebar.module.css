@@ -87,6 +87,22 @@
   padding: 15px;
 }
 
+.product-a-link {
+  box-sizing: border-box;
+  width: 150px;
+  border: 1px solid #000;
+  line-height: 26px;
+  text-decoration-line: none;
+  padding: 5px 30px 5px 30px;
+  color:#000;
+  font-family: initial;
+}
+
+.product-a-link:hover{
+  color:#fff;
+  background-color:#000;
+}
+
 .icon {
   margin: 0;
   color: #202020;
