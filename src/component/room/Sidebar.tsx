@@ -65,11 +65,12 @@ function Sidebar(props) {
 			setX(0);
 			setOpen(true);
 			const res = await findClothing(e.detail.name);
+			const commaPrice = res.data.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			e.detail.sidebarCanvas.loadClothing(res.data.signedClothingUrl);
 			setClothingName(res.data.name);
 			setClothingBrand(res.data.brand);
 			setClothingSerialNumber(res.data.serialNumber);
-			setClothingPrice(res.data.price);
+			setClothingPrice(commaPrice);
 			setClothingAssociateLink(res.data.associateLink);
 			setClothingDetailDescription(res.data.detailDescription);
 
@@ -145,20 +146,18 @@ function Sidebar(props) {
 							</tr>
 							<tr>
 								<td className={styles.productTdTitle}>가격</td>
-								<td className={styles.productTdInfo}>{clothingPrice}</td>
+								<td className={styles.productTdInfo}>{clothingPrice}원</td>
 							</tr>
 							<tr>
 								<td colSpan={2} className={styles.productTdLink}>
-									<button>
-										<a href={clothingAssociateLink} target="_blank">
-											옷 보러가기
-										</a>
-									</button>
+									<a className={styles.productALink} href={clothingAssociateLink} target="_blank">
+										옷 보러가기
+									</a>
 								</td>
 							</tr>
 							<tr>
 								<td colSpan={2} className={styles.productTdInfo}>
-									{clothingDetailDescription}
+									&nbsp;{clothingDetailDescription}
 								</td>
 							</tr>
 						</tbody>
