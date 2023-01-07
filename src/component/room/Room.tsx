@@ -7,17 +7,18 @@ import { createBrowserHistory } from 'history';
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import { findMyProfile } from '../../api/profile';
+import { useNavigate } from 'react-router-dom';
 
 function Room() {
 	const [world, setWorld] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isUiContainerOn, setUiContainerOn] = useState(false);
+	const navigate = useNavigate();
 
 	const history = createBrowserHistory();
 
 	useEffect(() => {
 		(async function () {
-			try {
 				const qs = new URLSearchParams(location.search);
 				if (qs.get('user-type') === 'guest') {
 					sessionStorage.setItem(
@@ -26,9 +27,22 @@ function Room() {
 					);
 					sessionStorage.setItem('avatar_name', '손님');
 				} else {
-					const data = await findMyProfile();
-					sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
-					sessionStorage.setItem('avatar_name', data.nickname);
+					try {
+						const data = await findMyProfile();
+						sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
+						sessionStorage.setItem('avatar_name', data.nickname);
+					} catch(error) {
+						if (error.response.status === 403) {
+							alert('권한이 없습니다. 다시 로그인 해주세요.');
+							navigate('/')
+						} else if (error.response.status === 404) {
+							alert('생성된 프로필이 없습니다. 프로필을 먼저 생성해 주세요.');
+							navigate('/')
+						} else {
+							alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
+							navigate('/')
+						}
+					}
 				}
 
 				setWorld(
@@ -45,19 +59,6 @@ function Room() {
 						listenBackEvent();
 					}
 				});
-			} catch (error) {
-				if (error.response.status === 404) {
-					if (confirm('아바타가 없습니다. 아바타 생성 페이지로 이동 합니다.')) {
-						window.location.href = '/avatar';
-					}
-				} else if (error.response.status === 403) {
-					alert('로그인 정보가 없습니다. 로그인을 다시 해주세요.');
-					window.location.href = '/';
-				} else {
-					alert('알 수 없는 에러가 발생했습니다.');
-					window.location.href = '/';
-				}
-			}
 		})();
 	}, []);
 

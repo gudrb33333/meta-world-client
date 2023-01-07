@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import classNames from 'classnames';
 import styles from './ProfileModal.module.css';
@@ -15,13 +14,24 @@ function ProfileModal(props) {
 
 	const afterOpenModal = async () => {
 		if (props.isModalOn) {
-			const data = await findMyProfile();
-
-			if(data){
+			try {
+				const data = await findMyProfile();
 				setNickname(data.nickname);
 				setProfileCanvas(new ProfileCanvas(data.signedAvatarUrl));
-			}else {
-				props.close();
+			} catch(error) {
+				if (error.response.status === 403) {
+					alert('권한이 없습니다. 다시 로그인 해주세요.');
+					props.close();
+				} else if (error.response.status === 404) {
+					if(confirm('생성된 프로필이 없습니다. 프로필 생성으로 이동합니다.')){
+						navigate('/avatar')
+					} else {
+						props.close();
+					}
+				} else {
+					alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
+					props.close();
+				}
 			}
 		}
 	};

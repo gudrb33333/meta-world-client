@@ -85,12 +85,21 @@ function AvatarNameModal(props) {
 		(async function() {
 			const qs = new URLSearchParams(location.search);
 			if (qs.has('edit-mode')) {
-				const data = await findMyProfile();
-				if(data){
+				try {
+					const data = await findMyProfile();
 					setInfo({ name: data.nickname });
 					setIsEditMode(true);
-				} else {
-					navigate('/');
+				} catch(error) {
+					if (error.response.status === 403) {
+						alert('권한이 없습니다. 다시 로그인 해주세요.');
+						navigate('/');
+					} else if (error.response.status === 404) {
+						alert('변경할 프로필이 없습니다. 프로필을 먼저 생성해 주세요.');
+						navigate('/');
+					} else {
+						alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
+						navigate('/');
+					}
 				}
 			}
 		})();
