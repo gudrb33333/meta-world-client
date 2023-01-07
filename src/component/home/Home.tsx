@@ -6,6 +6,7 @@ import SignupModal from './SignupModal';
 import SigninModal from './SigninModal';
 import ProfileModal from './ProfileModal';
 import { useEffect, useState } from 'react';
+import { logout } from '../../api/auth'
 
 function Home() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,15 +43,8 @@ function Home() {
 	};
 
 	const logoutHandler = async () => {
-		try {
-			await axios.delete('/api/v1/auth/logout');
-			setIsLoggedIn(false);
-		} catch (error) {
-			if (error.response.status == 403) {
-				alert('이미 로그아웃 되었습니다.');
-				setIsLoggedIn(false);
-			}
-		}
+		await logout();
+		setIsLoggedIn(false);
 	};
 
 	useEffect(() => {
