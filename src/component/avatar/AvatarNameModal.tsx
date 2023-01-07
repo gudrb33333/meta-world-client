@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import { createProfile, findMyProfile } from '../../api/profile';
+import { createProfile, findMyProfile, updateProfile } from '../../api/profile';
 import AvatarCreateLoading from './AvatarCreateLoading';
 import styles from './AvatarNameModal.module.css';
 
@@ -50,27 +50,7 @@ function AvatarNameModal(props) {
 
 	};
 
-	const updateProfile = async (avatarUrl: string, nickname: string) => {
-		try {
-			await axios.patch('/api/v1/profiles/me', {
-				nickname: nickname,
-				publicType: 'private',
-				avatarUrl: avatarUrl,
-			});
-		} catch (error) {
-			if (error.response.status === 403) {
-				alert('권한이 없습니다. 다시 로그인 해주세요.');
-				navigate('/');
-			} else if (error.response.status === 404) {
-				alert('프로필이 없습니다. 프로필을 먼저 생성 해주세요.');
-			} else {
-				alert('알 수 없는 에러로 아바타 생성을 실패했습니다.');
-				navigate('/');
-			}
-		}
-	};
-
-	const patchAvatarHandler = async () => {
+	const updateAvatarHandler = async () => {
 		const regex = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/;
 
 		if (!regex.test(info.name)) {
@@ -80,8 +60,18 @@ function AvatarNameModal(props) {
 
 		setDisable(true);
 		setIsLoading(true);
-		await updateProfile(props.avatarUrl, info.name);
-		navigate('/?profile-complete=true');
+
+		const data =await updateProfile({
+			nickname: info.name,
+			publicType: 'private',
+			avatarUrl: props.avatarUrl
+		});
+		
+		if(data){
+			navigate('/?profile-complete=true');
+		} else {
+			navigate('/');
+		}
 	};
 
 	useEffect(() => {
@@ -163,7 +153,7 @@ function AvatarNameModal(props) {
 											styles.enterRoom,
 											styles.avatarSetInfoButton,
 										])}
-										onClick={patchAvatarHandler}
+										onClick={updateAvatarHandler}
 									>
 										아바타 변경
 									</button>
