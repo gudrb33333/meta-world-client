@@ -1,8 +1,31 @@
 import axios from 'axios';
 
+export interface SignupProps {
+	email: string;
+	password: string;
+}
+
 export interface LoginProps {
 	email: string;
 	password: string;
+}
+
+export async function signup(signupProps: SignupProps) {
+	const { email, password } = signupProps;
+	try {
+		const data = await axios.post('/api/v1/auth/signup', {
+			email,
+			password,
+		});
+
+		return data;
+	} catch(error) {
+		if (error.response.status === 409) {
+			alert('회원가입을 실패했습니다. 이미 존재하는 아이디 입니다.');
+		} else {
+			alert('알 수 없는 에러로 회원가입을 실패했습니다.');
+		}
+	}
 }
 
 export async function signin(loginProps: LoginProps) {
