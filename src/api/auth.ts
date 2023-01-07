@@ -20,3 +20,13 @@ export async function signin(loginProps: LoginProps) {
 		}
 	}
 }
+
+export async function logout() {
+	try {
+		await axios.delete('/api/v1/auth/logout');
+	} catch (error) {
+		if (error.response.status == 403) {
+			alert('이미 로그아웃 되었습니다.');
+		}
+	}
+}
