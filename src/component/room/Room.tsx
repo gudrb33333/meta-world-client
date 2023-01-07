@@ -4,11 +4,9 @@ import Footer from './Footer';
 import LoadingScreen from './LoadingScreen';
 import UiContainer from './UiContainer';
 import { createBrowserHistory } from 'history';
-import { useNavigate } from 'react-router-dom';
-import screenfull from 'screenfull';
 import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import axios from 'axios';
+import { findMyProfile } from '../../api/profile';
 
 function Room() {
 	const [world, setWorld] = useState(null);
@@ -28,9 +26,9 @@ function Room() {
 					);
 					sessionStorage.setItem('avatar_name', '손님');
 				} else {
-					const res = await axios.get('/api/v1/profiles/me');
-					sessionStorage.setItem('avatar_url', res.data.signedAvatarUrl);
-					sessionStorage.setItem('avatar_name', res.data.nickname);
+					const data = await findMyProfile();
+					sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
+					sessionStorage.setItem('avatar_name', data.nickname);
 				}
 
 				setWorld(
