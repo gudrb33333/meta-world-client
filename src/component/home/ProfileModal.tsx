@@ -57,14 +57,22 @@ function ProfileModal(props) {
 	};
 
 	const deleteProfileHandler = async () => {
-		const data = await deleteProfile();
-
-		if(data) {
+		try {
+			await deleteProfile();
 			confirm('프로필을 성공적으로 삭제했습니다.');
 			setNickname('');
 			props.close();
-		} else {
-			props.close();
+		} catch (error) {
+			if (error.response.status === 404) {
+				alert('삭제할 프로필을 찾지 못했습니다.');
+				props.close();
+			} else if (error.response.status === 403) {
+				alert('권한이 없습니다. 로그인을 다시 해주세요.');
+				props.close();
+			} else {
+				alert('알 수 없는 에러가 발생했습니다.');
+				props.close();
+			}
 		}
 	};
 
