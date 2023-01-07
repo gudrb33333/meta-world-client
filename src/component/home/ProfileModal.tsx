@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import styles from './ProfileModal.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
+import { deleteProfile, findMyProfile } from '../../api/profile';
 
 function ProfileModal(props) {
 	const [isModalOn, setIsModalOn] = useState(false);
@@ -14,9 +15,14 @@ function ProfileModal(props) {
 
 	const afterOpenModal = async () => {
 		if (props.isModalOn) {
-			const data = await findProfile();
-			setNickname(data.nickname);
-			setProfileCanvas(new ProfileCanvas(data.signedAvatarUrl));
+			const data = await findMyProfile();
+
+			if(data){
+				setNickname(data.nickname);
+				setProfileCanvas(new ProfileCanvas(data.signedAvatarUrl));
+			}else {
+				props.close();
+			}
 		}
 	};
 
@@ -30,43 +36,6 @@ function ProfileModal(props) {
 		setIsModalOn(props.isModalOn);
 	}, [props.isModalOn]);
 
-	const findProfile = async () => {
-		try {
-			return (await axios.get('/api/v1/profiles/me')).data;
-		} catch (error) {
-			if (error.response.status === 404) {
-				if (confirm('아바타가 없습니다. 아바타 생성 페이지로 이동 합니다.')) {
-					navigate('/avatar');
-				} else {
-					props.close();
-				}
-			} else if (error.response.status === 403) {
-				alert('권한이 없습니다. 로그인을 다시 해주세요.');
-				props.close();
-			} else {
-				alert('알 수 없는 에러가 발생했습니다.');
-				props.close();
-			}
-		}
-	};
-
-	const deleteProfile = async () => {
-		try {
-			await axios.delete('/api/v1/profiles/me');
-		} catch (error) {
-			if (error.response.status === 404) {
-				alert('삭제할 프로필을 찾지 못했습니다.');
-				props.close();
-			} else if (error.response.status === 403) {
-				alert('권한이 없습니다. 로그인을 다시 해주세요.');
-				props.close();
-			} else {
-				alert('알 수 없는 에러가 발생했습니다.');
-				props.close();
-			}
-		}
-	};
-
 	const navigateHandler = async () => {
 		profileCanvas.stopRendering();
 		setProfileCanvas(null);
@@ -78,10 +47,15 @@ function ProfileModal(props) {
 	};
 
 	const deleteProfileHandler = async () => {
-		await deleteProfile();
-		confirm('프로필을 성공적으로 삭제했습니다.');
-		setNickname('');
-		props.close();
+		const data = await deleteProfile();
+
+		if(data) {
+			confirm('프로필을 성공적으로 삭제했습니다.');
+			setNickname('');
+			props.close();
+		} else {
+			props.close();
+		}
 	};
 
 	return (
