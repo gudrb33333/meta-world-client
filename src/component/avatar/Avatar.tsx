@@ -95,10 +95,10 @@ function Avatar() {
 	});
 
 	useEffect(() => {
-		(async function(){
-			try{
+		(async function () {
+			try {
 				await findMe();
-			} catch(error) {
+			} catch (error) {
 				if (error.response.status == 403) {
 					alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
 					navigate('/');

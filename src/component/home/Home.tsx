@@ -6,7 +6,7 @@ import SignupModal from './SignupModal';
 import SigninModal from './SigninModal';
 import ProfileModal from './ProfileModal';
 import { useEffect, useState } from 'react';
-import { logout } from '../../api/auth'
+import { logout } from '../../api/auth';
 
 function Home() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);

@@ -19,46 +19,46 @@ function Room() {
 
 	useEffect(() => {
 		(async function () {
-				const qs = new URLSearchParams(location.search);
-				if (qs.get('user-type') === 'guest') {
-					sessionStorage.setItem(
-						'avatar_url',
-						'/assets/male/readyDefaultMaleAvatar.glb',
-					);
-					sessionStorage.setItem('avatar_name', '손님');
-				} else {
-					try {
-						const data = await findMyProfile();
-						sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
-						sessionStorage.setItem('avatar_name', data.nickname);
-					} catch(error) {
-						if (error.response.status === 403) {
-							alert('권한이 없습니다. 다시 로그인 해주세요.');
-							navigate('/')
-						} else if (error.response.status === 404) {
-							alert('생성된 프로필이 없습니다. 프로필을 먼저 생성해 주세요.');
-							navigate('/')
-						} else {
-							alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
-							navigate('/')
-						}
+			const qs = new URLSearchParams(location.search);
+			if (qs.get('user-type') === 'guest') {
+				sessionStorage.setItem(
+					'avatar_url',
+					'/assets/male/readyDefaultMaleAvatar.glb',
+				);
+				sessionStorage.setItem('avatar_name', '손님');
+			} else {
+				try {
+					const data = await findMyProfile();
+					sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
+					sessionStorage.setItem('avatar_name', data.nickname);
+				} catch (error) {
+					if (error.response.status === 403) {
+						alert('권한이 없습니다. 다시 로그인 해주세요.');
+						navigate('/');
+					} else if (error.response.status === 404) {
+						alert('생성된 프로필이 없습니다. 프로필을 먼저 생성해 주세요.');
+						navigate('/');
+					} else {
+						alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
+						navigate('/');
 					}
 				}
+			}
 
-				setWorld(
-					new World('/assets/virtual_reality_space_mountain_view_room.glb'),
-				);
+			setWorld(
+				new World('/assets/virtual_reality_space_mountain_view_room.glb'),
+			);
 
-				document.addEventListener('loading-screen-event', function () {
-					setIsLoading(false);
-					setUiContainerOn(true);
-				});
+			document.addEventListener('loading-screen-event', function () {
+				setIsLoading(false);
+				setUiContainerOn(true);
+			});
 
-				history.listen(({ action }) => {
-					if (action === 'POP') {
-						listenBackEvent();
-					}
-				});
+			history.listen(({ action }) => {
+				if (action === 'POP') {
+					listenBackEvent();
+				}
+			});
 		})();
 	}, []);
 

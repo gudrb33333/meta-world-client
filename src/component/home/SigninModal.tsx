@@ -26,7 +26,7 @@ function SigninModal(props) {
 				email: signinEmail,
 				password: signinPassword,
 			});
-			
+
 			props.close();
 			props.loginComplete();
 			props.openProfileModal();

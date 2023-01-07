@@ -51,7 +51,7 @@ function Sidebar(props) {
 		const toggleOpenEventCallBack = async (e) => {
 			setX(0);
 			setOpen(true);
-			try { 
+			try {
 				const data = await findClothing({ uuid: e.detail.name });
 				const commaPrice = data.price
 					.toString()
@@ -63,7 +63,7 @@ function Sidebar(props) {
 				setClothingPrice(commaPrice);
 				setClothingAssociateLink(data.associateLink);
 				setClothingDetailDescription(data.detailDescription);
-	
+
 				if (data.genderType === 'male') {
 					setClothingGenderType('남');
 				} else if (data.genderType === 'female') {
@@ -71,7 +71,7 @@ function Sidebar(props) {
 				} else {
 					setClothingGenderType('남/여');
 				}
-			} catch(error) {
+			} catch (error) {
 				if (error.response.status === 404) {
 					alert('의상 정보가 없습니다.');
 				} else if (error.response.status === 403) {
