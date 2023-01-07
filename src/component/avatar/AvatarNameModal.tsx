@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
+import { createProfile } from '../../api/profile';
 import AvatarCreateLoading from './AvatarCreateLoading';
 import styles from './AvatarNameModal.module.css';
 
@@ -35,25 +36,16 @@ function AvatarNameModal(props) {
 
 		setDisable(true);
 		setIsLoading(true);
-		await createProfile(props.avatarUrl, info.name);
-		navigate('/?profile-complete=true');
-	};
+		const data =await createProfile({
+			nickname: info.name, 
+			publicType: 'private', 
+			avatarUrl: props.avatarUrl
+		});
 
-	const createProfile = async (avatarUrl: string, nickname: string) => {
-		try {
-			await axios.post('/api/v1/profiles', {
-				nickname: nickname,
-				publicType: 'private',
-				avatarUrl: avatarUrl,
-			});
-		} catch (error) {
-			if (error.response.status === 403) {
-				alert('권한이 없습니다. 다시 로그인 해주세요.');
-				navigate('/');
-			} else {
-				alert('알 수 없는 에러로 아바타 생성을 실패했습니다.');
-				navigate('/');
-			}
+		if(data){
+			navigate('/?profile-complete=true');
+		} else {
+			navigate('/');
 		}
 	};
 
