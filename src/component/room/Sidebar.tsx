@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './Sidebar.module.css';
 import axios from 'axios';
+import { findClothing } from '../../api/clothing';
 
 function Sidebar(props) {
 	const width = window.innerWidth / 2.5;
@@ -46,39 +47,25 @@ function Sidebar(props) {
 	//   };
 	// })
 
-	const findClothing = async (uuid: string) => {
-		try {
-			return await axios.get('/api/v1/clothing/' + uuid);
-		} catch (error) {
-			if (error.response.status === 404) {
-				alert('의상 정보가 없습니다.');
-			} else if (error.response.status === 403) {
-				alert('자산에 접근 권한이 없습니다. 로그인 해주세요.');
-			} else {
-				alert('알 수 없는 에러가 발생했습니다.');
-			}
-		}
-	};
-
 	useEffect(() => {
 		const toggleOpenEventCallBack = async (e) => {
 			setX(0);
 			setOpen(true);
-			const res = await findClothing(e.detail.name);
-			const commaPrice = res.data.price
+			const data = await findClothing(e.detail.name);
+			const commaPrice = data.price
 				.toString()
 				.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-			e.detail.sidebarCanvas.loadClothing(res.data.signedClothingUrl);
-			setClothingName(res.data.name);
-			setClothingBrand(res.data.brand);
-			setClothingSerialNumber(res.data.serialNumber);
+			e.detail.sidebarCanvas.loadClothing(data.signedClothingUrl);
+			setClothingName(data.name);
+			setClothingBrand(data.brand);
+			setClothingSerialNumber(data.serialNumber);
 			setClothingPrice(commaPrice);
-			setClothingAssociateLink(res.data.associateLink);
-			setClothingDetailDescription(res.data.detailDescription);
+			setClothingAssociateLink(data.associateLink);
+			setClothingDetailDescription(data.detailDescription);
 
-			if (res.data.genderType === 'male') {
+			if (data.genderType === 'male') {
 				setClothingGenderType('남');
-			} else if (res.data.genderType === 'female') {
+			} else if (data.genderType === 'female') {
 				setClothingGenderType('여');
 			} else {
 				setClothingGenderType('남/여');
