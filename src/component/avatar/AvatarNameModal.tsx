@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import { createProfile } from '../../api/profile';
+import { createProfile, findMyProfile } from '../../api/profile';
 import AvatarCreateLoading from './AvatarCreateLoading';
 import styles from './AvatarNameModal.module.css';
 
@@ -47,24 +47,7 @@ function AvatarNameModal(props) {
 		} else {
 			navigate('/');
 		}
-	};
 
-	const findProfile = async () => {
-		try {
-			const res = await axios.get('/api/v1/profiles/me');
-			setInfo({ name: res.data.nickname });
-		} catch (error) {
-			if (error.response.status === 403) {
-				alert('권한이 없습니다. 다시 로그인 해주세요.');
-				navigate('/');
-			} else if (error.response.status === 404) {
-				alert('이미 생성된 프로필이 없습니다. 프로필을 먼저 생성해 주세요.');
-				navigate('/');
-			} else {
-				alert('알 수 없는 에러로 아바타 수정을 실패했습니다.');
-				navigate('/');
-			}
-		}
 	};
 
 	const updateProfile = async (avatarUrl: string, nickname: string) => {
@@ -106,11 +89,18 @@ function AvatarNameModal(props) {
 	}, [props.isNameModalOn]);
 
 	useEffect(() => {
-		const qs = new URLSearchParams(location.search);
-		if (qs.has('edit-mode')) {
-			findProfile();
-			setIsEditMode(true);
-		}
+		(async function() {
+			const qs = new URLSearchParams(location.search);
+			if (qs.has('edit-mode')) {
+				const data = await findMyProfile();
+				if(data){
+					setInfo({ name: data.nickname });
+					setIsEditMode(true);
+				} else {
+					navigate('/');
+				}
+			}
+		})();
 	}, []);
 
 	return (
