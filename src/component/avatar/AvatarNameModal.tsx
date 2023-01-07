@@ -37,14 +37,19 @@ function AvatarNameModal(props) {
 		setIsLoading(true);
 		try {
 			await createProfile({
-				nickname: info.name, 
-				publicType: 'private', 
-				avatarUrl: props.avatarUrl
+				nickname: info.name,
+				publicType: 'private',
+				avatarUrl: props.avatarUrl,
 			});
 			navigate('/?profile-complete=true');
-		} catch(error) {
+		} catch (error) {
 			if (error.response.status === 403) {
 				alert('권한이 없습니다. 다시 로그인 해주세요.');
+				navigate('/');
+			} else if (error.response.status === 409) {
+				alert(
+					'이미 프로필이 생성되어 있습니다. 변경을 원하실 경우 아바타 변경을 해주세요.',
+				);
 				navigate('/');
 			} else {
 				alert('알 수 없는 에러로 아바타 생성을 실패했습니다.');
@@ -68,7 +73,7 @@ function AvatarNameModal(props) {
 			await updateProfile({
 				nickname: info.name,
 				publicType: 'private',
-				avatarUrl: props.avatarUrl
+				avatarUrl: props.avatarUrl,
 			});
 
 			navigate('/?profile-complete=true');
@@ -91,14 +96,14 @@ function AvatarNameModal(props) {
 	}, [props.isNameModalOn]);
 
 	useEffect(() => {
-		(async function() {
+		(async function () {
 			const qs = new URLSearchParams(location.search);
 			if (qs.has('edit-mode')) {
 				try {
 					const data = await findMyProfile();
 					setInfo({ name: data.nickname });
 					setIsEditMode(true);
-				} catch(error) {
+				} catch (error) {
 					if (error.response.status === 403) {
 						alert('권한이 없습니다. 다시 로그인 해주세요.');
 						navigate('/');
