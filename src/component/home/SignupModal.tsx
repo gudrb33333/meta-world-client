@@ -31,14 +31,22 @@ function SignupModal(props) {
 			return alert('비밀번호와 비밀번호 확인이 같지 않습니다.');
 		}
 
-		const data = await signup({
-			email: signupEmail,
-			password: signupPassword
-		});
-		
-		if (data && confirm('회원가입을 완료했습니다.')) {
-			props.close();
-			props.openSigninModal();
+		try{
+			await signup({
+				email: signupEmail,
+				password: signupPassword
+			})
+
+			if (confirm('회원가입을 완료했습니다.')) {
+				props.close();
+				props.openSigninModal();
+			}
+		} catch(error) {
+			if (error.response.status === 409) {
+				alert('회원가입을 실패했습니다. 이미 존재하는 아이디 입니다.');
+			} else {
+				alert('알 수 없는 에러로 회원가입을 실패했습니다.');
+			}
 		}
 	};
 
