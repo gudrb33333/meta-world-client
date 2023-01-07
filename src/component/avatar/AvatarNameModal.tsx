@@ -39,7 +39,6 @@ function AvatarNameModal(props) {
 		navigate('/?profile-complete=true');
 	};
 
-
 	const createProfile = async (avatarUrl: string, nickname: string) => {
 		try {
 			await axios.post('/api/v1/profiles', {
@@ -61,12 +60,12 @@ function AvatarNameModal(props) {
 	const findProfile = async () => {
 		try {
 			const res = await axios.get('/api/v1/profiles/me');
-			setInfo({name: res.data.nickname});
+			setInfo({ name: res.data.nickname });
 		} catch (error) {
 			if (error.response.status === 403) {
 				alert('권한이 없습니다. 다시 로그인 해주세요.');
 				navigate('/');
-			} else if (error.response.status === 404){
+			} else if (error.response.status === 404) {
 				alert('이미 생성된 프로필이 없습니다. 프로필을 먼저 생성해 주세요.');
 				navigate('/');
 			} else {
@@ -74,7 +73,7 @@ function AvatarNameModal(props) {
 				navigate('/');
 			}
 		}
-	}
+	};
 
 	const updateProfile = async (avatarUrl: string, nickname: string) => {
 		try {
@@ -87,14 +86,14 @@ function AvatarNameModal(props) {
 			if (error.response.status === 403) {
 				alert('권한이 없습니다. 다시 로그인 해주세요.');
 				navigate('/');
-			} else if(error.response.status === 404) {
+			} else if (error.response.status === 404) {
 				alert('프로필이 없습니다. 프로필을 먼저 생성 해주세요.');
 			} else {
 				alert('알 수 없는 에러로 아바타 생성을 실패했습니다.');
 				navigate('/');
 			}
 		}
-	}
+	};
 
 	const patchAvatarHandler = async () => {
 		const regex = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/;
@@ -114,10 +113,9 @@ function AvatarNameModal(props) {
 		setIsNameModalOn(props.isNameModalOn);
 	}, [props.isNameModalOn]);
 
-
 	useEffect(() => {
 		const qs = new URLSearchParams(location.search);
-		if(qs.has('edit-mode')){
+		if (qs.has('edit-mode')) {
 			findProfile();
 			setIsEditMode(true);
 		}
@@ -176,33 +174,29 @@ function AvatarNameModal(props) {
 						</tr>
 						<tr>
 							<td>
-								{
-									isEditMode
-									?								<button
-									disabled={disable}
-									className={classNames([
-										styles.enterRoom,
-										styles.avatarSetInfoButton,
-									])}
-									onClick={patchAvatarHandler}
-								>
-									아바타 변경
-								</button>
-								: 								<button
-								disabled={disable}
-								className={classNames([
-									styles.enterRoom,
-									styles.avatarSetInfoButton,
-								])}
-								onClick={createAvatarHandler}
-							>
-								아바타 생성
-							</button>
-								}
-
-
-
-
+								{isEditMode ? (
+									<button
+										disabled={disable}
+										className={classNames([
+											styles.enterRoom,
+											styles.avatarSetInfoButton,
+										])}
+										onClick={patchAvatarHandler}
+									>
+										아바타 변경
+									</button>
+								) : (
+									<button
+										disabled={disable}
+										className={classNames([
+											styles.enterRoom,
+											styles.avatarSetInfoButton,
+										])}
+										onClick={createAvatarHandler}
+									>
+										아바타 생성
+									</button>
+								)}
 
 								<button
 									disabled={disable}

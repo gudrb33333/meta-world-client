@@ -100,7 +100,10 @@ function SignupModal(props) {
 							<td>
 								<h3 className={styles.signupText}>
 									<div className={styles.title}>아이디</div>
-									<div className={styles.notice}>알림! 포트폴리오 용입니다. <br/> 가짜이메일로 회원가입 해주세요.</div>
+									<div className={styles.notice}>
+										알림! 포트폴리오 용입니다. <br /> 가짜이메일로 회원가입
+										해주세요.
+									</div>
 									<input
 										className={styles.signupInput}
 										value={signupEmail}

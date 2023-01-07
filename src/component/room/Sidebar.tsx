@@ -65,7 +65,9 @@ function Sidebar(props) {
 			setX(0);
 			setOpen(true);
 			const res = await findClothing(e.detail.name);
-			const commaPrice = res.data.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			const commaPrice = res.data.price
+				.toString()
+				.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 			e.detail.sidebarCanvas.loadClothing(res.data.signedClothingUrl);
 			setClothingName(res.data.name);
 			setClothingBrand(res.data.brand);
@@ -150,7 +152,11 @@ function Sidebar(props) {
 							</tr>
 							<tr>
 								<td colSpan={2} className={styles.productTdLink}>
-									<a className={styles.productALink} href={clothingAssociateLink} target="_blank">
+									<a
+										className={styles.productALink}
+										href={clothingAssociateLink}
+										target="_blank"
+									>
 										옷 보러가기
 									</a>
 								</td>

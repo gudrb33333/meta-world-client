@@ -50,14 +50,13 @@ function ProfileModal(props) {
 		}
 	};
 
-	const deleteProfile =async () => {
+	const deleteProfile = async () => {
 		try {
 			await axios.delete('/api/v1/profiles/me');
 		} catch (error) {
 			if (error.response.status === 404) {
-				alert('삭제할 프로필을 찾지 못했습니다.')
+				alert('삭제할 프로필을 찾지 못했습니다.');
 				props.close();
-
 			} else if (error.response.status === 403) {
 				alert('권한이 없습니다. 로그인을 다시 해주세요.');
 				props.close();
@@ -66,7 +65,7 @@ function ProfileModal(props) {
 				props.close();
 			}
 		}
-	}
+	};
 
 	const navigateHandler = async () => {
 		profileCanvas.stopRendering();
@@ -75,15 +74,15 @@ function ProfileModal(props) {
 	};
 
 	const changeProfileHandler = () => {
-		navigate('/avatar?edit-mode')
-	}
+		navigate('/avatar?edit-mode');
+	};
 
 	const deleteProfileHandler = async () => {
 		await deleteProfile();
-		confirm('프로필을 성공적으로 삭제했습니다.')
-		setNickname("");
+		confirm('프로필을 성공적으로 삭제했습니다.');
+		setNickname('');
 		props.close();
-	}
+	};
 
 	return (
 		<Modal

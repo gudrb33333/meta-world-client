@@ -17,10 +17,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 		this._object = object;
 	}
 
-	public spawn(
-		loadingManager: LoadingManager,
-		world: World,
-	) {
+	public spawn(loadingManager: LoadingManager, world: World) {
 		const qs = new URLSearchParams(location.search);
 		let avatarPath: string;
 		let avatarName: string;

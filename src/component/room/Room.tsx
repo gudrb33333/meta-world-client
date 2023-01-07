@@ -18,11 +18,14 @@ function Room() {
 	const history = createBrowserHistory();
 
 	useEffect(() => {
-		 (async function() {
+		(async function () {
 			try {
 				const qs = new URLSearchParams(location.search);
-				if(qs.get('user-type') === 'guest'){
-					sessionStorage.setItem('avatar_url', '/assets/male/readyDefaultMaleAvatar.glb');
+				if (qs.get('user-type') === 'guest') {
+					sessionStorage.setItem(
+						'avatar_url',
+						'/assets/male/readyDefaultMaleAvatar.glb',
+					);
 					sessionStorage.setItem('avatar_name', '손님');
 				} else {
 					const res = await axios.get('/api/v1/profiles/me');
@@ -30,13 +33,15 @@ function Room() {
 					sessionStorage.setItem('avatar_name', res.data.nickname);
 				}
 
-				setWorld(new World('/assets/virtual_reality_space_mountain_view_room.glb'));
+				setWorld(
+					new World('/assets/virtual_reality_space_mountain_view_room.glb'),
+				);
 
 				document.addEventListener('loading-screen-event', function () {
 					setIsLoading(false);
 					setUiContainerOn(true);
 				});
-		
+
 				history.listen(({ action }) => {
 					if (action === 'POP') {
 						listenBackEvent();

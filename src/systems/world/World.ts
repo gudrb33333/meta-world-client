@@ -338,7 +338,6 @@ export class World {
 
 				profile.avatar_url = sessionStorage.getItem('avatar_url');
 				profile.avatar_name = sessionStorage.getItem('avatar_name');
-			
 
 				this._phoenixAdapter = new PhoenixAdapter(
 					this,
