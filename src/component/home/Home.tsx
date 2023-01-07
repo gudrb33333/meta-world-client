@@ -43,8 +43,15 @@ function Home() {
 	};
 
 	const logoutHandler = async () => {
-		await logout();
-		setIsLoggedIn(false);
+		try {
+			await logout();
+			setIsLoggedIn(false);
+		} catch (error) {
+			if (error.response.status == 403) {
+				alert('이미 로그아웃 되었습니다.');
+				setIsLoggedIn(false);
+			}
+		}
 	};
 
 	useEffect(() => {
