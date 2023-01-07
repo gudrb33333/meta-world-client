@@ -96,10 +96,16 @@ function Avatar() {
 
 	useEffect(() => {
 		(async function(){
-			const data = await findMe();
-
-			if(!data){
-				navigate('/');
+			try{
+				await findMe();
+			} catch(error) {
+				if (error.response.status == 403) {
+					alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
+					navigate('/');
+				} else {
+					alert('알 수 없는 에러가 발생했습니다.');
+					navigate('/');
+				}
 			}
 		})();
 	}, []);
