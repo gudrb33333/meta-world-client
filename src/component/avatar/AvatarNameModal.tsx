@@ -64,16 +64,25 @@ function AvatarNameModal(props) {
 		setDisable(true);
 		setIsLoading(true);
 
-		const data =await updateProfile({
-			nickname: info.name,
-			publicType: 'private',
-			avatarUrl: props.avatarUrl
-		});
+		try {
+			await updateProfile({
+				nickname: info.name,
+				publicType: 'private',
+				avatarUrl: props.avatarUrl
+			});
 
-		if(data){
 			navigate('/?profile-complete=true');
-		} else {
-			navigate('/');
+		} catch (error) {
+			if (error.response.status === 403) {
+				alert('권한이 없습니다. 다시 로그인 해주세요.');
+				navigate('/');
+			} else if (error.response.status === 404) {
+				alert('변경할 프로필이 없습니다. 프로필을 먼저 생성 해주세요.');
+				navigate('/');
+			} else {
+				alert('알 수 없는 에러로 아바타 생성을 실패했습니다.');
+				navigate('/');
+			}
 		}
 	};
 

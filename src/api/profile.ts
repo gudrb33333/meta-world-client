@@ -23,23 +23,14 @@ export async function findMyProfile() {
 
 export async function updateProfile(profileProps: ProfileProps) {
     const { nickname, publicType, avatarUrl } = profileProps;
-    try {
-        const { data } = await axios.patch('/api/v1/profiles/me', {
-            nickname: nickname,
-            publicType: publicType,
-            avatarUrl: avatarUrl,
-        });
 
-        return data;
-    } catch (error) {
-        if (error.response.status === 403) {
-            alert('권한이 없습니다. 다시 로그인 해주세요.');
-        } else if (error.response.status === 404) {
-            alert('프로필이 없습니다. 프로필을 먼저 생성 해주세요.');
-        } else {
-            alert('알 수 없는 에러로 아바타 생성을 실패했습니다.');
-        }
-    }
+    const { data } = await axios.patch('/api/v1/profiles/me', {
+        nickname: nickname,
+        publicType: publicType,
+        avatarUrl: avatarUrl,
+    });
+
+    return data;
 }
 
 export async function deleteProfile() {
