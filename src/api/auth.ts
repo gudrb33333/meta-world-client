@@ -13,7 +13,7 @@ export interface LoginProps {
 export async function signup(signupProps: SignupProps) {
 	const { email, password } = signupProps;
 	try {
-		const data = await axios.post('/api/v1/auth/signup', {
+		const { data } = await axios.post('/api/v1/auth/signup', {
 			email,
 			password,
 		});
