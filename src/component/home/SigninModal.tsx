@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Modal from 'react-modal';
 import classNames from 'classnames';
 import styles from './SigninModal.module.css';
+import { signin } from '../../api/auth';
 
 function SigninModal(props) {
 	const [isModalOn, setIsModalOn] = useState(false);
@@ -18,44 +18,16 @@ function SigninModal(props) {
 		setSigninPassword(event.currentTarget.value);
 	};
 
-	const signin = async (dataToSubmit) => {
-		try {
-			await axios.post('/api/v1/auth/signin', dataToSubmit);
-			props.close();
-			props.loginComplete();
-			props.openProfileModal();
-		} catch (error) {
-			if (error.response.status === 403) {
-				alert('아이디나 비밀번호가 없습니다.');
-			} else {
-				alert('알 수 없는 에러로 로그인을 실패했습니다.');
-			}
-		}
-	};
-
 	const onSigninSubmitHandler = async (event) => {
 		event.preventDefault();
 
-		const body = {
+		await signin({
 			email: signinEmail,
 			password: signinPassword,
-		};
-
-		await signin(body);
-
-		// signin(body)
-		// .then(() => {
-		//     findMember();
-
-		// },
-		// (error) =>{
-		// 	if(error.response.status === 403){
-		// 		alert('아이디나 비밀번호가 없습니다.');
-		// 	} else{
-		// 		alert('알 수 없는 에러로 회원가입을 실패했습니다.');
-		// 	}
-		// }
-		// )
+		});
+		props.close();
+		props.loginComplete();
+		props.openProfileModal();
 	};
 
 	useEffect(() => {
