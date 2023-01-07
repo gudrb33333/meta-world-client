@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { findMe } from '../../api/member';
 import '../../App.css';
 import styles from './Avatar.module.css';
 import AvatarGuideModal from './AvatarGuideModal';
@@ -94,15 +95,13 @@ function Avatar() {
 	});
 
 	useEffect(() => {
-		axios.get('/api/v1/members/me').catch((error) => {
-			if (error.response.status == 403) {
-				alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
-				navigate('/');
-			} else {
-				alert('알 수 없는 에러가 발생했습니다.');
+		(async function(){
+			const data = await findMe();
+
+			if(!data){
 				navigate('/');
 			}
-		});
+		})();
 	}, []);
 
 	return (
