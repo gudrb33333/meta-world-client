@@ -15,11 +15,11 @@
 자신의 사진으로 아바타를 만들어 대화를 나누고, 옷을 구경해보세요!
 
 <div>
-  <img src="https://user-images.githubusercontent.com/59630175/194330165-40f8e98a-a3ee-491b-9528-6e2888fa9d59.jpg" width="830" height="403"/>
+  <img src="https://user-images.githubusercontent.com/59630175/194330165-40f8e98a-a3ee-491b-9528-6e2888fa9d59.jpg"/>
 </div>
 
 <div>
-  <img src="https://user-images.githubusercontent.com/59630175/211415728-b9900742-42de-4035-a058-17af27237353.gif"/>
+  <img src="https://user-images.githubusercontent.com/59630175/211437385-a576fd37-9607-41a5-8d52-78f154690707.gif"/>
 </div>
 
 <div>
@@ -27,15 +27,16 @@
   <img src="https://user-images.githubusercontent.com/59630175/196574537-00b01f63-8807-4c9e-9cba-bb2a417e405f.gif" width="270" height="420"/>
 </div>
 
-## 데모
+
+## Demo
 모바일 기기별로 모두 테스트 되지않아, PC에서 접속해주세요.
 
-Meta World : https://meta-world.gudrb33333.click
+Meta World Demo: https://meta-world.gudrb33333.click
 
 ## 연관 프로젝트 정보
-[meta-world-api](https://github.com/gudrb33333/meta-world-api.git) : API 서버\
-[meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의(WebRTC) 서버\
-[meta_world_server](https://github.com/gudrb33333/meta_world_server.git) : 게임네트워크 서버
+[meta-world-api](https://github.com/gudrb33333/meta-world-api.git) : REST API (Spring Boot)\
+[meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의 서버 (WebRTC)\
+[meta_world_server](https://github.com/gudrb33333/meta_world_server.git) : 게임네트워크 서버 (Elixir Phoenix)
 
 ## 알림
 프로젝트 내의 GLB 맵 자산과 배경 사진은 다음 사이트들에서 라이센스 구매한 후 사용하였습니다.\
