@@ -46,6 +46,9 @@ Meta World Demo: https://meta-world.gudrb33333.click
 Ready Player Me의 데모 버전을 사용하였습니다.\
 [Ready Player Me Demo Web](https://docs.readyplayer.me/ready-player-me/integration-guides/web)
 
+아바타 애니매이션 파일은 아래의 사이트에서 추출하였습니다.\
+https://www.mixamo.com
+
 의상 3D 파일 출처.\
 https://sketchfab.com/3d-models/cloth-jacket-f880b45cde9f41cf9b4afbfe25ce9887 \
 https://sketchfab.com/3d-models/cloths-815ccf1a7fc046b2a3ca9ca8c7b2983f \
