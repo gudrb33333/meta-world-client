@@ -117,7 +117,15 @@ function ProfileModal(props) {
 							<div
 								id="profile-container"
 								className={styles.profileAvatarContent}
-							></div>
+							>
+							</div>
+							<button
+								type="button"
+								className={classNames([styles.close, styles.profileEnterButton])}
+								onClick={navigateHandler}
+							>
+								공간으로 접속
+							</button>
 						</td>
 					</tr>
 					<tr>
@@ -134,13 +142,6 @@ function ProfileModal(props) {
 					</tr>
 					<tr>
 						<td>
-							<button
-								type="button"
-								className={classNames([styles.close, styles.profileInfoButton])}
-								onClick={navigateHandler}
-							>
-								공간으로 접속
-							</button>
 							<button
 								type="button"
 								className={classNames([styles.close, styles.profileInfoButton])}
