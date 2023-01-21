@@ -5,6 +5,7 @@ import { World } from './World';
 import { Chair } from '../objects/Chair';
 import { Clothing } from '../objects/Clothing';
 import { LoadingManager } from '../core/LoadingManager';
+import { WorldObject } from '../objects/WorldObject';
 
 export class ObjectSpawnPoint implements ISpawnPoint {
 	private _type: string;
@@ -17,7 +18,7 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 
 	public spawn(loadingManager: LoadingManager, world: World): void {
 		loadingManager.loadGLTF('/assets/' + this._type + '.glb', (model: any) => {
-			const object: Chair | Clothing = this.getNewChairByType(
+			const object: WorldObject = this.getNewWorldObjectByType(
 				model,
 				this._type,
 				this._object,
@@ -35,11 +36,11 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 		});
 	}
 
-	private getNewChairByType(
+	private getNewWorldObjectByType(
 		model: any,
 		type: string,
 		object: THREE.Object3D,
-	): Chair | Clothing {
+	): WorldObject {
 		switch (type) {
 			case 'chair':
 				return new Chair(model, object);

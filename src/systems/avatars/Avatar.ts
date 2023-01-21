@@ -27,6 +27,7 @@ import { IInputReceiver } from '../interfaces/IInputReceiver';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { TargetObjectInstance } from './TargetObjectInstance';
 import { SidebarCanvas } from '../world/SidebarCanvas';
+import { WorldObject } from '../objects/WorldObject';
 
 export class Avatar
 	extends THREE.Object3D
@@ -93,9 +94,9 @@ export class Avatar
 
 	private _sidebarCanvas: SidebarCanvas;
 
-	private _canInteractObjectMap: Map<string, Chair | Clothing> = new Map<
+	private _canInteractObjectMap: Map<string, WorldObject> = new Map<
 		string,
-		Chair | Clothing
+		WorldObject
 	>();
 
 	constructor(gltf: GLTF) {
@@ -1143,7 +1144,7 @@ export class Avatar
 		this._sidebarCanvas = sidebarCanvas;
 	}
 
-	get canInteractObjectMap(): Map<string, Chair | Clothing> {
+	get canInteractObjectMap(): Map<string, WorldObject> {
 		return this._canInteractObjectMap;
 	}
 }

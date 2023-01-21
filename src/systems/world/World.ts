@@ -16,8 +16,6 @@ import { Sky } from './Sky';
 import { IUpdatable } from '../interfaces/IUpdatable';
 import { AvatarSpawnPoint } from './AvatarSpawnPoint';
 import { ISpawnPoint } from '../interfaces/ISpawnPoint';
-import { Chair } from '../objects/Chair';
-import { Clothing } from '../objects/Clothing';
 import { Avatar } from '../avatars/Avatar';
 import { IWorldEntity } from '../interfaces/IWorldEntity';
 import { Stats } from '../../lib/utils/Stats';
@@ -31,6 +29,7 @@ import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import { Joystick } from '../core/Joystick';
 import checkIsMobile, { isIOS } from '../../utils/isMobile';
 import { DirectionalLight, HemisphereLight } from 'three';
+import { WorldObject } from '../objects/WorldObject';
 
 export interface WorldParams {
 	Pointer_Lock: boolean;
@@ -71,8 +70,7 @@ export class World {
 	private _userAvatar: Avatar;
 	private _avatars: Avatar[] = [];
 	private _avatarMap = new Map<string, Avatar>();
-	private _chairs: Chair[] = [];
-	private _clothing: Clothing[] = [];
+	private _worldObjects: WorldObject[] = [];
 
 	private _stats: Stats;
 	private _scenarioGUIFolder: GUI;
@@ -479,13 +477,8 @@ export class World {
 			i--;
 		}
 
-		for (let i = 0; i < this._chairs.length; i++) {
-			this.remove(this._chairs[i]);
-			i--;
-		}
-
-		for (let i = 0; i < this._clothing.length; i++) {
-			this.remove(this._clothing[i]);
+		for (let i = 0; i < this._worldObjects.length; i++) {
+			this.remove(this._worldObjects[i]);
 			i--;
 		}
 	}
@@ -720,12 +713,8 @@ export class World {
 		return this._userAvatar;
 	}
 
-	get chairs(): Chair[] {
-		return this._chairs;
-	}
-
-	get clothing(): Clothing[] {
-		return this._clothing;
+	get worldObjects(): WorldObject[] {
+		return this._worldObjects;
 	}
 
 	get mediasoupAdapter() {
