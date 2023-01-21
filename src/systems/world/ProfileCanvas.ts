@@ -31,6 +31,7 @@ export class ProfileCanvas {
 	private _mouse :THREE.Vector2;
 	private _objsToTest = [];
 	private _selectState: boolean = false;
+	private _uiContainer;
 	private _pointermoveCallback: (evt: MouseEvent) => void;
 	private _pointerdownCallback: () => void;
 	private _pointerupCallback: () => void;
@@ -151,11 +152,12 @@ export class ProfileCanvas {
 		document.addEventListener('pointerdown', this._pointerdownCallback);
 		document.addEventListener('pointerup', this._pointerupCallback);
 
+		this.makePanel();
 		this.loadAvatar(avatar_url);
 		this.render();
 	}
 
-	public loadAvatar(avatar_url: string) {
+	public async loadAvatar(avatar_url: string) {
 		// model
 		this._gltfLoader.load(
 			avatar_url,
@@ -163,8 +165,6 @@ export class ProfileCanvas {
 				this._mixer = new THREE.AnimationMixer(gltf.scene);
 				this._animationClipArr = new Array<THREE.AnimationClip>();
 				await this.setAvatarAnimation(gltf);
-				await this.makePanel();
-
 				this._model = gltf.scene;
 
 				const clip = THREE.AnimationClip.findByName( this._animationClipArr, 'idle' );
@@ -172,7 +172,7 @@ export class ProfileCanvas {
 				action.play();
 
 				this._model.scale.set(8, 8, 8);
-				this._graphicsWorld.add(gltf.scene);
+				this._graphicsWorld.add(this._model);
 
 				this._controls.target.x = this._model.position.x * 8;
 				this._controls.target.y = this._model.position.y * 8 + 11.4;
@@ -249,7 +249,7 @@ export class ProfileCanvas {
 	}
 
 	private makePanel() {
-			const container = new ThreeMeshUI.Block( {
+			this._uiContainer = new ThreeMeshUI.Block( {
 				justifyContent: 'center',
 				contentDirection: 'row-reverse',
 				fontFamily: './assets/fonts/NanumGothic-Bold.json',
@@ -259,11 +259,11 @@ export class ProfileCanvas {
 				borderRadius: 0.11
 			} );
 	
-			container.position.set( 0, 9.5, 2.8 );
-			container.rotation.x = -0.55;
-			container.scale.set(6,6,6)
-			this._graphicsWorld.add( container );
-	
+			this._uiContainer.position.set( 0, 9.5, 2.8 );
+			this._uiContainer.rotation.x = -0.55;
+			this._uiContainer.scale.set(6,6,6);
+			this._graphicsWorld.add(this._uiContainer);
+
 			const buttonOptions = {
 				width: 0.4,
 				height: 0.15,
@@ -346,7 +346,7 @@ export class ProfileCanvas {
 			buttonWave.setupState( hoveredStateAttributes );
 			buttonWave.setupState( idleStateAttributes );
 		
-			container.add(buttonWave, buttonIdle, buttonDance );
+			this._uiContainer.add(buttonWave, buttonIdle, buttonDance );
 			this._objsToTest.push(buttonWave, buttonIdle, buttonDance );
 	}
 
@@ -387,25 +387,32 @@ export class ProfileCanvas {
 	}
 
 	public render() {
+		ThreeMeshUI.update();
+		this.updateButtons();
+
+		this._controls.update(); // required if damping enabled
+		if(this._model && this._mixer) {
+			this._mixer.update(this._clock.getDelta());
+			this._model.scale.set(8, 8, 8);
+		}		
+
 		this._requestAnimationFrameId = requestAnimationFrame(() => {
 			this.render();
 		});
-		if(this._mixer){
-			this._mixer.update(this._clock.getDelta());
-			if(this._model){
-				this._model.scale.set(8, 8, 8);
-			}
-			ThreeMeshUI.update();
-			this.updateButtons();
+		
+		try {
+			this._renderer.render(this._graphicsWorld, this._camera);	
+		} catch {
+			this._graphicsWorld.remove(this._uiContainer);
+			this._objsToTest = [];
+			this.makePanel();
 		}
-
-		this._controls.update(); // required if damping enabled
-		this._renderer.render(this._graphicsWorld, this._camera);
 	}
 
 	public stopRendering() {
 		console.log('stopRendering');
 		cancelAnimationFrame(this._requestAnimationFrameId);
+		this._graphicsWorld.remove(this._uiContainer);
 		document.removeEventListener('pointermove', this._pointermoveCallback);
 		document.removeEventListener('pointerdown', this._pointerdownCallback);
 		document.removeEventListener('pointerup', this._pointerupCallback);
