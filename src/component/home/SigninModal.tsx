@@ -31,7 +31,7 @@ function SigninModal(props) {
 			props.loginComplete();
 			props.openProfileModal();
 		} catch (error) {
-			if (error.response.status === 403) {
+			if (error.response.status === 401) {
 				alert('아이디나 비밀번호가 없습니다.');
 			} else {
 				alert('알 수 없는 에러로 로그인을 실패했습니다.');
