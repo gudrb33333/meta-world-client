@@ -337,12 +337,29 @@ export class World {
 				profile.avatar_url = sessionStorage.getItem('avatar_url');
 				profile.avatar_name = sessionStorage.getItem('avatar_name');
 
-				this._phoenixAdapter = new PhoenixAdapter(
-					this,
-					process.env.PHOENIX_SERVER_URL,
-					process.env.PHOENIX_CHANNER_TOPIC,
-					profile,
-				);
+
+
+				const qs = new URLSearchParams(location.search);
+				if (qs.has('phoenix-host')) {
+					const phoenix = `wss://${qs.get('phoenix-host')}/socket`;
+					console.log(phoenix);
+	
+					this._phoenixAdapter = new PhoenixAdapter(
+						this,
+						phoenix,
+						process.env.PHOENIX_CHANNER_TOPIC,
+						profile,
+					);
+				} else {
+					this._phoenixAdapter = new PhoenixAdapter(
+						this,
+						process.env.PHOENIX_SERVER_URL,
+						process.env.PHOENIX_CHANNER_TOPIC,
+						profile,
+					);
+					console.log(process.env.PHOENIX_SERVER_URL);
+				}
+
 				await this._phoenixAdapter.phoenixSocketConnect();
 				await this._phoenixAdapter.phoenixChannelJoin();
 
