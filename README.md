@@ -38,6 +38,14 @@ Meta World Demo: https://meta-world.gudrb33333.click
 [meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의 서버 (WebRTC)\
 [meta_world_server](https://github.com/gudrb33333/meta_world_server.git) : 게임네트워크 서버 (Elixir Phoenix)
 
+## 시스템 아키텍쳐
+
+![final_draw_io drawio (1)](https://user-images.githubusercontent.com/59630175/215112695-9af002bc-b937-4351-a9e4-f0c976d18484.png)
+
+- 개인 3D Assets은 Spring에서 Signed URL을 획득해야 접근가능. (검증된 회원만 자원 접근 가능).
+- 게임 네트워크 서버 부하분산시 Redis Pub/Sub를 통해 메시지를 교환하여 다중서버 환경에서 애니매이션,아바타 좌표 값 공유.
+- Spring은 세션 인증 방식으로 Redis를 Session Storage로 사용.
+
 ## 알림
 프로젝트 내의 GLB 맵 자산과 배경 사진은 다음 사이트들에서 라이센스 구매한 후 사용하였습니다.\
 [Virtual Reality Space Mountain View Room](https://sketchfab.com/3d-models/virtual-reality-space-mountain-view-room-695833e5854d4ed5922daf53011e2d4a)\
