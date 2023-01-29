@@ -35,7 +35,7 @@ Meta World Demo: https://meta-world.gudrb33333.click
 
 ## 연관 프로젝트 정보
 [meta-world-api](https://github.com/gudrb33333/meta-world-api.git) : REST API (Spring Boot)\
-[meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의 서버 (WebRTC)\
+[meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의 서버 (WebRTC SFU)\
 [meta_world_server](https://github.com/gudrb33333/meta_world_server.git) : 게임네트워크 서버 (Elixir Phoenix)
 
 ## 시스템 아키텍쳐
