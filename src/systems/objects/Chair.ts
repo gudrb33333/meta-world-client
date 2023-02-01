@@ -28,7 +28,7 @@ export class Chair
 		super(gltf, object);
 
 		// Read GLTF
-		this.readChairData(gltf);
+		this.readGltfData(gltf);
 	}
 
 	public handleKeyboardEvent(
@@ -73,7 +73,7 @@ export class Chair
 			.set(this.position.x, this.position.y + 5.5, this.position.z);
 	}
 
-	public readChairData(gltf: any): void {
+	public readGltfData(gltf: any): void {
 		gltf.scene.traverse((child) => {
 			if (child.isMesh) {
 				Utils.setupMeshProperties(child);

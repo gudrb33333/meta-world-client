@@ -14,10 +14,10 @@ export class Clothing extends WorldObject {
 		super(gltf, object);
 
 		// Read GLTF
-		this.readClothingData(gltf);
+		this.readGltfData(gltf);
 	}
 
-	private readClothingData(gltf: any) {
+	public readGltfData(gltf: any) {
 		gltf.scene.traverse((child) => {
 			if (child.hasOwnProperty('userData')) {
 				if (child.userData.data === 'collision') {

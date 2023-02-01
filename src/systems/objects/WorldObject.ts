@@ -75,6 +75,8 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 		this._interactionText.visible = false;
     }
 
+	public abstract readGltfData(gltf:any): void;
+
 	public removeFromWorld(world: World): void {
 		const chairs = world.worldObjects;
 		if (!_.includes(chairs, this)) {
