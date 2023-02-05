@@ -80,7 +80,7 @@ function Sidebar(props) {
 				sidebarCanvas.loadClothing('/assets/can_not_access_text.glb');
 				if (error.response.status === 404) {
 					setErrorMessage('의상 정보가 없습니다.');
-				} else if (error.response.status === 403) {
+				} else if (error.response.status === 401) {
 					setErrorMessage('자산에 접근할 권한이 없습니다. 로그인 해주세요.');
 				} else {
 					setErrorMessage('알 수 없는 에러가 발생했습니다.');

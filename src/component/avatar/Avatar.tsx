@@ -99,7 +99,7 @@ function Avatar() {
 			try {
 				await findMe();
 			} catch (error) {
-				if (error.response.status == 403) {
+				if (error.response.status == 401) {
 					alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
 					navigate('/');
 				} else {

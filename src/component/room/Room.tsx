@@ -32,7 +32,7 @@ function Room() {
 					sessionStorage.setItem('avatar_url', data.signedAvatarUrl);
 					sessionStorage.setItem('avatar_name', data.nickname);
 				} catch (error) {
-					if (error.response.status === 403) {
+					if (error.response.status === 401) {
 						alert('권한이 없습니다. 다시 로그인 해주세요.');
 						navigate('/');
 					} else if (error.response.status === 404) {

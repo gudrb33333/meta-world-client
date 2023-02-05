@@ -43,7 +43,7 @@ function AvatarNameModal(props) {
 			});
 			navigate('/?profile-complete=true');
 		} catch (error) {
-			if (error.response.status === 403) {
+			if (error.response.status === 401) {
 				alert('권한이 없습니다. 다시 로그인 해주세요.');
 				navigate('/');
 			} else if (error.response.status === 409) {
@@ -78,7 +78,7 @@ function AvatarNameModal(props) {
 
 			navigate('/?profile-complete=true');
 		} catch (error) {
-			if (error.response.status === 403) {
+			if (error.response.status === 401) {
 				alert('권한이 없습니다. 다시 로그인 해주세요.');
 				navigate('/');
 			} else if (error.response.status === 404) {
@@ -104,7 +104,7 @@ function AvatarNameModal(props) {
 					setInfo({ name: data.nickname });
 					setIsEditMode(true);
 				} catch (error) {
-					if (error.response.status === 403) {
+					if (error.response.status === 401) {
 						alert('권한이 없습니다. 다시 로그인 해주세요.');
 						navigate('/');
 					} else if (error.response.status === 404) {

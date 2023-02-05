@@ -47,7 +47,7 @@ function Home() {
 			await logout();
 			setIsLoggedIn(false);
 		} catch (error) {
-			if (error.response.status == 403) {
+			if (error.response.status == 401) {
 				alert('이미 로그아웃 되었습니다.');
 				setIsLoggedIn(false);
 			}

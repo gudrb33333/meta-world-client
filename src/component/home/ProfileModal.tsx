@@ -19,7 +19,7 @@ function ProfileModal(props) {
 				setNickname(data.nickname);
 				setProfileCanvas(new ProfileCanvas(data.signedAvatarUrl));
 			} catch (error) {
-				if (error.response.status === 403) {
+				if (error.response.status === 401) {
 					alert('권한이 없습니다. 다시 로그인 해주세요.');
 					props.close();
 				} else if (error.response.status === 404) {
@@ -68,7 +68,7 @@ function ProfileModal(props) {
 			if (error.response.status === 404) {
 				alert('삭제할 프로필을 찾지 못했습니다.');
 				props.close();
-			} else if (error.response.status === 403) {
+			} else if (error.response.status === 401) {
 				alert('권한이 없습니다. 로그인을 다시 해주세요.');
 				props.close();
 			} else {
