@@ -35,8 +35,8 @@ Meta World Demo: https://meta-world.gudrb33333.click
 
 ## 연관 프로젝트 정보
 [meta-world-api](https://github.com/gudrb33333/meta-world-api.git) : REST API (Spring Boot)\
-[meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의 서버 (WebRTC SFU)\
-[meta_world_server](https://github.com/gudrb33333/meta_world_server.git) : 게임네트워크 서버 (Elixir Phoenix)
+[meta_world_server](https://github.com/gudrb33333/meta_world_server.git) : 게임네트워크 서버 (Elixir Phoenix)\
+[meta-world-mediasoup](https://github.com/gudrb33333/meta-world-mediasoup.git) : 화상회의 서버 (WebRTC SFU)
 
 ## 시스템 아키텍쳐
 
@@ -53,6 +53,9 @@ Meta World Demo: https://meta-world.gudrb33333.click
 
 Ready Player Me의 데모 버전을 사용하였습니다.\
 [Ready Player Me Demo Web](https://docs.readyplayer.me/ready-player-me/integration-guides/web)
+
+기본 게임 엔진은 Sketchbook 0.4 오픈 소스를 사용하였습니다.\
+[Sketchbook 0.4](https://github.com/swift502/Sketchbook)
 
 아바타 애니매이션 파일은 아래의 사이트에서 추출하였습니다.\
 https://www.mixamo.com
