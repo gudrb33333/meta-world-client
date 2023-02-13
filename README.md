@@ -27,6 +27,9 @@
   <img src="https://user-images.githubusercontent.com/59630175/196574537-00b01f63-8807-4c9e-9cba-bb2a417e405f.gif" width="270" height="420"/>
 </div>
 
+<div>
+  <img src="https://user-images.githubusercontent.com/59630175/218590192-9bce8196-c4b1-4349-9182-188a6f02971d.gif"/>
+</div>
 
 ## Demo
 모바일 기기별로 모두 테스트 되지않아, PC에서 접속해주세요.
