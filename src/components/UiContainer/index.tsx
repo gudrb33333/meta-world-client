@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import styles from './UiContainer.module.css';
+import styles from './style.module.css';
 import checkIsMobile from '../../utils/isMobile';
 
 function UiContainer(props) {

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './Sidebar.module.css';
+import styles from './style.module.css';
 import axios from 'axios';
 import { findClothing } from '../../api/clothing';
 
-function Sidebar(props) {
+function RoomSidebar(props) {
 	const width = window.innerWidth / 2.5;
 	const [permission, setPermission] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
@@ -216,4 +216,4 @@ function Sidebar(props) {
 	}
 }
 
-export default Sidebar;
+export default RoomSidebar;

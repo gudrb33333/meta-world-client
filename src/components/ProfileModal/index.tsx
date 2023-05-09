@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import classNames from 'classnames';
-import styles from './ProfileModal.module.css';
+import styles from './style.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
 import { deleteProfile, findMyProfile } from '../../api/profile';

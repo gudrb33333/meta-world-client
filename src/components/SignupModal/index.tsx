@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import classNames from 'classnames';
-import styles from './SignupModal.module.css';
+import styles from './style.module.css';
 import { signup } from '../../api/auth';
 
 function SignupModal(props) {

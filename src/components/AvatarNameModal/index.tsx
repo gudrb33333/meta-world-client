@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { createProfile, findMyProfile, updateProfile } from '../../api/profile';
-import AvatarCreateLoading from './AvatarCreateLoading';
-import styles from './AvatarNameModal.module.css';
+import AvatarCreateLoading from '../AvatarCreateLoading';
+import styles from './style.module.css';
 
 function AvatarNameModal(props) {
 	Modal.setAppElement('#root');

@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import classNames from 'classnames';
-import styles from './Home.module.css';
-import SignupModal from './SignupModal';
-import SigninModal from './SigninModal';
-import ProfileModal from './ProfileModal';
+import styles from './style.module.css';
+import SignupModal from '../SignupModal';
+import SigninModal from '../SigninModal';
+import ProfileModal from '../ProfileModal';
 import { useEffect, useState } from 'react';
 import { logout } from '../../api/auth';
 

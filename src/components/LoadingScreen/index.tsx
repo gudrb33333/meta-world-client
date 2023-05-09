@@ -1,4 +1,4 @@
-import styles from './LoadingScreen.module.css';
+import styles from './style.module.css';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import checkIsMobile from '../../utils/isMobile';
-import styles from './Footer.module.css';
+import styles from './style.module.css';
 
-function Footer(props) {
+function RoomFooter(props) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isMicOn, setIsMicOn] = useState(false);
 	const [isWebcamOn, setIsWebcamOn] = useState(false);
@@ -398,4 +398,4 @@ function Footer(props) {
 	);
 }
 
-export default Footer;
+export default RoomFooter;

@@ -1,9 +1,9 @@
 import './App.css';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { useEffect } from 'react';
-import Home from './component/home/Home';
-import Avatar from './component/avatar/Avatar';
-import Room from './component/room/Room';
+import Home from './components/Home';
+import Avatar from './components/Avatar';
+import Room from './components/Room';
 import { isIOS, isAndroid } from './utils/isMobile';
 
 import screenfull from 'screenfull';

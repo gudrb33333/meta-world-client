@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { findMe } from '../../api/member';
 import '../../App.css';
-import styles from './Avatar.module.css';
-import AvatarGuideModal from './AvatarGuideModal';
-import AvatarNameModal from './AvatarNameModal';
+import styles from './style.module.css';
+import AvatarGuideModal from '../AvatarGuideModal';
+import AvatarNameModal from '../AvatarNameModal';
 
 function Avatar() {
 	const subdomain = 'demo'; // See section about becoming a partner

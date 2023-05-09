@@ -1,11 +1,11 @@
-import styles from './Room.module.css';
+import styles from './style.module.css';
 import { World } from '../../systems/world/World';
-import Footer from './Footer';
-import LoadingScreen from './LoadingScreen';
-import UiContainer from './UiContainer';
+import Footer from '../RoomFooter';
+import LoadingScreen from '../LoadingScreen';
+import UiContainer from '../UiContainer';
 import { createBrowserHistory } from 'history';
 import { useEffect, useState } from 'react';
-import Sidebar from './Sidebar';
+import Sidebar from '../RoomSidebar';
 import { findMyProfile } from '../../api/profile';
 import { useNavigate } from 'react-router-dom';
 

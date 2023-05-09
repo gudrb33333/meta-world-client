@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import classNames from 'classnames';
-import styles from './SigninModal.module.css';
+import styles from './style.module.css';
 import { signin } from '../../api/auth';
 
 function SigninModal(props) {
