@@ -26,7 +26,6 @@ import { UIManager } from '../core/UIManager';
 import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
-import { Joystick } from '../core/Joystick';
 import checkIsMobile, { isIOS } from '../../utils/isMobile';
 import { DirectionalLight, HemisphereLight } from 'three';
 import { WorldObject } from '../objects/WorldObject';
@@ -317,10 +316,6 @@ export class World {
 		bgMesh.position.set(0, 0, 0);
 		this._graphicsWorld.add(bgMesh);
 
-		if (checkIsMobile()) {
-			new Joystick(this, this._inputManager);
-		}
-
 		// Load scene if path is supplied
 		if (worldScenePath !== undefined) {
 			const loadingManager = new LoadingManager(this);
@@ -336,8 +331,6 @@ export class World {
 
 				profile.avatar_url = sessionStorage.getItem('avatar_url');
 				profile.avatar_name = sessionStorage.getItem('avatar_name');
-
-
 
 				const qs = new URLSearchParams(location.search);
 				if (qs.has('phoenix-host')) {
