@@ -75,7 +75,7 @@ export class ProfileCanvas {
 		this._graphicsWorld = new THREE.Scene();
 		this._camera = new THREE.PerspectiveCamera(
 			45,
-			window.innerWidth / 2 / (window.innerHeight / 2),
+			2.03713,
 			0.1,
 			1000,
 		);
@@ -108,24 +108,15 @@ export class ProfileCanvas {
 		mainLight.position.set(10, 10, 10);
 		this._graphicsWorld.add(mainLight);
 
-		const loader = new THREE.TextureLoader();
-		const texture = loader.load('assets/zd218ru-lobby.jpeg');
-		texture.magFilter = THREE.LinearFilter;
-		texture.minFilter = THREE.LinearFilter;
+		const geometry = new THREE.SphereGeometry( 500, 60, 40 );
+		geometry.scale( - 1, 1, 1 );
 
-		const shader = THREE.ShaderLib.equirect;
-		const material = new THREE.ShaderMaterial({
-			fragmentShader: shader.fragmentShader,
-			vertexShader: shader.vertexShader,
-			uniforms: shader.uniforms,
-			depthWrite: false,
-			side: THREE.BackSide,
-		});
-		material.uniforms.tEquirect.value = texture;
-		const sphere = new THREE.SphereBufferGeometry(50, 50, 50);
-		const bgMesh = new THREE.Mesh(sphere, material);
-		bgMesh.position.set(0, 10, 0);
-		this._graphicsWorld.add(bgMesh);
+		const texture = new THREE.TextureLoader().load( 'assets/zd218ru-lobby.jpeg' );
+		const material = new THREE.MeshBasicMaterial( { map: texture } );
+
+		const mesh = new THREE.Mesh( geometry, material );
+
+		this._graphicsWorld.add( mesh );
 
 		this._gltfLoader = new GLTFLoader();
 
