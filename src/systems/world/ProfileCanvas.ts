@@ -11,6 +11,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import ThreeMeshUI from 'three-mesh-ui';
 import { resolve } from 'path';
 
+import checkIsMobile from '../../utils/isMobile';
+
 export class ProfileCanvas {
 	private static instance: ProfileCanvas;
 
@@ -48,12 +50,21 @@ export class ProfileCanvas {
 		// Renderer
 		this._renderer = new THREE.WebGLRenderer({ antialias: true });
 		this._renderer.setPixelRatio(window.devicePixelRatio);
-		this._renderer.setSize(500, 250);
 		this._renderer.toneMapping = THREE.ReinhardToneMapping;
 		this._renderer.toneMappingExposure = 1;
 		this._renderer.shadowMap.enabled = false;
 		this._renderer.shadowMap.type = THREE.BasicShadowMap;
 		this._container.appendChild(this._renderer.domElement);
+
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+		if (checkIsMobile && width > height) {
+			this._renderer.setSize(width * 0.6, height * 0.35);
+		} else if (checkIsMobile && width < height) {
+			this._renderer.setSize(width * 0.8, height * 0.35);
+		} else {
+			this._renderer.setSize(500, 250);
+		}
 
 		// Auto window resize
 		// function onWindowResize(): void {
