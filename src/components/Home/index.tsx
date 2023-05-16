@@ -70,6 +70,10 @@ function Home() {
 		if (qs.get('profile-complete') === 'true') {
 			openProfileModal();
 		}
+
+		if (qs.has('logged-in-init')) {
+			openProfileModal();
+		}
 	}, []);
 
 	if (isLoggedIn) {
