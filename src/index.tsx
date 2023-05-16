@@ -4,8 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
-
-axios.defaults.baseURL = `https://api.meta-world.gudrb33333.click`;
+axios.defaults.baseURL = process.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] =
 	'application/json; charset: utf-8';
