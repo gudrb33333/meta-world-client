@@ -149,19 +149,7 @@ function Home() {
 						>
 							<span className={styles.shadow}></span>
 							<span className={styles.edge}></span>
-							<span className={styles.front}>로그인</span>
-						</button>
-						<button
-							className={classNames([
-								styles.homeRedBlockButton,
-								styles.pushable,
-								styles.slideInLeft,
-							])}
-							onClick={openSignupModal}
-						>
-							<span className={styles.shadow}></span>
-							<span className={styles.edge}></span>
-							<span className={styles.front}>회원가입</span>
+							<span className={styles.front}>소셜 로그인</span>
 						</button>
 					</div>
 					<div className={styles.homeButtonContainer}>
