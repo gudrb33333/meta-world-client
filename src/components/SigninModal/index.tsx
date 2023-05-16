@@ -3,8 +3,12 @@ import Modal from 'react-modal';
 import classNames from 'classnames';
 import styles from './style.module.css';
 import { signin } from '../../api/auth';
+import checkIsMobile from '../../utils/isMobile';
 
 function SigninModal(props) {
+	const apiUrl = process.env.VITE_API_URL;
+	const googleAuthorizationUrl = `${apiUrl}/oauth2/authorization/google`;
+	const kakaoAuthorizationUrl = `${apiUrl}/oauth2/authorization/kakao`;
 	const [isModalOn, setIsModalOn] = useState(false);
 
 	const [signinEmail, setSigninEmail] = useState('');
@@ -43,22 +47,46 @@ function SigninModal(props) {
 		setIsModalOn(props.isModalOn);
 	}, [props.isModalOn]);
 
+
+
+	let overlayStyle;
+	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
+		overlayStyle =	{
+			position: 'fixed',
+			top: '20%',
+			left: 0,
+			right: 0,
+			bottom: '30%',
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		}
+	} else if (checkIsMobile() && window.innerWidth > window.innerHeight) {
+		overlayStyle =	{
+			position: 'fixed',
+			top: '10%',
+			left: '10%',
+			right: '10%',
+			bottom: '10%',
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		}
+	} else {
+		overlayStyle =	{
+			position: 'fixed',
+			top: '30%',
+			left: '30%',
+			right: '30%',
+			bottom: '20%',
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		}
+	}
+
 	return (
 		<Modal
 			isOpen={isModalOn}
 			className={styles.signinModal}
 			ariaHideApp={false}
 			style={{
-				overlay: {
-					position: 'fixed',
-					top: 50,
-					left: 0,
-					right: 0,
-					bottom: 50,
-					backgroundColor: 'rgba(255, 255, 255, 0.1)',
-				},
+				overlay: overlayStyle,
 				content: {
-					position: 'absolute',
 					background: '#80807f',
 					overflow: 'auto',
 					WebkitOverflowScrolling: 'touch',
@@ -79,44 +107,20 @@ function SigninModal(props) {
 					<tbody>
 						<tr>
 							<td>
-								<h3 className={styles.signinText}>
-									<div className={styles.title}>아이디</div>
-									<input
-										className={styles.signinInput}
-										value={signinEmail}
-										onChange={onSigninEmailHandler}
-										type="email"
-										id="signin-email"
-										placeholder="Enter email"
-									/>
-								</h3>
+								<a href={googleAuthorizationUrl}>
+  									<img className={styles.signinImg} src="/assets/images/btn_login_google.png" />
+								</a>
 							</td>
 						</tr>
-						<tr>
+						<tr>	
 							<td>
-								<h3 className={styles.signinText}>
-									<div className={styles.title}>비밀번호</div>
-									<input
-										className={styles.signinInput}
-										value={signinPassword}
-										onChange={onSigninPasswordHandler}
-										type="password"
-										id="signin-password"
-										placeholder="Password"
-									/>
-								</h3>
-							</td>
+								<a href={kakaoAuthorizationUrl}>
+									<img className={styles.signinImg} src='/assets/images/btn_login_kakao.png'></img>
+								</a>
+							</td>	
 						</tr>
 						<tr>
-							<td>
-								<button
-									className={classNames([
-										styles.close,
-										styles.signinInfoButton,
-									])}
-								>
-									로그인
-								</button>
+							<td>							
 								<button
 									type="button"
 									className={classNames([

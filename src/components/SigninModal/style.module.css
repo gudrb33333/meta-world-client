@@ -4,17 +4,23 @@
     padding: 10px;
     font-size: 2.0rem;
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+tbody tr:first-child td {
+    padding-top: 25px;
+}
+
+.signin-img {
+    width: 255px; 
+    height: 60px;
+    cursor: pointer;
 }
 
 .title {
     font-size: 1.2rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-}
-
-.signin-modal {
-    inset: 12% 0%;
 }
 
 .signin-info-table {
@@ -49,10 +55,6 @@
 
 
 @media (max-width:600px){
-    .signin-modal {
-        inset: 12% 0%;
-    }
-
     input {
         width: 55%;
         height: 32px;
