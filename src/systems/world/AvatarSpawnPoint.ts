@@ -61,7 +61,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					});
 
 					model.animations = animationClipArr;
-					const player = new Avatar(model);
+					const player = new Avatar(model, world.avatarAdjustValue);
 					player.setAvatarName(avatarName);
 
 					const worldPos = new THREE.Vector3();
@@ -106,7 +106,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					});
 
 					model.animations = animationClipArr;
-					let player = new Avatar(model);
+					let player = new Avatar(model, world.avatarAdjustValue);
 					player.sessionId = sessionId;
 					player.setAvatarName(profile.avatar_name);
 
@@ -147,7 +147,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 								});
 
 								model.animations = animationClipArr;
-								player = new Avatar(model);
+								player = new Avatar(model, world.avatarAdjustValue);
 								player.sessionId = sessionId;
 								player.setAvatarName(profile.avatar_name);
 								const worldPos = new THREE.Vector3();

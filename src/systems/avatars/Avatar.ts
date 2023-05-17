@@ -99,7 +99,7 @@ export class Avatar
 		WorldObject
 	>();
 
-	constructor(gltf: GLTF) {
+	constructor(gltf: GLTF, avatarAdjustValue: number) {
 		super();
 
 		this.readAvatarData(gltf);
@@ -147,6 +147,9 @@ export class Avatar
 			stand_dance: new KeyBinding('Digit3'),
 		};
 
+
+		this.scale.set(avatarAdjustValue, avatarAdjustValue, avatarAdjustValue);
+
 		// Physics
 		// Player Capsule
 		this._avatarCapsule = new CapsuleCollider({
@@ -156,6 +159,7 @@ export class Avatar
 			radius: 0.25,
 			segments: 8,
 			friction: 0.0,
+			avatarAdjustValue: avatarAdjustValue
 		});
 		// capsulePhysics.physical.collisionFilterMask = ~CollisionGroups.Trimesh;
 		this._avatarCapsule.body.shapes.forEach((shape) => {

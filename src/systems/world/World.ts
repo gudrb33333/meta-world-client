@@ -62,6 +62,7 @@ export class World {
 	private _justRendered: boolean;
 	private _params: WorldParams;
 	private _timeScaleTarget = 1;
+	private _avatarAdjustValue: number;
 
 	private _inputManager: InputManager;
 
@@ -80,7 +81,7 @@ export class World {
 
 	public updatables: IUpdatable[] = [];
 
-	constructor(worldScenePath?: string) {
+	constructor(worldScenePath?: string, avatarAdjustValue: number = 1) {
 		const scope = this;
 
 		// Renderer
@@ -318,6 +319,7 @@ export class World {
 
 		// Load scene if path is supplied
 		if (worldScenePath !== undefined) {
+			this._avatarAdjustValue = avatarAdjustValue;
 			const loadingManager = new LoadingManager(this);
 			const avatarLoadingManager = new LoadingManager(this);
 
@@ -733,5 +735,9 @@ export class World {
 
 	get avatarMap(): Map<string, Avatar> {
 		return this._avatarMap;
+	}
+
+	get avatarAdjustValue(): number {
+		return this._avatarAdjustValue;
 	}
 }
