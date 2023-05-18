@@ -508,7 +508,8 @@
 	  opacity: 1;
 	}
   }
-  @keyframes slide-in-left {
+
+@keyframes slide-in-left {
 	0% {
 	  -webkit-transform: translateX(-1000px);
 			  transform: translateX(-1000px);
@@ -519,5 +520,14 @@
 			  transform: translateX(0);
 	  opacity: 1;
 	}
-  }
+}
+
+@media only screen and (max-width: 600px) {
+	.home-button-container {
+		z-index: 2;
+		margin-top: 5%;
+		width: 100%;
+		margin-left: 0px
+	}
+}
   
