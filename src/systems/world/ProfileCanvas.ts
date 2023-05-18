@@ -58,9 +58,9 @@ export class ProfileCanvas {
 
 		const width = window.innerWidth;
 		const height = window.innerHeight;
-		if (checkIsMobile && width > height) {
-			this._renderer.setSize(width * 0.6, height * 0.35);
-		} else if (checkIsMobile && width < height) {
+		if (checkIsMobile() && width > height) {
+			this._renderer.setSize(width * 0.45, height * 0.6);
+		} else if (checkIsMobile() && width < height) {
 			this._renderer.setSize(width * 0.8, height * 0.35);
 		} else {
 			this._renderer.setSize(500, 250);
