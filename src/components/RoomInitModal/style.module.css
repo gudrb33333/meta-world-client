@@ -5,7 +5,7 @@
 
 .room-init-modal {
     /* width: 350px; */
-    inset: 12% 0%;
+    /* inset: 12% 0%; */
 }
 
 .room-init-modal-table {
@@ -46,16 +46,34 @@
     cursor: pointer;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 600px) {
     .room-init-modal {
         width: 350px;
-        inset: 12% 4%;
     }
 }
 
-@media screen and (orientation: landscape) {
+@media screen and (orientation: landscape) and (max-width: 600px) {
     .room-init-modal {
         width: 650px;
-        inset: -6% 12%;
+    }
+
+    .room-init-modal-input {
+        width: 22%;
+        min-width: 200px;
+        height: 32px;
+        font-size: 15px;
+        border: 0;
+        border-radius: 15px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
+    }
+
+    .room-init-modal-table-thead {
+        border-bottom: 1px solid #444444;
+        padding: 5px;
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
     }
 }
