@@ -22,6 +22,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 	private _onMouseDownTheta: any;
 	private _onMouseDownPhi: any;
 	private _targetRadius = 1;
+	private _avatarAdjustValue: number;
 
 	private _movementSpeed: number;
 
@@ -38,11 +39,13 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		camera: THREE.Camera,
 		sensitivityX = 1,
 		sensitivityY: number = sensitivityX * 0.8,
+		avatarAdjustValue,
 	) {
 		this._world = world;
 		this._camera = camera;
 		this._target = new THREE.Vector3();
 		this._sensitivity = new THREE.Vector2(sensitivityX, sensitivityY);
+		this._avatarAdjustValue = avatarAdjustValue;
 
 		this._movementSpeed = 0.06;
 		this._radius = 3;
@@ -106,7 +109,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 			this._camera.position.y = newPos.y;
 			this._camera.position.z = newPos.z;
 		} else {
-			this._target.y += 0.8;
+			this._target.y += (0.8 * this._avatarAdjustValue);
 			this._radius = THREE.MathUtils.lerp(
 				this._radius,
 				this._targetRadius,
@@ -114,14 +117,14 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 			);
 			this._camera.position.x =
 				this._target.x +
-				this._radius *
+				(this._radius * this._avatarAdjustValue) *
 					Math.sin((this._theta * Math.PI) / 180) *
 					Math.cos((this._phi * Math.PI) / 180);
 			this._camera.position.y =
-				this._target.y + this._radius * Math.sin((this._phi * Math.PI) / 180);
+				this._target.y + (this._radius * this._avatarAdjustValue) * Math.sin((this._phi * Math.PI) / 180);
 			this._camera.position.z =
 				this._target.z +
-				this._radius *
+				(this._radius * this._avatarAdjustValue) *
 					Math.cos((this._theta * Math.PI) / 180) *
 					Math.cos((this._phi * Math.PI) / 180);
 			this._camera.updateMatrix();

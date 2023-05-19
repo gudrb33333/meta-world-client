@@ -105,6 +105,8 @@ export class Avatar
 		this.readAvatarData(gltf);
 		this.setAnimations(gltf.animations);
 
+		this._moveSpeed *= avatarAdjustValue;
+
 		// The visuals group is centered for easy avatar tilting
 		this._tiltContainer = new THREE.Group();
 		this.add(this._tiltContainer);
