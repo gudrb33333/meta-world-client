@@ -109,6 +109,21 @@ function Room() {
 				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
+						<video
+				id="local-video"
+				className={styles.video}
+				autoPlay
+				width="1280"
+				height="720"
+				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
+				playsInline
+			></video>
+			<canvas
+				id="local-video-image"
+				width="1280"
+				height="720"
+				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
+			></canvas>
 			<div id="remote-producer-container"></div>
 			<LoadingScreen isLoading={isLoading} />
 			<UiContainer isLoading={isLoading} isUiContainerOn={isUiContainerOn} />
