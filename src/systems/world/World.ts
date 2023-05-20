@@ -27,8 +27,12 @@ import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
 import checkIsMobile, { isIOS } from '../../utils/isMobile';
-import { DirectionalLight, HemisphereLight } from 'three';
 import { WorldObject } from '../objects/WorldObject';
+import { Light } from './Light';
+
+import { Bloom } from '../core/Bloom';
+import { LocalVideoScreen } from '../core/LocalVideoScreen';
+import { AudioFrequencyAnalyser } from '../core/AudioFrequencyAnalyser';
 
 export interface WorldParams {
 	Pointer_Lock: boolean;
@@ -45,9 +49,11 @@ export interface WorldParams {
 export class World {
 	private _requestAnimationFrameId;
 	private _renderer: THREE.WebGLRenderer;
+	private _renderPass: RenderPass;
 	private _camera: THREE.PerspectiveCamera;
 	private _cameraOperator: CameraOperator;
 	private _sky: Sky;
+	private _light: Light;
 	private _composer: EffectComposer;
 	private _graphicsWorld: THREE.Scene;
 	private _physicsWorld: CANNON.World;
@@ -63,6 +69,9 @@ export class World {
 	private _params: WorldParams;
 	private _timeScaleTarget = 1;
 	private _avatarAdjustValue: number;
+	private _bloom: Bloom;
+	private _localVideoSceen: LocalVideoScreen;
+	private _localVideoSrc: string;
 
 	private _inputManager: InputManager;
 
@@ -79,10 +88,24 @@ export class World {
 	private _phoenixAdapter: PhoenixAdapter;
 	private _mediasoupAdapter: MediasoupAdapter;
 
+	private _audioFrequencyAnalyser: AudioFrequencyAnalyser;
+	private _needAudioFrequencyData: boolean;
+
 	public updatables: IUpdatable[] = [];
 
-	constructor(worldScenePath?: string, avatarAdjustValue: number = 1) {
+	constructor(options: {
+		worldScenePath: string,
+		roomName: string,
+		avatarAdjustValue: number,
+		lightValue: number,
+		needBloom: boolean,
+		localVideoSrc: string,
+		needAudioFrequencyData: boolean
+	  }) {
 		const scope = this;
+
+		this._localVideoSrc = options.localVideoSrc;
+		this._needAudioFrequencyData = options.needAudioFrequencyData;
 
 		// Renderer
 		this._renderer = new THREE.WebGLRenderer();
@@ -234,7 +257,7 @@ export class World {
 		);
 
 		// Passes
-		const renderPass = new RenderPass(this._graphicsWorld, this._camera);
+		this._renderPass = new RenderPass(this._graphicsWorld, this._camera);
 		const fxaaPass = new ShaderPass(FXAAShader);
 
 		// FXAA
@@ -246,8 +269,12 @@ export class World {
 
 		// Composer
 		this._composer = new EffectComposer(this._renderer);
-		this._composer.addPass(renderPass);
+		this._composer.addPass(this._renderPass);
 		this._composer.addPass(fxaaPass);
+
+		if (options.needBloom){
+			this._bloom = new Bloom(this);
+		}
 
 		// Physics
 		this._physicsWorld = new CANNON.World();
@@ -280,23 +307,11 @@ export class World {
 			this,
 			this._camera,
 			this._params.Mouse_Sensitivity,
+			this._params.Mouse_Sensitivity * 0.8,
+			options.avatarAdjustValue,
 		);
 
-		// this.sky = new Sky(this);
-		// const light = new THREE.AmbientLight( 0xffffff ); // soft white light
-		// light.intensity = 1;
-		// this.graphicsWorld.add( light );
-
-		const ambientLight = new HemisphereLight(
-			'white', // bright sky color
-			'darkslategrey', // dim ground color
-			5, // intensity
-		);
-		this._graphicsWorld.add(ambientLight);
-
-		const mainLight = new DirectionalLight('white', 5);
-		mainLight.position.set(10, 10, 10);
-		this._graphicsWorld.add(mainLight);
+		this._light = new Light(this, options.lightValue);
 
 		const loader = new THREE.TextureLoader();
 		const texture = loader.load('assets/AdobeStock_191213422_11zon.jpeg');
@@ -318,8 +333,8 @@ export class World {
 		this._graphicsWorld.add(bgMesh);
 
 		// Load scene if path is supplied
-		if (worldScenePath !== undefined) {
-			this._avatarAdjustValue = avatarAdjustValue;
+		if (options.worldScenePath !== undefined) {
+			this._avatarAdjustValue = options.avatarAdjustValue;
 			const loadingManager = new LoadingManager(this);
 			const avatarLoadingManager = new LoadingManager(this);
 
@@ -333,7 +348,7 @@ export class World {
 
 				profile.avatar_url = sessionStorage.getItem('avatar_url');
 				profile.avatar_name = sessionStorage.getItem('avatar_name');
-
+				
 				const qs = new URLSearchParams(location.search);
 				if (qs.has('phoenix-host')) {
 					const phoenix = `wss://${qs.get('phoenix-host')}/socket`;
@@ -342,14 +357,14 @@ export class World {
 					this._phoenixAdapter = new PhoenixAdapter(
 						this,
 						phoenix,
-						process.env.PHOENIX_CHANNER_TOPIC,
+						'room:' + options.roomName,
 						profile,
 					);
 				} else {
 					this._phoenixAdapter = new PhoenixAdapter(
 						this,
 						process.env.PHOENIX_SERVER_URL,
-						process.env.PHOENIX_CHANNER_TOPIC,
+						'room:' + options.roomName,
 						profile,
 					);
 					console.log(process.env.PHOENIX_SERVER_URL);
@@ -365,10 +380,11 @@ export class World {
 				this._mediasoupAdapter = new MediasoupAdapter(
 					this,
 					process.env.MEDIASOUP_SERVER_URL,
+					options.roomName,
 				);
 			};
 
-			loadingManager.loadGLTF(worldScenePath, (gltf) => {
+			loadingManager.loadGLTF(options.worldScenePath, (gltf) => {
 				this.loadScene(loadingManager, gltf);
 			});
 		}
@@ -378,9 +394,18 @@ export class World {
 
 	public loadScene(loadingManager: LoadingManager, gltf: any): void {
 		gltf.scene.traverse((child) => {
-			if (child.material) {
-				if (child.material.name === 'pink_bloom') {
-					console.log(child.material);
+			if ( child.material ) {
+				if( child.material.name === 'pink_bloom' || 
+				child.material.name === 'iceblue_bloom'|| 
+				child.material.name === 'yellow_bloom_highyy' ||
+				child.material.name === 'yellow_bloom_low' ||
+				child.material.name === 'turkuaz_bloom'||
+				child.material.name === 'orange_bloom' ||
+				child.material.name === 'purple_bloom' ||
+				child.material.name === 'yellow_bloom_high'){
+					child.layers.enable( 1 );
+				}else{
+					child.material.dispose();
 				}
 			}
 
@@ -637,6 +662,18 @@ export class World {
 		body.angularVelocity.setZero();
 	}
 
+	public initLocalVideoSceen() : void {
+		if (this._localVideoSrc != null) {
+			this._localVideoSceen = new LocalVideoScreen(this, this._localVideoSrc);	
+		}
+	}
+
+	public initAudioFrequencyAnalyser() : void {
+		if(this._needAudioFrequencyData){
+			this._audioFrequencyAnalyser = new AudioFrequencyAnalyser(this);
+		}
+	}
+
 	public stopRendering() {
 		cancelAnimationFrame(this._requestAnimationFrameId);
 	}
@@ -648,6 +685,22 @@ export class World {
 	 * @param {World} world
 	 */
 	public render(world: World): void {
+
+		if (this._localVideoSceen != null) {
+			if (this._localVideoSceen.localVideo && this._localVideoSceen.localVideo.readyState === this._localVideoSceen.localVideo.HAVE_ENOUGH_DATA ) 
+			{
+				this._localVideoSceen.localVideoImageContext.drawImage( this._localVideoSceen.localVideo, 0, 0 );
+				if ( this._localVideoSceen.localVideoTexture ) 
+					this._localVideoSceen.localVideoTexture.needsUpdate = true;
+			}
+		}
+
+		if( this._audioFrequencyAnalyser != null) {
+			const sumOfFrequencyData = this._audioFrequencyAnalyser.getSumOfFrequencyData();		
+			this._bloom.changerBloomStrength(sumOfFrequencyData);
+			this.renderer.toneMappingExposure = sumOfFrequencyData;	
+		}
+
 		this._requestDelta = this._clock.getDelta();
 
 		this._requestAnimationFrameId = requestAnimationFrame(() => {
@@ -679,6 +732,11 @@ export class World {
 		// Actual rendering with a FXAA ON/OFF switch
 		if (this._params.FXAA) this._composer.render();
 		else this._renderer.render(this._graphicsWorld, this._camera);
+
+		if (this._bloom != null) {
+			this._bloom.renderBloomCompose();
+			this._bloom.renderFinalCompose();
+		}
 
 		// Measuring render time
 		this._renderDelta = this._clock.getDelta();
@@ -739,5 +797,21 @@ export class World {
 
 	get avatarAdjustValue(): number {
 		return this._avatarAdjustValue;
+	}
+
+	get renderer(): THREE.WebGLRenderer {
+		return this._renderer;
+	}
+
+	get renderPass(): RenderPass {
+		return this._renderPass;
+	}
+
+	get localVideoSceen(): LocalVideoScreen {
+		return this._localVideoSceen;
+	}
+
+	get audioFrequencyAnalyser() : AudioFrequencyAnalyser {
+		return this._audioFrequencyAnalyser;
 	}
 }
