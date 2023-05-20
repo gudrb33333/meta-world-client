@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../RoomSidebar';
 import { findMyProfile } from '../../api/profile';
 import { useNavigate } from 'react-router-dom';
+import RoomInitModal from '../RoomInitModal';
 
 function Room() {
 	const [world, setWorld] = useState(null);
@@ -126,6 +127,10 @@ function Room() {
 			></canvas>
 			<div id="remote-producer-container"></div>
 			<LoadingScreen isLoading={isLoading} />
+			<RoomInitModal 
+				isLoading={isLoading}
+				getWorld={getWorld}
+			/>
 			<UiContainer isLoading={isLoading} isUiContainerOn={isUiContainerOn} />
 			<Footer
 				isLoading={isLoading}
