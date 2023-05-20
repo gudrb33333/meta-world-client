@@ -32,6 +32,9 @@ export default function RoomInitModal(props) {
             new Joystick(world, world._inputManager);
         }
 
+		world.initLocalVideoSceen();
+		world.initAudioFrequencyAnalyser();
+
         setIsModalOpen(false);
 	};
 
