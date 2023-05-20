@@ -7,10 +7,12 @@ import { createBrowserHistory } from 'history';
 import { useEffect, useState } from 'react';
 import Sidebar from '../RoomSidebar';
 import { findMyProfile } from '../../api/profile';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RoomInitModal from '../RoomInitModal';
 
 function Room() {
+	const { roomName } = useParams();
+
 	const [world, setWorld] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isUiContainerOn, setUiContainerOn] = useState(false);
@@ -46,9 +48,34 @@ function Room() {
 				}
 			}
 
-			setWorld(
-				new World('/assets/virtual_reality_space_mountain_view_room.glb'),
-			);
+			if (roomName === 'public-room') {
+				setWorld(
+					new World({
+						worldScenePath: `/assets/${roomName}.glb`,
+						roomName: roomName,
+						avatarAdjustValue: 1,
+						lightValue: 5,
+						needBloom: null,
+						localVideoSrc: null,
+						needAudioFrequencyData: null
+					})
+				)
+			} else if(roomName === 'after-party') {
+				setWorld(
+				new World({
+					worldScenePath: `/assets/${roomName}.glb`,
+					roomName: roomName,
+					avatarAdjustValue: 0.6,
+					lightValue: 0.1,
+					needBloom: true,
+					localVideoSrc: '/assets/NewJeans.mp4',
+					needAudioFrequencyData: true
+				})
+				)
+			} else {
+				alert("그런 이름의 방이 없습니다.");
+				window.location.replace('/');
+			}
 
 			document.addEventListener('loading-screen-event', function () {
 				setIsLoading(false);
