@@ -28,7 +28,7 @@ export class MediasoupAdapter implements IUpdatable {
 
 	private _world: World;
 	private _mediasoupSocket: Socket;
-	private _roomName = 'abc';
+	private _roomName: string;
 
 	private _device;
 
@@ -66,8 +66,9 @@ export class MediasoupAdapter implements IUpdatable {
 	private _consumerTransports = [];
 	private _consumingTransports = [];
 
-	constructor(world: World, serverUrl: string) {
+	constructor(world: World, serverUrl: string, roomName: string) {
 		this._world = world;
+		this._roomName = roomName;
 		this._mediasoupSocket = io(serverUrl, { transports: ['websocket'] });
 
 		this._mediasoupSocket.on('connection-success', async ({ socketId }) => {
