@@ -6,6 +6,7 @@ import { logout } from '../../api/auth';
 import axios from 'axios';
 import ProfileModal from '../ProfileModal';
 import Card from '../Card';
+import PushableButton from '../PushableButton';
 
 function RoomLobby() {
     const movePage = useNavigate();
@@ -65,31 +66,17 @@ function RoomLobby() {
 					/>
 				</div>
 				<div className={styles.roomLobbyButtonContainer}>
-					<button
-						className={classNames([
-							styles.roomLobbyRedBlockButton,
-							styles.pushable,
-							styles.slideInLeft,
-						])}
-						onClick={openProfileModal}
-					>
-						<span className={styles.shadow}></span>
-						<span className={styles.edge}></span>
-						<span className={styles.front}>프로필</span>
-					</button>
+					<PushableButton
+							content='프로필'
+							slideDirection='slideInLeft'
+							onClick={openProfileModal}
+					/>
 					{isLoggedIn && (
-					  <button
-					    className={classNames([
-					      styles.roomLobbyRedBlockButton,
-					      styles.pushable,
-					      styles.slideInLeft,
-					    ])}
-					    onClick={logoutHandler}
-					  >
-					    <span className={styles.shadow}></span>
-					    <span className={styles.edge}></span>
-					    <span className={styles.front}>로그아웃</span>
-					  </button>
+						<PushableButton
+							content='로그아웃'
+							slideDirection='slideInRight'
+							onClick={logoutHandler}
+						/>
 					)}
 					<ProfileModal
 						isModalOn={isProfileModalOn}
