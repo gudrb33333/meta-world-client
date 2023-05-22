@@ -48,7 +48,7 @@ function Room() {
 				}
 			}
 
-			if (roomName === 'public-room') {
+			if (roomName === 'shopping-mall') {
 				setWorld(
 					new World({
 						worldScenePath: `/assets/${roomName}.glb`,
