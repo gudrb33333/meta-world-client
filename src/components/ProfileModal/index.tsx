@@ -6,7 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
 import { deleteProfile, findMyProfile } from '../../api/profile';
 
-function ProfileModal(props) {
+interface ProfileModalProps {
+	isModalOn: boolean;
+	isLoggedIn: boolean;
+	close: () => void;
+  }
+
+function ProfileModal(props: ProfileModalProps) {
 	const [isModalOn, setIsModalOn] = useState(false);
 	const [nickname, setNickname] = useState('');
 	const [profileCanvas, setProfileCanvas] = useState(null);
@@ -47,12 +53,6 @@ function ProfileModal(props) {
 	useEffect(() => {
 		setIsModalOn(props.isModalOn);
 	}, [props.isModalOn]);
-
-	const navigateHandler = async () => {
-		profileCanvas.stopRendering();
-		setProfileCanvas(null);
-		navigate('/room');
-	};
 
 	const changeProfileHandler = () => {
 		navigate('/avatar?edit-mode');
@@ -119,13 +119,6 @@ function ProfileModal(props) {
 								className={styles.profileAvatarContent}
 							>
 							</div>
-							<button
-								type="button"
-								className={classNames([styles.close, styles.profileEnterButton])}
-								onClick={navigateHandler}
-							>
-								공간으로 접속
-							</button>
 						</td>
 					</tr>
 					<tr>
@@ -142,20 +135,24 @@ function ProfileModal(props) {
 					</tr>
 					<tr>
 						<td>
-							<button
-								type="button"
-								className={classNames([styles.close, styles.profileInfoButton])}
-								onClick={changeProfileHandler}
-							>
-								아바타 변경
-							</button>
-							<button
-								type="button"
-								className={classNames([styles.close, styles.profileInfoButton])}
-								onClick={deleteProfileHandler}
-							>
-								아바타 삭제
-							</button>
+							{props.isLoggedIn && (
+								<>	
+								<button
+									type="button"
+									className={classNames([styles.close, styles.profileInfoButton])}
+									onClick={changeProfileHandler}
+								>
+									아바타 변경
+								</button>
+								<button
+									type="button"
+									className={classNames([styles.close, styles.profileInfoButton])}
+									onClick={deleteProfileHandler}
+								>
+									아바타 삭제
+								</button>
+								</>
+							)}
 							<button
 								type="button"
 								className={classNames([styles.close, styles.profileInfoButton])}
