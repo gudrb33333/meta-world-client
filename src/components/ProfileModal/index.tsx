@@ -5,6 +5,7 @@ import styles from './style.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
 import { deleteProfile, findMyProfile } from '../../api/profile';
+import checkIsMobile from '../../utils/isMobile';
 
 interface ProfileModalProps {
 	isModalOn: boolean;
@@ -78,6 +79,36 @@ function ProfileModal(props: ProfileModalProps) {
 		}
 	};
 
+	let overlayStyle;
+	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
+		overlayStyle =	{
+			position: 'fixed',
+			top: 30,
+			left: 0,
+			right: 0,
+			bottom: 30,
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		}
+	} else if (checkIsMobile() && window.innerWidth > window.innerHeight) {
+		overlayStyle =	{
+			position: 'fixed',
+			top: '10%',
+			left: '10%',
+			right: '10%',
+			bottom: '10%',
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		}
+	} else {
+		overlayStyle =	{
+			position: 'fixed',
+			top: 70,
+			left: 500,
+			right: 500,
+			bottom: 70,
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		}
+	}
+
 	return (
 		<Modal
 			isOpen={isModalOn}
@@ -85,14 +116,7 @@ function ProfileModal(props: ProfileModalProps) {
 			ariaHideApp={false}
 			onAfterOpen={afterOpenModal}
 			style={{
-				overlay: {
-					position: 'fixed',
-					top: 30,
-					left: 0,
-					right: 0,
-					bottom: 30,
-					backgroundColor: 'rgba(255, 255, 255, 0.1)',
-				},
+				overlay: overlayStyle,
 				content: {
 					position: 'absolute',
 					background: '#80807f',
