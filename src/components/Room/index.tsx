@@ -39,8 +39,8 @@ function Room() {
 						alert('권한이 없습니다. 다시 로그인 해주세요.');
 						navigate('/');
 					} else if (error.response.status === 404) {
-						alert('생성된 프로필이 없습니다. 프로필을 먼저 생성해 주세요.');
-						navigate('/');
+						alert('생성된 프로필이 없습니다. 프로필 생성 페이지로 이동합니다.');
+						navigate('/avatar');
 					} else {
 						alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
 						navigate('/');
