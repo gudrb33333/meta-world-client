@@ -15,6 +15,12 @@ function RoomLobby() {
 	const [isProfileModalOn, setIsProfileModalOn] = useState(false);
 
 	useEffect(() => {
+		const qs = new URLSearchParams(location.search);
+		if (qs.get('user-type') === 'guest') {
+			setProfileModalType('?user-type=guest');
+			return;
+		}
+
 		axios.get('/api/v1/members/me').then(
 			() => {
 				setIsLoggedIn(true);
@@ -81,6 +87,7 @@ function RoomLobby() {
 					<ProfileModal
 						isModalOn={isProfileModalOn}
 						isLoggedIn={isLoggedIn}
+						profileModalType={profileModalType}
 						close={closeProfileModal}
 					/>
 				</div>

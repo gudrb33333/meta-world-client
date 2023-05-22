@@ -10,6 +10,7 @@ import checkIsMobile from '../../utils/isMobile';
 interface ProfileModalProps {
 	isModalOn: boolean;
 	isLoggedIn: boolean;
+	profileModalType: string;
 	close: () => void;
   }
 
@@ -21,6 +22,17 @@ function ProfileModal(props: ProfileModalProps) {
 
 	const afterOpenModal = async () => {
 		if (props.isModalOn) {
+			if (props.profileModalType === '?user-type=guest') {
+				sessionStorage.setItem(
+					'avatar_url',
+					'/assets/male/readyDefaultMaleAvatar.glb',
+				);
+				sessionStorage.setItem('avatar_name', '손님');
+				setNickname('손님');
+				setProfileCanvas(new ProfileCanvas('/assets/male/readyDefaultMaleAvatar.glb'));
+				return;
+			}
+
 			try {
 				const data = await findMyProfile();
 				setNickname(data.nickname);

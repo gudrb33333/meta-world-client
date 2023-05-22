@@ -75,7 +75,7 @@ function Home() {
 					/>
 				</div>
 				<div className={styles.homeButtonContainer}>
-					<Link to="/lobby">
+					<Link to="/lobby?user-type=guest">
 						<PushableButton
 							content='로그인 없이 입장'
 							slideDirection='slideInRight'
