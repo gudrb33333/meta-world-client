@@ -207,3 +207,22 @@
 	  opacity: 1;
 	}
 }
+
+@media only screen and (max-width: 600px) {
+    .pushable {
+        position: relative;
+        border: none;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+        outline-offset: 4px;
+        transition: filter 250ms;
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+}
+  
+@media screen and (orientation: landscape) and (max-width: 1000px) {
+
+}
+  

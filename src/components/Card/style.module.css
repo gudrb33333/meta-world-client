@@ -71,3 +71,20 @@ a {
     text-decoration: none;
     font-weight: bold;
 }
+
+@media only screen and (max-width: 600px) {
+    .image-container img{
+        overflow: hidden;
+        height: 200px;
+        width: 340px;
+    }
+}
+  
+@media screen and (orientation: landscape) and (max-width: 1000px) {
+    .image-container img{
+        overflow: hidden;
+        height: 150px;
+        width: 330px;
+    }
+}
+  

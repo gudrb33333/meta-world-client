@@ -35,17 +35,11 @@
 .room-lobby-button-container {
 	z-index: 2;
 	margin-top: 2%;
-	width: 40%;
+	width: 50%;
 }
 
 .room-lobby-red-block-button {
 	margin-right: 6%;
-}
-
-.room-lobby-img {
-  width: 500px; 
-  height: 250px;
-  cursor: pointer;
 }
 
 .pushable {
@@ -177,4 +171,97 @@
 	100% {
 	  opacity: 1;
 	}
+}
+
+@media only screen and (max-width: 600px) {
+
+  .room-lobby-content {
+    position: absolute;
+    top: -5%;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    overflow: auto; /* 혹은 overflow: scroll; */
+    -ms-overflow-style: none; /* IE 및 Edge 브라우저에서 스크롤바 제거 */
+    scrollbar-width: none; /* Firefox 브라우저에서 스크롤바 제거 */
+  }
+
+  .room-lobby-content::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .room-lobby-content {
+    -ms-overflow-style: none;
+  }
+
+  .room-lobby-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background-color: transparent;
+  }
+
+  .room-lobby-img {
+    width: 325px; 
+    height: 250px;
+    cursor: pointer;
+  }
+
+  .room-lobby-card-container {
+    margin-top: 90%;
+    display: grid;
+    grid-template-columns: repeat(1, 325px);
+    grid-column-gap: 23px;
+    -moz-column-gap: 23px;
+    column-gap: 23px;
+    justify-content: center; /* 가운데 정렬 */
+    grid-row-gap: 20px; /* 세로 간격 추가 */
+  }
+}
+
+@media screen and (orientation: landscape) and (max-width: 1000px) {
+  .room-lobby-content {
+    position: absolute;
+    top: -5%;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    overflow: auto; /* 혹은 overflow: scroll; */
+    -ms-overflow-style: none; /* IE 및 Edge 브라우저에서 스크롤바 제거 */
+    scrollbar-width: none; /* Firefox 브라우저에서 스크롤바 제거 */
+  }
+
+  .room-lobby-content::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .room-lobby-content {
+    -ms-overflow-style: none;
+  }
+
+  .room-lobby-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background-color: transparent;
+  }
+
+  .room-lobby-card-container {
+    margin-top: 15%;
+    display: grid;
+    grid-template-columns: repeat(2, 325px);
+    grid-column-gap: 23px;
+    -moz-column-gap: 23px;
+    column-gap: 23px;
+    justify-content: center; /* 가운데 정렬 */
+    grid-row-gap: 20px; /* 세로 간격 추가 */
+  }
 }
