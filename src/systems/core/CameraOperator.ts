@@ -49,9 +49,9 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 
 		this._movementSpeed = 0.06;
 		this._radius = 3;
-		this._theta = 0;
 		this._phi = 0;
-
+		avatarAdjustValue < 1 ? this._theta = 270 : this._theta = 0;
+		
 		this._onMouseDownPosition = new THREE.Vector2();
 		this._onMouseDownTheta = this._theta;
 		this._onMouseDownPhi = this._phi;
