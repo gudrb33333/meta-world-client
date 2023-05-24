@@ -28,17 +28,8 @@ export class AudioFrequencyAnalyser {
         this._frequencyData[1] -= 100;
         this._frequencyData[2] -= 50;
 
-        let sumOfFrequencyData = 0;
-        this._frequencyData.forEach((frequencyData) => {
-            sumOfFrequencyData += frequencyData;
-        })
+        const sumOfFrequencyData = this._frequencyData.reduce((sum, frequencyData) => sum + frequencyData, 0) / 1600 - 0.1;
 
-        sumOfFrequencyData = ((sumOfFrequencyData)/ 1600) - 0.1;
-
-        if(sumOfFrequencyData < 0.3){
-            sumOfFrequencyData = 0.3
-        }
-
-        return sumOfFrequencyData;
+        return Math.max(sumOfFrequencyData, 0.3);
     }
 }
