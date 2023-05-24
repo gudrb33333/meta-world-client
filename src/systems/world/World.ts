@@ -704,7 +704,7 @@ export class World {
 		if( this._audioFrequencyAnalyser != null) {
 			const sumOfFrequencyData = this._audioFrequencyAnalyser.getSumOfFrequencyData();		
 			this._bloom.changerBloomStrength(sumOfFrequencyData);
-			this.renderer.toneMappingExposure = sumOfFrequencyData;	
+			this.renderer.toneMappingExposure = sumOfFrequencyData + 0.5;	
 		}
 
 		this._requestDelta = this._clock.getDelta();
