@@ -52,6 +52,10 @@ function RoomLobby() {
     const closeProfileModal = () => {
 		setIsProfileModalOn(false);
 	};
+
+	const moveHome = () => {
+		movePage('/');
+	}
     
 
     return(
@@ -82,6 +86,13 @@ function RoomLobby() {
 							content='로그아웃'
 							slideDirection='slideInRight'
 							onClick={logoutHandler}
+						/>
+					)}
+					{!isLoggedIn && (
+						<PushableButton
+							content='홈으로'
+							slideDirection='slideInRight'
+							onClick={moveHome}
 						/>
 					)}
 					<ProfileModal
