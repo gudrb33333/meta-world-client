@@ -12,7 +12,7 @@ interface ProfileModalProps {
 	isLoggedIn: boolean;
 	profileModalType: string;
 	close: () => void;
-  }
+}
 
 function ProfileModal(props: ProfileModalProps) {
 	const [isModalOn, setIsModalOn] = useState(false);
@@ -29,7 +29,9 @@ function ProfileModal(props: ProfileModalProps) {
 				);
 				sessionStorage.setItem('avatar_name', '손님');
 				setNickname('손님');
-				setProfileCanvas(new ProfileCanvas('/assets/male/readyDefaultMaleAvatar.glb'));
+				setProfileCanvas(
+					new ProfileCanvas('/assets/male/readyDefaultMaleAvatar.glb'),
+				);
 				return;
 			}
 
@@ -93,32 +95,32 @@ function ProfileModal(props: ProfileModalProps) {
 
 	let overlayStyle;
 	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
-		overlayStyle =	{
+		overlayStyle = {
 			position: 'fixed',
 			top: 30,
 			left: 0,
 			right: 0,
 			bottom: 30,
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-		}
+		};
 	} else if (checkIsMobile() && window.innerWidth > window.innerHeight) {
-		overlayStyle =	{
+		overlayStyle = {
 			position: 'fixed',
 			top: '10%',
 			left: '10%',
 			right: '10%',
 			bottom: '10%',
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-		}
+		};
 	} else {
-		overlayStyle =	{
+		overlayStyle = {
 			position: 'fixed',
 			top: 70,
 			left: 500,
 			right: 500,
 			bottom: 70,
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-		}
+		};
 	}
 
 	return (
@@ -153,8 +155,7 @@ function ProfileModal(props: ProfileModalProps) {
 							<div
 								id="profile-container"
 								className={styles.profileAvatarContent}
-							>
-							</div>
+							></div>
 						</td>
 					</tr>
 					<tr>
@@ -172,21 +173,27 @@ function ProfileModal(props: ProfileModalProps) {
 					<tr>
 						<td>
 							{props.isLoggedIn && (
-								<>	
-								<button
-									type="button"
-									className={classNames([styles.close, styles.profileInfoButton])}
-									onClick={changeProfileHandler}
-								>
-									아바타 변경
-								</button>
-								<button
-									type="button"
-									className={classNames([styles.close, styles.profileInfoButton])}
-									onClick={deleteProfileHandler}
-								>
-									아바타 삭제
-								</button>
+								<>
+									<button
+										type="button"
+										className={classNames([
+											styles.close,
+											styles.profileInfoButton,
+										])}
+										onClick={changeProfileHandler}
+									>
+										아바타 변경
+									</button>
+									<button
+										type="button"
+										className={classNames([
+											styles.close,
+											styles.profileInfoButton,
+										])}
+										onClick={deleteProfileHandler}
+									>
+										아바타 삭제
+									</button>
 								</>
 							)}
 							<button

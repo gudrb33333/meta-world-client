@@ -6,22 +6,25 @@ import { World } from '../world/World';
 import _ = require('lodash');
 import { SpriteText2D, textAlign } from 'three-text2d';
 
-export abstract class WorldObject extends THREE.Object3D implements IWorldEntity {
-    public abstract entityType: EntityType;
-    public updateOrder: number = 11;
-    public world: World;
-    public spawnPoint: THREE.Object3D;
-    public collision: CANNON.Body;
-    public rayCastVehicle: CANNON.RaycastVehicle;
-    private _modelContainer: THREE.Group;
+export abstract class WorldObject
+	extends THREE.Object3D
+	implements IWorldEntity
+{
+	public abstract entityType: EntityType;
+	public updateOrder = 11;
+	public world: World;
+	public spawnPoint: THREE.Object3D;
+	public collision: CANNON.Body;
+	public rayCastVehicle: CANNON.RaycastVehicle;
+	private _modelContainer: THREE.Group;
 	private _interactionMark: SpriteText2D;
 	private _interactionText: SpriteText2D;
 
-    public _isSeated = false;
+	public _isSeated = false;
 
-    constructor(gltf: any, object:THREE.Object3D) {
-        super();
-        // Physics mat
+	constructor(gltf: any, object: THREE.Object3D) {
+		super();
+		// Physics mat
 		const mat = new CANNON.Material('Mat');
 		mat.friction = 0.01;
 
@@ -29,7 +32,7 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 		this.collision = new CANNON.Body({ mass: 0 });
 		this.collision.material = mat;
 
-        		// Raycast vehicle component
+		// Raycast vehicle component
 		this.rayCastVehicle = new CANNON.RaycastVehicle({
 			chassisBody: this.collision,
 			indexUpAxis: 0,
@@ -37,7 +40,7 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 			indexForwardAxis: 0,
 		});
 
-        this._modelContainer = new THREE.Group();
+		this._modelContainer = new THREE.Group();
 		this.add(this._modelContainer);
 		this._modelContainer.add(gltf.scene);
 		// this._setModel(gltf.scene);
@@ -73,9 +76,9 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 		this._interactionText.position.y = this._interactionText.position.y + 2;
 		this.add(this._interactionText);
 		this._interactionText.visible = false;
-    }
+	}
 
-	public abstract readGltfData(gltf:any): void;
+	public abstract readGltfData(gltf: any): void;
 
 	public removeFromWorld(world: World): void {
 		const chairs = world.worldObjects;
@@ -91,9 +94,7 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 
 	public update(timeStep: number): void {
 		if (this.world.userAvatar) {
-			const distance = this.position.distanceTo(
-				this.world.userAvatar.position,
-			);
+			const distance = this.position.distanceTo(this.world.userAvatar.position);
 			if (distance < 2) {
 				this.visibleInteractionMark();
 				this.world.userAvatar.canInteractObjectMap.set(this.uuid, this);
@@ -116,8 +117,7 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 		this._interactionText.visible = false;
 	}
 
-
-    public allowSleep(value: boolean): void {
+	public allowSleep(value: boolean): void {
 		this.collision.allowSleep = value;
 
 		if (value === false) {
@@ -125,7 +125,7 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 		}
 	}
 
-    public inputReceiverInit(): void {
+	public inputReceiverInit(): void {
 		this.collision.allowSleep = false;
 	}
 
@@ -133,13 +133,13 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 		return true;
 	}
 
-    public setPosition(x: number, y: number, z: number): void {
+	public setPosition(x: number, y: number, z: number): void {
 		this.collision.position.x = x;
 		this.collision.position.y = y;
 		this.collision.position.z = z;
 	}
 
-    public addToWorld(world: World): void {
+	public addToWorld(world: World): void {
 		const chairs = world.worldObjects;
 		if (_.includes(chairs, this)) {
 			console.warn('Adding avatar to a world in which it already exists.');
@@ -157,7 +157,7 @@ export abstract class WorldObject extends THREE.Object3D implements IWorldEntity
 		}
 	}
 
-    set isSeated(isSeated: boolean) {
+	set isSeated(isSeated: boolean) {
 		this._isSeated = isSeated;
 	}
 

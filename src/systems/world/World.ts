@@ -94,14 +94,14 @@ export class World {
 	public updatables: IUpdatable[] = [];
 
 	constructor(options: {
-		worldScenePath: string,
-		roomName: string,
-		avatarAdjustValue: number,
-		lightValue: number,
-		needBloom: boolean,
-		localVideoSrc: string,
-		needAudioFrequencyData: boolean
-	  }) {
+		worldScenePath: string;
+		roomName: string;
+		avatarAdjustValue: number;
+		lightValue: number;
+		needBloom: boolean;
+		localVideoSrc: string;
+		needAudioFrequencyData: boolean;
+	}) {
 		const scope = this;
 
 		this._localVideoSrc = options.localVideoSrc;
@@ -272,7 +272,7 @@ export class World {
 		this._composer.addPass(this._renderPass);
 		this._composer.addPass(fxaaPass);
 
-		if (options.needBloom){
+		if (options.needBloom) {
 			this._bloom = new Bloom(this);
 		}
 
@@ -348,12 +348,12 @@ export class World {
 
 				profile.avatar_url = sessionStorage.getItem('avatar_url');
 				profile.avatar_name = sessionStorage.getItem('avatar_name');
-				
+
 				const qs = new URLSearchParams(location.search);
 				if (qs.has('phoenix-host')) {
 					const phoenix = `wss://${qs.get('phoenix-host')}/socket`;
 					console.log(phoenix);
-	
+
 					this._phoenixAdapter = new PhoenixAdapter(
 						this,
 						phoenix,
@@ -394,17 +394,19 @@ export class World {
 
 	public loadScene(loadingManager: LoadingManager, gltf: any): void {
 		gltf.scene.traverse((child) => {
-			if ( child.material ) {
-				if( child.material.name === 'pink_bloom' || 
-				child.material.name === 'iceblue_bloom'|| 
-				child.material.name === 'yellow_bloom_highyy' ||
-				child.material.name === 'yellow_bloom_low' ||
-				child.material.name === 'turkuaz_bloom'||
-				child.material.name === 'orange_bloom' ||
-				child.material.name === 'purple_bloom' ||
-				child.material.name === 'yellow_bloom_high'){
-					child.layers.enable( 1 );
-				}else{
+			if (child.material) {
+				if (
+					child.material.name === 'pink_bloom' ||
+					child.material.name === 'iceblue_bloom' ||
+					child.material.name === 'yellow_bloom_highyy' ||
+					child.material.name === 'yellow_bloom_low' ||
+					child.material.name === 'turkuaz_bloom' ||
+					child.material.name === 'orange_bloom' ||
+					child.material.name === 'purple_bloom' ||
+					child.material.name === 'yellow_bloom_high'
+				) {
+					child.layers.enable(1);
+				} else {
 					child.material.dispose();
 				}
 			}
@@ -662,20 +664,20 @@ export class World {
 		body.angularVelocity.setZero();
 	}
 
-	public initLocalVideoSceen() : void {
+	public initLocalVideoSceen(): void {
 		if (this._localVideoSrc != null) {
-			this._localVideoSceen = new LocalVideoScreen(this, this._localVideoSrc);	
+			this._localVideoSceen = new LocalVideoScreen(this, this._localVideoSrc);
 		}
 	}
 
-	public playLocalVideoSceen() : void {
+	public playLocalVideoSceen(): void {
 		if (this._localVideoSrc != null) {
 			this._localVideoSceen.localVideo.play();
 		}
 	}
 
-	public initAudioFrequencyAnalyser() : void {
-		if(this._needAudioFrequencyData){
+	public initAudioFrequencyAnalyser(): void {
+		if (this._needAudioFrequencyData) {
 			this._audioFrequencyAnalyser = new AudioFrequencyAnalyser(this);
 		}
 	}
@@ -691,20 +693,27 @@ export class World {
 	 * @param {World} world
 	 */
 	public render(world: World): void {
-
 		if (this._localVideoSceen != null) {
-			if (this._localVideoSceen.localVideo && this._localVideoSceen.localVideo.readyState === this._localVideoSceen.localVideo.HAVE_ENOUGH_DATA ) 
-			{
-				this._localVideoSceen.localVideoImageContext.drawImage( this._localVideoSceen.localVideo, 0, 0 );
-				if ( this._localVideoSceen.localVideoTexture ) 
+			if (
+				this._localVideoSceen.localVideo &&
+				this._localVideoSceen.localVideo.readyState ===
+					this._localVideoSceen.localVideo.HAVE_ENOUGH_DATA
+			) {
+				this._localVideoSceen.localVideoImageContext.drawImage(
+					this._localVideoSceen.localVideo,
+					0,
+					0,
+				);
+				if (this._localVideoSceen.localVideoTexture)
 					this._localVideoSceen.localVideoTexture.needsUpdate = true;
 			}
 		}
 
-		if( this._audioFrequencyAnalyser != null) {
-			const sumOfFrequencyData = this._audioFrequencyAnalyser.getSumOfFrequencyData();		
+		if (this._audioFrequencyAnalyser != null) {
+			const sumOfFrequencyData =
+				this._audioFrequencyAnalyser.getSumOfFrequencyData();
 			this._bloom.changerBloomStrength(sumOfFrequencyData);
-			this.renderer.toneMappingExposure = sumOfFrequencyData + 0.5;	
+			this.renderer.toneMappingExposure = sumOfFrequencyData + 0.5;
 		}
 
 		this._requestDelta = this._clock.getDelta();
@@ -817,7 +826,7 @@ export class World {
 		return this._localVideoSceen;
 	}
 
-	get audioFrequencyAnalyser() : AudioFrequencyAnalyser {
+	get audioFrequencyAnalyser(): AudioFrequencyAnalyser {
 		return this._audioFrequencyAnalyser;
 	}
 }

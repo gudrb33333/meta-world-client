@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './style.module.css';
-import axios from 'axios';
 import { findClothing } from '../../api/clothing';
 
 function RoomSidebar(props) {
 	const width = window.innerWidth / 2.5;
 	const [permission, setPermission] = useState(false);
-	const [errorMessage, setErrorMessage] = useState("");
+	const [errorMessage, setErrorMessage] = useState('');
 	const [isOpen, setOpen] = useState(false);
 	const [xPosition, setX] = useState(-width);
 	const [clothingName, setClothingName] = useState(null);

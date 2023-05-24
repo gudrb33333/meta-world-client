@@ -1,5 +1,4 @@
 import { AvatarStateBase, Idle, JumpIdle, Sprint, Walk } from './_stateLibrary';
-import { IAvatarState } from '../../interfaces/IAvatarState';
 import { Avatar } from '../Avatar';
 
 export class EndWalk extends AvatarStateBase {

@@ -9,10 +9,7 @@ import { EntityType } from '../enums/EntityType';
 import { IControllable } from '../interfaces/IControllable';
 import { WorldObject } from './WorldObject';
 
-export class Chair
-	extends WorldObject
-	implements IControllable
-{
+export class Chair extends WorldObject implements IControllable {
 	public entityType: EntityType = EntityType.Chair;
 	public actions: { [action: string]: KeyBinding } = {};
 	public controllingAvatar: Avatar;

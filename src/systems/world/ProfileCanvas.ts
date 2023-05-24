@@ -28,11 +28,11 @@ export class ProfileCanvas {
 	private _model: THREE.Object3D;
 	private _mixer: THREE.AnimationMixer;
 	private _clock: THREE.Clock;
-	private _animationClipArr : Array<THREE.AnimationClip>;
+	private _animationClipArr: Array<THREE.AnimationClip>;
 	private _raycaster: THREE.Raycaster;
-	private _mouse :THREE.Vector2;
+	private _mouse: THREE.Vector2;
 	private _objsToTest = [];
-	private _selectState: boolean = false;
+	private _selectState = false;
 	private _uiContainer;
 	private _pointermoveCallback: (evt: MouseEvent) => void;
 	private _pointerdownCallback: () => void;
@@ -84,12 +84,7 @@ export class ProfileCanvas {
 		// window.addEventListener('resize', onWindowResize, false);
 
 		this._graphicsWorld = new THREE.Scene();
-		this._camera = new THREE.PerspectiveCamera(
-			45,
-			2.03713,
-			0.1,
-			1000,
-		);
+		this._camera = new THREE.PerspectiveCamera(45, 2.03713, 0.1, 1000);
 
 		// Passes
 		const renderPass = new RenderPass(this._graphicsWorld, this._camera);
@@ -119,15 +114,15 @@ export class ProfileCanvas {
 		mainLight.position.set(10, 10, 10);
 		this._graphicsWorld.add(mainLight);
 
-		const geometry = new THREE.SphereGeometry( 500, 60, 40 );
-		geometry.scale( - 1, 1, 1 );
+		const geometry = new THREE.SphereGeometry(500, 60, 40);
+		geometry.scale(-1, 1, 1);
 
-		const texture = new THREE.TextureLoader().load( 'assets/zd218ru-lobby.jpeg' );
-		const material = new THREE.MeshBasicMaterial( { map: texture } );
+		const texture = new THREE.TextureLoader().load('assets/zd218ru-lobby.jpeg');
+		const material = new THREE.MeshBasicMaterial({ map: texture });
 
-		const mesh = new THREE.Mesh( geometry, material );
+		const mesh = new THREE.Mesh(geometry, material);
 
-		this._graphicsWorld.add( mesh );
+		this._graphicsWorld.add(mesh);
 
 		this._gltfLoader = new GLTFLoader();
 
@@ -142,14 +137,18 @@ export class ProfileCanvas {
 		this._controls = new OrbitControls(this._camera, this._renderer.domElement);
 
 		this._pointermoveCallback = (event: MouseEvent) => {
-			var rect = this._renderer.domElement.getBoundingClientRect();
-			this._mouse.x = ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1;
-			this._mouse.y = - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1;
-		}
+			const rect = this._renderer.domElement.getBoundingClientRect();
+			this._mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+			this._mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+		};
 
-		this._pointerdownCallback = () => { this._selectState = true; }
-		this._pointerupCallback = () => { this._selectState = false; }
-		
+		this._pointerdownCallback = () => {
+			this._selectState = true;
+		};
+		this._pointerupCallback = () => {
+			this._selectState = false;
+		};
+
 		document.addEventListener('pointermove', this._pointermoveCallback);
 		document.addEventListener('pointerdown', this._pointerdownCallback);
 		document.addEventListener('pointerup', this._pointerupCallback);
@@ -169,8 +168,11 @@ export class ProfileCanvas {
 				await this.setAvatarAnimation(gltf);
 				this._model = gltf.scene;
 
-				const clip = THREE.AnimationClip.findByName( this._animationClipArr, 'idle' );
-				const action = this._mixer.clipAction( clip );
+				const clip = THREE.AnimationClip.findByName(
+					this._animationClipArr,
+					'idle',
+				);
+				const action = this._mixer.clipAction(clip);
 				action.play();
 
 				this._model.scale.set(8, 8, 8);
@@ -206,7 +208,7 @@ export class ProfileCanvas {
 			animationGlbList.push(await load('/assets/male/readyStandWaveMale.glb'));
 			animationGlbList.push(await load('/assets/male/readyStandDanceMale.glb'));
 
-			for(const item of animationGlbList){
+			for (const item of animationGlbList) {
 				const animationAction = this._mixer.clipAction(item.animations[0]);
 				animationAction.getClip().name = item.scene.children[0].name;
 				this._animationClipArr.push(animationAction.getClip());
@@ -216,10 +218,14 @@ export class ProfileCanvas {
 			model.parser.json.nodes[4].rotation[1] === 4.327869973508314e-8
 		) {
 			animationGlbList.push(await load('/assets/female/readyIdleFemale.glb'));
-			animationGlbList.push(await load('/assets/female/readyStandWaveFemale.glb'));
-			animationGlbList.push(await load('/assets/female/readyStandDanceFemale.glb'));
+			animationGlbList.push(
+				await load('/assets/female/readyStandWaveFemale.glb'),
+			);
+			animationGlbList.push(
+				await load('/assets/female/readyStandDanceFemale.glb'),
+			);
 
-			for(const item of animationGlbList){
+			for (const item of animationGlbList) {
 				const animationAction = this._mixer.clipAction(item.animations[0]);
 				animationAction.getClip().name = item.scene.children[0].name;
 				this._animationClipArr.push(animationAction.getClip());
@@ -230,162 +236,159 @@ export class ProfileCanvas {
 	public loadGLTF = (function () {
 		const gltfLoader = new GLTFLoader();
 		const dracoLoader = new DRACOLoader();
-		dracoLoader.setDecoderPath(
-			'/draco/',
-		);
+		dracoLoader.setDecoderPath('/draco/');
 		dracoLoader.setDecoderConfig({ type: 'js' });
 
 		gltfLoader.setDRACOLoader(dracoLoader);
 		return function loadGLTF(url): Promise<any> {
-		  return new Promise(function (resolve, reject) {
-			gltfLoader.load(url, resolve, null, reject);
-		  });
+			return new Promise(function (resolve, reject) {
+				gltfLoader.load(url, resolve, null, reject);
+			});
 		};
-	  })();
+	})();
 
-	private playAnimation(clipName: string){
+	private playAnimation(clipName: string) {
 		this._mixer.stopAllAction();
-		const clip = THREE.AnimationClip.findByName( this._animationClipArr, clipName );
-		const action = this._mixer.clipAction( clip );
+		const clip = THREE.AnimationClip.findByName(
+			this._animationClipArr,
+			clipName,
+		);
+		const action = this._mixer.clipAction(clip);
 		action.play();
 	}
 
 	private makePanel() {
-			this._uiContainer = new ThreeMeshUI.Block( {
-				justifyContent: 'center',
-				contentDirection: 'row-reverse',
-				fontFamily: './assets/fonts/NanumGothic-Bold.json',
-				fontTexture: './assets/fonts/NanumGothic-Bold.png',
-				fontSize: 0.07,
-				padding: 0.02,
-				borderRadius: 0.11
-			} );
-	
-			this._uiContainer.position.set( 0, 9.5, 2.8 );
-			this._uiContainer.rotation.x = -0.55;
-			this._uiContainer.scale.set(6,6,6);
-			this._graphicsWorld.add(this._uiContainer);
+		this._uiContainer = new ThreeMeshUI.Block({
+			justifyContent: 'center',
+			contentDirection: 'row-reverse',
+			fontFamily: './assets/fonts/NanumGothic-Bold.json',
+			fontTexture: './assets/fonts/NanumGothic-Bold.png',
+			fontSize: 0.07,
+			padding: 0.02,
+			borderRadius: 0.11,
+		});
 
-			const buttonOptions = {
-				width: 0.4,
-				height: 0.15,
-				justifyContent: 'center',
-				offset: 0.05,
-				margin: 0.02,
-				borderRadius: 0.075
-			};
-	
-			const hoveredStateAttributes = {
-				state: 'hovered',
-				attributes: {
-					offset: 0.035,
-					backgroundColor: new THREE.Color( 0x999999 ),
-					backgroundOpacity: 1,
-					fontColor: new THREE.Color( 0xffffff )
-				},
-			};
-	
-			const idleStateAttributes = {
-				state: 'idle',
-				attributes: {
-					offset: 0.035,
-					backgroundColor: new THREE.Color( 0x666666 ),
-					backgroundOpacity: 0.3,
-					fontColor: new THREE.Color( 0xffffff )
-				},
-			};
-	
-			const buttonIdle = new ThreeMeshUI.Block( buttonOptions );
-			const buttonDance = new ThreeMeshUI.Block( buttonOptions );
-			const buttonWave = new ThreeMeshUI.Block( buttonOptions );
-	
-			buttonIdle.add(
-				new ThreeMeshUI.Text( { content: '기본' } )
-			);
-	
-			buttonDance.add(
-				new ThreeMeshUI.Text( { content: '춤추기' } )
-			);
-		
-			buttonWave.add(
-				new ThreeMeshUI.Text( { content: '인사하기' } )
-			);
-	
-			const selectedAttributes = {
-				offset: 0.02,
-				backgroundColor: new THREE.Color( 0x777777 ),
-				fontColor: new THREE.Color( 0x222222 )
-			};
-	
-			buttonIdle.setupState( {
-				state: 'selected',
-				attributes: selectedAttributes,
-				onSet: () => {
-					this.playAnimation("idle");
-				}
-			} );
-			buttonIdle.setupState( hoveredStateAttributes );
-			buttonIdle.setupState( idleStateAttributes );
-	
-			buttonDance.setupState( {
-				state: 'selected',
-				attributes: selectedAttributes,
-				onSet: () => {
-					this.playAnimation("stand_dance");
-				}
-			} );
-			buttonDance.setupState( hoveredStateAttributes );
-			buttonDance.setupState( idleStateAttributes );
-		
-			buttonWave.setupState( {
-				state: 'selected',
-				attributes: selectedAttributes,
-				onSet: () => {
-					this.playAnimation("stand_wave");
-				}
-			} );
-	
-			buttonWave.setupState( hoveredStateAttributes );
-			buttonWave.setupState( idleStateAttributes );
-		
-			this._uiContainer.add(buttonWave, buttonIdle, buttonDance );
-			this._objsToTest.push(buttonWave, buttonIdle, buttonDance );
+		this._uiContainer.position.set(0, 9.5, 2.8);
+		this._uiContainer.rotation.x = -0.55;
+		this._uiContainer.scale.set(6, 6, 6);
+		this._graphicsWorld.add(this._uiContainer);
+
+		const buttonOptions = {
+			width: 0.4,
+			height: 0.15,
+			justifyContent: 'center',
+			offset: 0.05,
+			margin: 0.02,
+			borderRadius: 0.075,
+		};
+
+		const hoveredStateAttributes = {
+			state: 'hovered',
+			attributes: {
+				offset: 0.035,
+				backgroundColor: new THREE.Color(0x999999),
+				backgroundOpacity: 1,
+				fontColor: new THREE.Color(0xffffff),
+			},
+		};
+
+		const idleStateAttributes = {
+			state: 'idle',
+			attributes: {
+				offset: 0.035,
+				backgroundColor: new THREE.Color(0x666666),
+				backgroundOpacity: 0.3,
+				fontColor: new THREE.Color(0xffffff),
+			},
+		};
+
+		const buttonIdle = new ThreeMeshUI.Block(buttonOptions);
+		const buttonDance = new ThreeMeshUI.Block(buttonOptions);
+		const buttonWave = new ThreeMeshUI.Block(buttonOptions);
+
+		buttonIdle.add(new ThreeMeshUI.Text({ content: '기본' }));
+
+		buttonDance.add(new ThreeMeshUI.Text({ content: '춤추기' }));
+
+		buttonWave.add(new ThreeMeshUI.Text({ content: '인사하기' }));
+
+		const selectedAttributes = {
+			offset: 0.02,
+			backgroundColor: new THREE.Color(0x777777),
+			fontColor: new THREE.Color(0x222222),
+		};
+
+		buttonIdle.setupState({
+			state: 'selected',
+			attributes: selectedAttributes,
+			onSet: () => {
+				this.playAnimation('idle');
+			},
+		});
+		buttonIdle.setupState(hoveredStateAttributes);
+		buttonIdle.setupState(idleStateAttributes);
+
+		buttonDance.setupState({
+			state: 'selected',
+			attributes: selectedAttributes,
+			onSet: () => {
+				this.playAnimation('stand_dance');
+			},
+		});
+		buttonDance.setupState(hoveredStateAttributes);
+		buttonDance.setupState(idleStateAttributes);
+
+		buttonWave.setupState({
+			state: 'selected',
+			attributes: selectedAttributes,
+			onSet: () => {
+				this.playAnimation('stand_wave');
+			},
+		});
+
+		buttonWave.setupState(hoveredStateAttributes);
+		buttonWave.setupState(idleStateAttributes);
+
+		this._uiContainer.add(buttonWave, buttonIdle, buttonDance);
+		this._objsToTest.push(buttonWave, buttonIdle, buttonDance);
 	}
 
 	private updateButtons() {
 		let intersect;
-	
-		if ( this._mouse.x !== null && this._mouse.y !== null ) {
-			this._raycaster.setFromCamera( this._mouse, this._camera );
+
+		if (this._mouse.x !== null && this._mouse.y !== null) {
+			this._raycaster.setFromCamera(this._mouse, this._camera);
 			intersect = this.raycast();
 		}
-	
-		if ( intersect && intersect.object.isUI ) {
-			if ( this._selectState ) {
-				intersect.object.setState( 'selected' );
+
+		if (intersect && intersect.object.isUI) {
+			if (this._selectState) {
+				intersect.object.setState('selected');
 			} else {
-				intersect.object.setState( 'hovered' );
+				intersect.object.setState('hovered');
 			}
 		}
 
-		this._objsToTest.forEach( ( obj ) => {
-			if ( ( !intersect || obj !== intersect.object ) && obj.isUI ) {
-				obj.setState( 'idle' );
+		this._objsToTest.forEach((obj) => {
+			if ((!intersect || obj !== intersect.object) && obj.isUI) {
+				obj.setState('idle');
 			}
-		} );
+		});
 	}
 
 	private raycast() {
-		return this._objsToTest.reduce( ( closestIntersection, obj ) => {
-			const intersection = this._raycaster.intersectObject( obj, true );
-			if ( !intersection[ 0 ] ) return closestIntersection;
-			if ( !closestIntersection || intersection[ 0 ].distance < closestIntersection.distance ) {
-				intersection[ 0 ].object = obj;
-				return intersection[ 0 ];
+		return this._objsToTest.reduce((closestIntersection, obj) => {
+			const intersection = this._raycaster.intersectObject(obj, true);
+			if (!intersection[0]) return closestIntersection;
+			if (
+				!closestIntersection ||
+				intersection[0].distance < closestIntersection.distance
+			) {
+				intersection[0].object = obj;
+				return intersection[0];
 			}
 			return closestIntersection;
-	
-		}, null );
+		}, null);
 	}
 
 	public render() {
@@ -393,17 +396,17 @@ export class ProfileCanvas {
 		this.updateButtons();
 
 		this._controls.update(); // required if damping enabled
-		if(this._model && this._mixer) {
+		if (this._model && this._mixer) {
 			this._mixer.update(this._clock.getDelta());
 			this._model.scale.set(8, 8, 8);
-		}		
+		}
 
 		this._requestAnimationFrameId = requestAnimationFrame(() => {
 			this.render();
 		});
-		
+
 		try {
-			this._renderer.render(this._graphicsWorld, this._camera);	
+			this._renderer.render(this._graphicsWorld, this._camera);
 		} catch {
 			this._graphicsWorld.remove(this._uiContainer);
 			this._objsToTest = [];

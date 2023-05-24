@@ -6,7 +6,6 @@ import { CollisionGroups } from '../enums/CollisionGroups';
 import { WorldObject } from './WorldObject';
 
 export class Clothing extends WorldObject {
-
 	public entityType: EntityType = EntityType.Clothing;
 	private _targetPoint: THREE.Object3D;
 

@@ -149,7 +149,6 @@ export class Avatar
 			stand_dance: new KeyBinding('Digit3'),
 		};
 
-
 		this.scale.set(avatarAdjustValue, avatarAdjustValue, avatarAdjustValue);
 
 		// Physics
@@ -161,7 +160,7 @@ export class Avatar
 			radius: 0.25,
 			segments: 8,
 			friction: 0.0,
-			avatarAdjustValue: avatarAdjustValue
+			avatarAdjustValue: avatarAdjustValue,
 		});
 		// capsulePhysics.physical.collisionFilterMask = ~CollisionGroups.Trimesh;
 		this._avatarCapsule.body.shapes.forEach((shape) => {

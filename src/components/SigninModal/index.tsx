@@ -14,14 +14,6 @@ function SigninModal(props) {
 	const [signinEmail, setSigninEmail] = useState('');
 	const [signinPassword, setSigninPassword] = useState('');
 
-	const onSigninEmailHandler = (event) => {
-		setSigninEmail(event.currentTarget.value);
-	};
-
-	const onSigninPasswordHandler = (event) => {
-		setSigninPassword(event.currentTarget.value);
-	};
-
 	const onSigninSubmitHandler = async (event) => {
 		event.preventDefault();
 
@@ -47,36 +39,34 @@ function SigninModal(props) {
 		setIsModalOn(props.isModalOn);
 	}, [props.isModalOn]);
 
-
-
 	let overlayStyle;
 	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
-		overlayStyle =	{
+		overlayStyle = {
 			position: 'fixed',
 			top: '20%',
 			left: 0,
 			right: 0,
 			bottom: '30%',
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-		}
+		};
 	} else if (checkIsMobile() && window.innerWidth > window.innerHeight) {
-		overlayStyle =	{
+		overlayStyle = {
 			position: 'fixed',
 			top: '10%',
 			left: '10%',
 			right: '10%',
 			bottom: '10%',
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-		}
+		};
 	} else {
-		overlayStyle =	{
+		overlayStyle = {
 			position: 'fixed',
 			top: '30%',
 			left: '30%',
 			right: '30%',
 			bottom: '20%',
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-		}
+		};
 	}
 
 	return (
@@ -108,19 +98,25 @@ function SigninModal(props) {
 						<tr>
 							<td>
 								<a href={googleAuthorizationUrl}>
-  									<img className={styles.signinImg} src="/assets/images/btn_login_google.png" />
+									<img
+										className={styles.signinImg}
+										src="/assets/images/btn_login_google.png"
+									/>
 								</a>
 							</td>
 						</tr>
-						<tr>	
+						<tr>
 							<td>
 								<a href={kakaoAuthorizationUrl}>
-									<img className={styles.signinImg} src='/assets/images/btn_login_kakao.png'></img>
+									<img
+										className={styles.signinImg}
+										src="/assets/images/btn_login_kakao.png"
+									></img>
 								</a>
-							</td>	
+							</td>
 						</tr>
 						<tr>
-							<td>							
+							<td>
 								<button
 									type="button"
 									className={classNames([

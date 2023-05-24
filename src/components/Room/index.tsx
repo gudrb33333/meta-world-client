@@ -57,23 +57,23 @@ function Room() {
 						lightValue: 5,
 						needBloom: null,
 						localVideoSrc: null,
-						needAudioFrequencyData: null
-					})
-				)
-			} else if(roomName === 'after-party') {
+						needAudioFrequencyData: null,
+					}),
+				);
+			} else if (roomName === 'after-party') {
 				setWorld(
-				new World({
-					worldScenePath: `/assets/${roomName}.glb`,
-					roomName: roomName,
-					avatarAdjustValue: 0.6,
-					lightValue: 0.2,
-					needBloom: true,
-					localVideoSrc: '/assets/NewJeans.mp4',
-					needAudioFrequencyData: true
-				})
-				)
+					new World({
+						worldScenePath: `/assets/${roomName}.glb`,
+						roomName: roomName,
+						avatarAdjustValue: 0.6,
+						lightValue: 0.2,
+						needBloom: true,
+						localVideoSrc: '/assets/NewJeans.mp4',
+						needAudioFrequencyData: true,
+					}),
+				);
 			} else {
-				alert("그런 이름의 방이 없습니다.");
+				alert('그런 이름의 방이 없습니다.');
 				window.location.replace('/');
 			}
 
@@ -137,7 +137,7 @@ function Room() {
 				height="360"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
 			></canvas>
-						<video
+			<video
 				id="local-video"
 				className={styles.video}
 				autoPlay
@@ -154,10 +154,7 @@ function Room() {
 			></canvas>
 			<div id="remote-producer-container"></div>
 			<LoadingScreen isLoading={isLoading} />
-			<RoomInitModal 
-				isLoading={isLoading}
-				getWorld={getWorld}
-			/>
+			<RoomInitModal isLoading={isLoading} getWorld={getWorld} />
 			<UiContainer isLoading={isLoading} isUiContainerOn={isUiContainerOn} />
 			<Footer
 				isLoading={isLoading}

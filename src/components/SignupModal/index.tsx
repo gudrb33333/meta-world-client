@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Modal from 'react-modal';
 import classNames from 'classnames';
 import styles from './style.module.css';

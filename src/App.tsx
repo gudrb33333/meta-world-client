@@ -6,7 +6,6 @@ import Room from './components/Room';
 import RoomLobby from './components/RoomLobby';
 
 function App() {
-
 	return (
 		<Router>
 			<Routes>

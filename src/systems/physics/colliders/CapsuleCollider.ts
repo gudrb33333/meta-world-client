@@ -16,7 +16,7 @@ export class CapsuleCollider implements ICollider {
 			radius: 0.3,
 			segments: 8,
 			friction: 0.3,
-			avatarAdjustValue: 1
+			avatarAdjustValue: 1,
 		};
 		options = Utils.setDefaults(options, defaults);
 		this.options = options;
@@ -36,14 +36,25 @@ export class CapsuleCollider implements ICollider {
 		capsuleBody.material = mat;
 		// sphereShape.material = mat;
 
-		capsuleBody.addShape(sphereShape, new CANNON.Vec3(0, 0.4 * options.avatarAdjustValue, 0));
 		capsuleBody.addShape(
 			sphereShape,
-			new CANNON.Vec3(0, options.height / 2 + 0.4 * options.avatarAdjustValue, 0),
+			new CANNON.Vec3(0, 0.4 * options.avatarAdjustValue, 0),
 		);
 		capsuleBody.addShape(
 			sphereShape,
-			new CANNON.Vec3(0, -options.height / 2 + 0.4 * options.avatarAdjustValue, 0),
+			new CANNON.Vec3(
+				0,
+				options.height / 2 + 0.4 * options.avatarAdjustValue,
+				0,
+			),
+		);
+		capsuleBody.addShape(
+			sphereShape,
+			new CANNON.Vec3(
+				0,
+				-options.height / 2 + 0.4 * options.avatarAdjustValue,
+				0,
+			),
 		);
 
 		this.body = capsuleBody;

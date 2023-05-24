@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { findMe } from '../../api/member';
@@ -9,8 +8,8 @@ import AvatarNameModal from '../AvatarNameModal';
 
 function Avatar() {
 	const subdomain = 'demo'; // See section about becoming a partner
+	const showIFrame = true;
 	const iFrameRef = useRef(null);
-	const [showIFrame, setShowIFrame] = useState(true);
 	const [isNameModalOn, setIsNameModalOn] = useState(false);
 	const [isGuideModalOn, setIsGuideModalOn] = useState(true);
 	const [avatarUrl, setAvatarUrl] = useState(null);

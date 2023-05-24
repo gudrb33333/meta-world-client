@@ -7,45 +7,45 @@ import classNames from 'classnames';
 import screenfull from 'screenfull';
 import checkIsMobile from '../../utils/isMobile';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
-import { deleteProfile, findMyProfile } from '../../api/profile';
+import { findMyProfile } from '../../api/profile';
 
 import { Joystick } from '../../systems/core/Joystick';
 
 export default function RoomInitModal(props) {
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(true);
-    const [nickname, setNickname] = useState('');
+	const [isModalOpen, setIsModalOpen] = useState(true);
+	const [nickname, setNickname] = useState('');
 	const [profileCanvas, setProfileCanvas] = useState(null);
 
 	useEffect(() => {
 		setIsLoading(props.isLoading);
 	}, [props.isLoading]);
 
-    const closeModal = () => {
-        const world = props.getWorld();
-        profileCanvas.stopRendering();
+	const closeModal = () => {
+		const world = props.getWorld();
+		profileCanvas.stopRendering();
 		setProfileCanvas(null);
 
-        if (checkIsMobile() && screenfull.isEnabled) {
-            screenfull.request();
-            new Joystick(world, world._inputManager);
-        }
+		if (checkIsMobile() && screenfull.isEnabled) {
+			screenfull.request();
+			new Joystick(world, world._inputManager);
+		}
 
 		world.initLocalVideoSceen();
 		world.playLocalVideoSceen();
 		world.initAudioFrequencyAnalyser();
 
-        setIsModalOpen(false);
+		setIsModalOpen(false);
 	};
 
-    const afterOpenModal = async () => {
-        const qs = new URLSearchParams(location.search);
-        if (qs.get('user-type') === 'guest') {
-            setNickname(sessionStorage.getItem("avatar_name"));
-            setProfileCanvas(new ProfileCanvas(sessionStorage.getItem("avatar_url")));
-            return;
-        }
+	const afterOpenModal = async () => {
+		const qs = new URLSearchParams(location.search);
+		if (qs.get('user-type') === 'guest') {
+			setNickname(sessionStorage.getItem('avatar_name'));
+			setProfileCanvas(new ProfileCanvas(sessionStorage.getItem('avatar_url')));
+			return;
+		}
 
 		if (isModalOpen) {
 			try {
@@ -71,7 +71,7 @@ export default function RoomInitModal(props) {
 			}
 		}
 	};
-	
+
 	if (checkIsMobile() && window.innerWidth > window.innerHeight) {
 		return (
 			<Modal
@@ -83,7 +83,7 @@ export default function RoomInitModal(props) {
 					overlay: {
 						position: 'fixed',
 						top: 0,
-						left: "8%",
+						left: '8%',
 						right: 0,
 						bottom: 0,
 						backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -112,8 +112,7 @@ export default function RoomInitModal(props) {
 								<div
 									id="profile-container"
 									className={styles.roomInitModalAvatarContent}
-								>
-								</div>
+								></div>
 							</td>
 							<tr>
 								<td>
@@ -131,10 +130,13 @@ export default function RoomInitModal(props) {
 								<td>
 									<button
 										type="button"
-										className={classNames([styles.close, styles.roomInitModalButton])}
+										className={classNames([
+											styles.close,
+											styles.roomInitModalButton,
+										])}
 										onClick={closeModal}
 									>
-									입장하기
+										입장하기
 									</button>
 								</td>
 							</tr>
@@ -154,7 +156,7 @@ export default function RoomInitModal(props) {
 					overlay: {
 						position: 'fixed',
 						top: 20,
-						left: "4%",
+						left: '4%',
 						right: 0,
 						bottom: 30,
 						backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -183,8 +185,7 @@ export default function RoomInitModal(props) {
 								<div
 									id="profile-container"
 									className={styles.roomInitModalAvatarContent}
-								>
-								</div>
+								></div>
 							</td>
 						</tr>
 						<tr>
@@ -203,7 +204,10 @@ export default function RoomInitModal(props) {
 							<td>
 								<button
 									type="button"
-									className={classNames([styles.close, styles.roomInitModalButton])}
+									className={classNames([
+										styles.close,
+										styles.roomInitModalButton,
+									])}
 									onClick={closeModal}
 								>
 									입장하기
@@ -224,10 +228,10 @@ export default function RoomInitModal(props) {
 				style={{
 					overlay: {
 						position: 'fixed',
-						top: "10%",
-						left: "35%",
-						right: "35%",
-						bottom: "10%",
+						top: '10%',
+						left: '35%',
+						right: '35%',
+						bottom: '10%',
 						backgroundColor: 'rgba(0, 0, 0, 0)',
 					},
 					content: {
@@ -254,8 +258,7 @@ export default function RoomInitModal(props) {
 								<div
 									id="profile-container"
 									className={styles.roomInitModalAvatarContent}
-								>
-								</div>
+								></div>
 							</td>
 						</tr>
 						<tr>
@@ -274,7 +277,10 @@ export default function RoomInitModal(props) {
 							<td>
 								<button
 									type="button"
-									className={classNames([styles.close, styles.roomInitModalButton])}
+									className={classNames([
+										styles.close,
+										styles.roomInitModalButton,
+									])}
 									onClick={closeModal}
 								>
 									입장하기

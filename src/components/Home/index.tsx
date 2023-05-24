@@ -22,36 +22,16 @@ function Home() {
 		setIsSigninModalOn(false);
 	};
 
-	const openSignupModal = () => {
-		setIsSignupModalOn(true);
-	};
-
-	const closeSignupModal = () => {
-		setIsSignupModalOn(false);
-	};
-
 	const loginComplete = () => {
 		setIsLoggedIn(true);
-		movePage('/lobby')
-	};
-
-	const logoutHandler = async () => {
-		try {
-			await logout();
-			setIsLoggedIn(false);
-		} catch (error) {
-			if (error.response.status == 401) {
-				alert('이미 로그아웃 되었습니다.');
-				setIsLoggedIn(false);
-			}
-		}
+		movePage('/lobby');
 	};
 
 	useEffect(() => {
 		axios.get('/api/v1/members/me').then(
 			() => {
 				setIsLoggedIn(true);
-				movePage('/lobby')
+				movePage('/lobby');
 			},
 			() => {
 				setIsLoggedIn(false);
@@ -69,16 +49,16 @@ function Home() {
 				</div>
 				<div className={styles.homeButtonContainer}>
 					<PushableButton
-							content='소셜 로그인'
-							slideDirection='slideInLeft'
-							onClick={openSigninModal}
+						content="소셜 로그인"
+						slideDirection="slideInLeft"
+						onClick={openSigninModal}
 					/>
 				</div>
 				<div className={styles.homeButtonContainer}>
 					<Link to="/lobby?user-type=guest">
 						<PushableButton
-							content='로그인 없이 입장'
-							slideDirection='slideInRight'
+							content="로그인 없이 입장"
+							slideDirection="slideInRight"
 							onClick={null}
 						/>
 					</Link>
@@ -92,7 +72,6 @@ function Home() {
 			</div>
 		</div>
 	);
-	
 }
 
 export default Home;
