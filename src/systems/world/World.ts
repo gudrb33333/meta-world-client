@@ -668,6 +668,12 @@ export class World {
 		}
 	}
 
+	public playLocalVideoSceen() : void {
+		if (this._localVideoSrc != null) {
+			this._localVideoSceen.localVideo.play();
+		}
+	}
+
 	public initAudioFrequencyAnalyser() : void {
 		if(this._needAudioFrequencyData){
 			this._audioFrequencyAnalyser = new AudioFrequencyAnalyser(this);

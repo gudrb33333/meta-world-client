@@ -144,7 +144,7 @@ function Room() {
 				width="1280"
 				height="720"
 				style={{ visibility: 'hidden', float: 'left', position: 'absolute' }}
-				playsInline
+				playsInline={true}
 			></video>
 			<canvas
 				id="local-video-image"

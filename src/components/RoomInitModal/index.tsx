@@ -33,6 +33,7 @@ export default function RoomInitModal(props) {
         }
 
 		world.initLocalVideoSceen();
+		world.playLocalVideoSceen();
 		world.initAudioFrequencyAnalyser();
 
         setIsModalOpen(false);
