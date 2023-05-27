@@ -72,6 +72,38 @@ export default function RoomInitModal(props): JSX.Element {
 		}
 	};
 
+	let overlayStyle;
+	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
+		overlayStyle = {
+			position: 'fixed',
+			top: 0,
+			left: '5%',
+			right: 0,
+			bottom: 0,
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		};
+	} else if (checkIsMobile() && window.innerWidth > window.innerHeight) {
+		overlayStyle = {
+			position: 'fixed',
+			top: 20,
+			left: '4%',
+			right: 0,
+			bottom: 30,
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+
+		};
+	} else {
+		overlayStyle = {
+			position: 'fixed',
+			top: '10%',
+			left: '35%',
+			right: '35%',
+			bottom: '10%',
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+		};
+	}
+
+
 	if (checkIsMobile() && window.innerWidth > window.innerHeight) {
 		return (
 			<Modal
@@ -80,14 +112,7 @@ export default function RoomInitModal(props): JSX.Element {
 				ariaHideApp={false}
 				onAfterOpen={afterOpenModal}
 				style={{
-					overlay: {
-						position: 'fixed',
-						top: 0,
-						left: '8%',
-						right: 0,
-						bottom: 0,
-						backgroundColor: 'rgba(0, 0, 0, 0)',
-					},
+					overlay: overlayStyle,
 					content: {
 						position: 'absolute',
 						background: '#80807f',
@@ -145,79 +170,6 @@ export default function RoomInitModal(props): JSX.Element {
 				</table>
 			</Modal>
 		);
-	} else if (checkIsMobile() && window.innerWidth < window.innerHeight) {
-		return (
-			<Modal
-				isOpen={!isLoading && isModalOpen}
-				className={styles.roomInitModal}
-				ariaHideApp={false}
-				onAfterOpen={afterOpenModal}
-				style={{
-					overlay: {
-						position: 'fixed',
-						top: 20,
-						left: '4%',
-						right: 0,
-						bottom: 30,
-						backgroundColor: 'rgba(0, 0, 0, 0)',
-					},
-					content: {
-						position: 'absolute',
-						background: '#80807f',
-						overflow: 'auto',
-						WebkitOverflowScrolling: 'touch',
-						outline: 'none',
-						padding: '2px',
-						fontFamily: 'Poppins, sans-serif',
-						color: '#f3f0ef',
-						borderRadius: '12px',
-						backgroundColor: '#2a2d44',
-						border: '1px solid #414361',
-						textAlign: 'center',
-					},
-				}}
-			>
-				<table className={styles.roomInitModalTable}>
-					<thead className={styles.roomInitModalTableThead}>프로필</thead>
-					<tbody>
-						<tr>
-							<td>
-								<div
-									id="profile-container"
-									className={styles.roomInitModalAvatarContent}
-								></div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<h3 className={styles.profileText}>
-									<div className={styles.title}>닉네임</div>
-									<input
-										className={styles.roomInitModalInput}
-										disabled
-										value={nickname}
-									></input>
-								</h3>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<button
-									type="button"
-									className={classNames([
-										styles.close,
-										styles.roomInitModalButton,
-									])}
-									onClick={closeModal}
-								>
-									입장하기
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</Modal>
-		);
 	} else {
 		return (
 			<Modal
@@ -226,14 +178,7 @@ export default function RoomInitModal(props): JSX.Element {
 				ariaHideApp={false}
 				onAfterOpen={afterOpenModal}
 				style={{
-					overlay: {
-						position: 'fixed',
-						top: '10%',
-						left: '35%',
-						right: '35%',
-						bottom: '10%',
-						backgroundColor: 'rgba(0, 0, 0, 0)',
-					},
+					overlay: overlayStyle,
 					content: {
 						position: 'absolute',
 						background: '#80807f',
