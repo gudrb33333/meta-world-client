@@ -3,13 +3,15 @@ import styles from './style.module.css';
 
 interface ModalButtonProp {
     buttonName: string;
+    disable?: boolean;
     onClick: () => void;
 }
 
-function ModalButton({buttonName, onClick}: ModalButtonProp): JSX.Element   {
+function ModalButton({buttonName, disable = false, onClick}: ModalButtonProp): JSX.Element   {
 
     return (
         <button
+            disabled={disable}
             type="button"
             className={classNames([
                 styles.modalButton,
