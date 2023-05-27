@@ -17,10 +17,6 @@
     margin-bottom: 0.5rem;
 }
 
-.profile-modal {
-    inset: 12% 0%;
-}
-
 .profile-info-table {
     width: 100%;
     border-collapse: collapse;
@@ -39,13 +35,20 @@
 }
 
 
-@media (max-width:600px){
+@media only screen and (max-width: 600px) {
     .profile-modal {
-        inset: 12% 0%;
+        width: 350px;
+    }
+}
+
+@media screen and (orientation: landscape) and (max-width: 600px) {
+    .profile-modal {
+        width: 650px;
     }
 
-    input {
-        width: 55%;
+    .profile-modal-input {
+        width: 22%;
+        min-width: 200px;
         height: 32px;
         font-size: 15px;
         border: 0;
@@ -53,5 +56,13 @@
         outline: none;
         padding-left: 10px;
         background-color: rgb(233, 233, 233);
+    }
+
+    .room-init-modal-table-thead {
+        border-bottom: 1px solid #444444;
+        padding: 5px;
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
     }
 }

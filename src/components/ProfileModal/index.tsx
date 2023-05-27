@@ -98,28 +98,29 @@ function ProfileModal(props: ProfileModalProps): JSX.Element {
 	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
 		overlayStyle = {
 			position: 'fixed',
-			top: 30,
-			left: 0,
+			top: 0,
+			left: '5%',
 			right: 0,
-			bottom: 30,
+			bottom: 0,
 			backgroundColor: 'rgba(0, 0, 0, 0)',
 		};
 	} else if (checkIsMobile() && window.innerWidth > window.innerHeight) {
 		overlayStyle = {
 			position: 'fixed',
-			top: '10%',
-			left: '10%',
-			right: '10%',
-			bottom: '10%',
+			top: 20,
+			left: '4%',
+			right: 0,
+			bottom: 30,
 			backgroundColor: 'rgba(0, 0, 0, 0)',
+
 		};
 	} else {
 		overlayStyle = {
 			position: 'fixed',
-			top: 70,
-			left: 500,
-			right: 500,
-			bottom: 70,
+			top: '10%',
+			left: '35%',
+			right: '35%',
+			bottom: '10%',
 			backgroundColor: 'rgba(0, 0, 0, 0)',
 		};
 	}
