@@ -2,12 +2,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import classNames from 'classnames';
 import styles from './style.module.css';
-import SigninModal from '../SigninModal';
+import SigninModal from '../../components/SigninModal';
 import { useEffect, useState } from 'react';
-import { logout } from '../../api/auth';
-import PushableButton from '../PushableButton';
+import PushableButton from '../../components/PushableButton';
 
-function Home() {
+function HomePage() {
 	const movePage = useNavigate();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -74,4 +73,4 @@ function Home() {
 	);
 }
 
-export default Home;
+export default HomePage;

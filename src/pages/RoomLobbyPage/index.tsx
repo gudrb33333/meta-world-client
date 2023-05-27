@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { logout } from '../../api/auth';
 import axios from 'axios';
-import ProfileModal from '../ProfileModal';
-import Card from '../Card';
-import PushableButton from '../PushableButton';
+import ProfileModal from '../../components/ProfileModal';
+import Card from '../../components/Card';
+import PushableButton from '../../components/PushableButton';
 
-function RoomLobby() {
+function RoomLobbyPage() {
 	const movePage = useNavigate();
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [profileModalType, setProfileModalType] = useState('');
@@ -106,4 +106,4 @@ function RoomLobby() {
 	);
 }
 
-export default RoomLobby;
+export default RoomLobbyPage;

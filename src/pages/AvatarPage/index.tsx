@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { findMe } from '../../api/member';
 import '../../App.css';
 import styles from './style.module.css';
-import AvatarGuideModal from '../AvatarGuideModal';
-import AvatarNameModal from '../AvatarNameModal';
+import AvatarGuideModal from '../../components/AvatarGuideModal';
+import AvatarNameModal from '../../components/AvatarNameModal';
 
-function Avatar() {
+function AvatarPage() {
 	const subdomain = 'demo'; // See section about becoming a partner
 	const showIFrame = true;
 	const iFrameRef = useRef(null);
@@ -145,4 +145,4 @@ function Avatar() {
 	);
 }
 
-export default Avatar;
+export default AvatarPage;

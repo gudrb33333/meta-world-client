@@ -1,19 +1,19 @@
 import './App.css';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import Home from './components/Home';
-import Avatar from './components/Avatar';
-import Room from './components/Room';
-import RoomLobby from './components/RoomLobby';
+import HomePage from './pages/HomePage';
+import AvatarPage from './pages/AvatarPage';
+import RoomPage from './pages/RoomPage';
+import RoomLobbyPage from './pages/RoomLobbyPage';
 
 function App() {
 	return (
 		<Router>
 			<Routes>
-				<Route path="/avatar" element={<Avatar />} />
-				<Route path="/rooms/:roomName" element={<Room />} />
-				<Route path="/lobby" element={<RoomLobby />} />
-				<Route path="/" element={<Home />} />
-				<Route path="*" element={<Home />} />
+				<Route path="/avatar" element={<AvatarPage />} />
+				<Route path="/rooms/:roomName" element={<RoomPage />} />
+				<Route path="/lobby" element={<RoomLobbyPage />} />
+				<Route path="/" element={<HomePage />} />
+				<Route path="*" element={<HomePage />} />
 			</Routes>
 		</Router>
 	);

@@ -1,16 +1,16 @@
 import styles from './style.module.css';
 import { World } from '../../systems/world/World';
-import Footer from '../RoomFooter';
-import LoadingScreen from '../LoadingScreen';
-import UiContainer from '../UiContainer';
+import Footer from '../../components/RoomFooter';
+import LoadingScreen from '../../components/LoadingScreen';
+import UiContainer from '../../components/UiContainer';
 import { createBrowserHistory } from 'history';
 import { useEffect, useState } from 'react';
-import Sidebar from '../RoomSidebar';
+import Sidebar from '../../components/RoomSidebar';
 import { findMyProfile } from '../../api/profile';
 import { useNavigate, useParams } from 'react-router-dom';
-import RoomInitModal from '../RoomInitModal';
+import RoomInitModal from '../../components/RoomInitModal';
 
-function Room() {
+function RoomPage() {
 	const { roomName } = useParams();
 
 	const [world, setWorld] = useState(null);
@@ -167,4 +167,4 @@ function Room() {
 	);
 }
 
-export default Room;
+export default RoomPage;
