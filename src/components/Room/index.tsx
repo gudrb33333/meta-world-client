@@ -66,7 +66,7 @@ function Room() {
 						worldScenePath: `/assets/${roomName}.glb`,
 						roomName: roomName,
 						avatarAdjustValue: 0.6,
-						lightValue: 0.2,
+						lightValue: 0.1,
 						needBloom: true,
 						localVideoSrc: '/assets/NewJeans.mp4',
 						needAudioFrequencyData: true,
