@@ -4,40 +4,18 @@ import classNames from 'classnames';
 import styles from './style.module.css';
 import { signin } from '../../api/auth';
 import checkIsMobile from '../../utils/isMobile';
+import ModalButton from '../Buttons/ModalButton';
 
-function SigninModal(props) {
+interface SigninModalProps {
+	isModalOn: boolean;
+	close: () => void;
+	loginComplete: () => void;
+  }
+
+function SigninModal({ isModalOn, close, loginComplete }: SigninModalProps): JSX.Element {
 	const apiUrl = process.env.VITE_API_URL;
-	const googleAuthorizationUrl = `${apiUrl}/oauth2/authorization/google`;
-	const kakaoAuthorizationUrl = `${apiUrl}/oauth2/authorization/kakao`;
-	const [isModalOn, setIsModalOn] = useState(false);
-
-	const [signinEmail, setSigninEmail] = useState('');
-	const [signinPassword, setSigninPassword] = useState('');
-
-	const onSigninSubmitHandler = async (event) => {
-		event.preventDefault();
-
-		try {
-			await signin({
-				email: signinEmail,
-				password: signinPassword,
-			});
-
-			props.close();
-			props.loginComplete();
-			props.openProfileModal();
-		} catch (error) {
-			if (error.response.status === 401) {
-				alert('아이디나 비밀번호가 없습니다.');
-			} else {
-				alert('알 수 없는 에러로 로그인을 실패했습니다.');
-			}
-		}
-	};
-
-	useEffect(() => {
-		setIsModalOn(props.isModalOn);
-	}, [props.isModalOn]);
+	const googleAuthorizationUrl: string = `${apiUrl}/oauth2/authorization/google`;
+	const kakaoAuthorizationUrl: string = `${apiUrl}/oauth2/authorization/kakao`;
 
 	let overlayStyle;
 	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
@@ -91,7 +69,7 @@ function SigninModal(props) {
 				},
 			}}
 		>
-			<form onSubmit={onSigninSubmitHandler}>
+			<form>
 				<table className={styles.signinInfoTable}>
 					<thead className={styles.signinThead}>로그인</thead>
 					<tbody>
@@ -117,16 +95,10 @@ function SigninModal(props) {
 						</tr>
 						<tr>
 							<td>
-								<button
-									type="button"
-									className={classNames([
-										styles.close,
-										styles.signinInfoButton,
-									])}
-									onClick={props.close}
-								>
-									닫기
-								</button>
+								<ModalButton 
+									buttonName='닫기'
+									onClick={close}
+								/>
 							</td>
 						</tr>
 					</tbody>
