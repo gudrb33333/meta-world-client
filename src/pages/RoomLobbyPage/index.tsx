@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { logout } from '../../api/auth';
 import axios from 'axios';
 import ProfileModal from '../../components/ProfileModal';
-import Card from '../../components/Card';
+import Card from '../../components/RoomInitModalCard';
 import PushableButton from '../../components/buttons/PushableButton';
 
 function RoomLobbyPage(): JSX.Element {
