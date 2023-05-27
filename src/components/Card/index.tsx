@@ -8,7 +8,7 @@ interface CardProps {
 	roomUrl: string;
 }
 
-function Card({ title, imageUrl, body, roomUrl }: CardProps) {
+function Card({ title, imageUrl, body, roomUrl }: CardProps): JSX.Element {
 	return (
 		<div className={styles.cardContainer}>
 			<div className={styles.imageContainer}>

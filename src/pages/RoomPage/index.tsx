@@ -10,7 +10,7 @@ import { findMyProfile } from '../../api/profile';
 import { useNavigate, useParams } from 'react-router-dom';
 import RoomInitModal from '../../components/RoomInitModal';
 
-function RoomPage() {
+function RoomPage(): JSX.Element {
 	const { roomName } = useParams();
 
 	const [world, setWorld] = useState(null);

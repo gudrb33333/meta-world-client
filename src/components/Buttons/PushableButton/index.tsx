@@ -11,7 +11,7 @@ function PushableButton({
 	slideDirection,
 	content,
 	onClick,
-}: PushableButtonProps) {
+}: PushableButtonProps): JSX.Element {
 	return (
 		<button
 			className={classNames([

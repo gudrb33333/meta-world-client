@@ -2,7 +2,7 @@ import styles from './style.module.css';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
-function LoadingScreen(props) {
+function LoadingScreen(props): JSX.Element {
 	const [isLoading, setIsLoading] = useState(props.isLoading);
 	const [doneLoading, setDoneLoading] = useState(0);
 

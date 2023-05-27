@@ -6,7 +6,7 @@ import { createProfile, findMyProfile, updateProfile } from '../../api/profile';
 import AvatarCreateLoading from '../AvatarCreateLoading';
 import styles from './style.module.css';
 
-function AvatarNameModal(props) {
+function AvatarNameModal(props): JSX.Element {
 	Modal.setAppElement('#root');
 	const [isNameModalOn, setIsNameModalOn] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);

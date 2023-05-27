@@ -1,8 +1,5 @@
-import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import classNames from 'classnames';
 import styles from './style.module.css';
-import { signin } from '../../api/auth';
 import checkIsMobile from '../../utils/isMobile';
 import ModalButton from '../Buttons/ModalButton';
 

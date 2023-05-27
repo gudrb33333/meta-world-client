@@ -8,7 +8,7 @@ import ProfileModal from '../../components/ProfileModal';
 import Card from '../../components/Card';
 import PushableButton from '../../components/Buttons/PushableButton';
 
-function RoomLobbyPage() {
+function RoomLobbyPage(): JSX.Element {
 	const movePage = useNavigate();
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [profileModalType, setProfileModalType] = useState('');

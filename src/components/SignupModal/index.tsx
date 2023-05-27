@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import styles from './style.module.css';
 import { signup } from '../../api/auth';
 
-function SignupModal(props) {
+function SignupModal(props): JSX.Element {
 	const [isModalOn, setIsModalOn] = useState(false);
 
 	const [signupEmail, setSignupEmail] = useState('');

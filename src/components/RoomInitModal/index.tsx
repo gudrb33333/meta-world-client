@@ -11,7 +11,7 @@ import { findMyProfile } from '../../api/profile';
 
 import { Joystick } from '../../systems/core/Joystick';
 
-export default function RoomInitModal(props) {
+export default function RoomInitModal(props): JSX.Element {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(true);

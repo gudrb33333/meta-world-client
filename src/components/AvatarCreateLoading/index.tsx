@@ -1,7 +1,6 @@
-import React from 'react';
 import FadeLoader from 'react-spinners/MoonLoader';
 
-function AvatarCreateLoading() {
+function AvatarCreateLoading(): JSX.Element {
 	return (
 		<div className="contentWrap">
 			<div

@@ -14,7 +14,7 @@ interface ProfileModalProps {
 	close: () => void;
 }
 
-function ProfileModal(props: ProfileModalProps) {
+function ProfileModal(props: ProfileModalProps): JSX.Element {
 	const [isModalOn, setIsModalOn] = useState(false);
 	const [nickname, setNickname] = useState('');
 	const [profileCanvas, setProfileCanvas] = useState(null);

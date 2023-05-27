@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './style.module.css';
 import { findClothing } from '../../api/clothing';
 
-function RoomSidebar(props) {
+function RoomSidebar(props): JSX.Element {
 	const width = window.innerWidth / 2.5;
 	const [permission, setPermission] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');

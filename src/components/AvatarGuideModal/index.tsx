@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import styles from './style.module.css';
 
-function AvatarGuideModal(props) {
+function AvatarGuideModal(props): JSX.Element {
 	const [isGuideModalOn, setIsGuideModalOn] = useState(true);
 
 	useEffect(() => {

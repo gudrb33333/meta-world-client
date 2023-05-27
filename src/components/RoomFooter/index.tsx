@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import checkIsMobile from '../../utils/isMobile';
 import styles from './style.module.css';
 
-function RoomFooter(props) {
+function RoomFooter(props): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isMicOn, setIsMicOn] = useState(false);
 	const [isWebcamOn, setIsWebcamOn] = useState(false);

@@ -6,7 +6,7 @@ import SigninModal from '../../components/SigninModal';
 import { useEffect, useState } from 'react';
 import PushableButton from '../../components/Buttons/PushableButton';
 
-function HomePage() {
+function HomePage(): JSX.Element {
 	const movePage = useNavigate();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);

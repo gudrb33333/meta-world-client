@@ -6,7 +6,7 @@ import styles from './style.module.css';
 import AvatarGuideModal from '../../components/AvatarGuideModal';
 import AvatarNameModal from '../../components/AvatarNameModal';
 
-function AvatarPage() {
+function AvatarPage(): JSX.Element {
 	const subdomain = 'demo'; // See section about becoming a partner
 	const showIFrame = true;
 	const iFrameRef = useRef(null);
