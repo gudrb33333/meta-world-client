@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { createProfile, findMyProfile, updateProfile } from '../../api/profile';
 import AvatarCreateLoading from '../AvatarCreateLoading';
 import styles from './style.module.css';
-import ModalButton from '../buttons/ModalButton';
+import ModalButton from '../ModalButton';
 
 function AvatarNameModal(props): JSX.Element {
 	Modal.setAppElement('#root');

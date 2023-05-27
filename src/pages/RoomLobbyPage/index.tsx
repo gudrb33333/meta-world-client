@@ -6,7 +6,7 @@ import { logout } from '../../api/auth';
 import axios from 'axios';
 import ProfileModal from '../../components/ProfileModal';
 import Card from '../../components/RoomInitModalCard';
-import PushableButton from '../../components/buttons/PushableButton';
+import PushableButton from '../../components/PushableButton';
 
 function RoomLobbyPage(): JSX.Element {
 	const movePage = useNavigate();

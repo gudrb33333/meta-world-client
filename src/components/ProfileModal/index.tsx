@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
 import { deleteProfile, findMyProfile } from '../../api/profile';
 import checkIsMobile from '../../utils/isMobile';
-import ModalButton from '../buttons/ModalButton';
+import ModalButton from '../ModalButton';
 
 interface ProfileModalProps {
 	isModalOn: boolean;

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import styles from './style.module.css';
 import SigninModal from '../../components/SigninModal';
 import { useEffect, useState } from 'react';
-import PushableButton from '../../components/buttons/PushableButton';
+import PushableButton from '../../components/PushableButton';
 
 function HomePage(): JSX.Element {
 	const movePage = useNavigate();
