@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
@@ -7,9 +6,14 @@ import AvatarCreateLoading from '../AvatarCreateLoading';
 import styles from './style.module.css';
 import ModalButton from '../ModalButton';
 
-function AvatarNameModal(props): JSX.Element {
+interface AvatarNameModalProps {
+	isNameModalOn: boolean;
+	close: () => void;
+	avatarUrl: string;
+}
+
+function AvatarNameModal({ isNameModalOn, close, avatarUrl }:AvatarNameModalProps): JSX.Element {
 	Modal.setAppElement('#root');
-	const [isNameModalOn, setIsNameModalOn] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [disable, setDisable] = useState(false);
@@ -40,7 +44,7 @@ function AvatarNameModal(props): JSX.Element {
 			await createProfile({
 				nickname: info.name,
 				publicType: 'private',
-				avatarUrl: props.avatarUrl,
+				avatarUrl: avatarUrl,
 			});
 			navigate('/?profile-complete=true');
 		} catch (error) {
@@ -74,7 +78,7 @@ function AvatarNameModal(props): JSX.Element {
 			await updateProfile({
 				nickname: info.name,
 				publicType: 'private',
-				avatarUrl: props.avatarUrl,
+				avatarUrl: avatarUrl,
 			});
 
 			navigate('/?profile-complete=true');
@@ -91,10 +95,6 @@ function AvatarNameModal(props): JSX.Element {
 			}
 		}
 	};
-
-	useEffect(() => {
-		setIsNameModalOn(props.isNameModalOn);
-	}, [props.isNameModalOn]);
 
 	useEffect(() => {
 		(async function () {
@@ -189,7 +189,7 @@ function AvatarNameModal(props): JSX.Element {
 								<ModalButton 
 									buttonName='아바타 다시 선택'
 									disable={disable}
-									onClick={props.close}
+									onClick={close}
 								/>
 							</td>
 						</tr>

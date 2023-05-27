@@ -1,18 +1,19 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import checkIsMobile from '../../utils/isMobile';
 import styles from './style.module.css';
+import { World } from 'src/systems/world/World';
 
-function RoomFooter(props): JSX.Element {
-	const [isLoading, setIsLoading] = useState(true);
+interface RoomFooterProps {
+	isLoading: boolean;
+	world: World;
+	isUiContainerOn: boolean;
+	setUiContainerOn: Dispatch<SetStateAction<boolean>>;
+}
+
+function RoomFooter({ isLoading, world, isUiContainerOn, setUiContainerOn }: RoomFooterProps): JSX.Element {
 	const [isMicOn, setIsMicOn] = useState(false);
 	const [isWebcamOn, setIsWebcamOn] = useState(false);
 	const [isShareOn, setIsShareOn] = useState(false);
-	const [isUiContainerOn, setIsUiContainerOn] = useState(false);
-
-	useEffect(() => {
-		setIsLoading(props.isLoading);
-		setIsUiContainerOn(props.isUiContainerOn);
-	}, [props.isLoading, props.isUiContainerOn]);
 
 	useEffect(() => {
 		const initMicEventCallBack = () => {
@@ -30,10 +31,9 @@ function RoomFooter(props): JSX.Element {
 			document.removeEventListener('init-mic-event', initMicEventCallBack);
 			document.removeEventListener('stop-share-event', stopShareEventCallBack);
 		};
-	}, [props.getWorld, isShareOn]);
+	}, [world, isShareOn]);
 
 	const micButtonClicked = () => {
-		const world = props.getWorld();
 		const mediasoupAdapter = world.mediasoupAdapter;
 		if (isMicOn) {
 			mediasoupAdapter.muteMic();
@@ -46,7 +46,6 @@ function RoomFooter(props): JSX.Element {
 
 	const webcamButtonClicked = () => {
 		document.dispatchEvent(new Event('toggle-out-event'));
-		const world = props.getWorld();
 		const mediasoupAdapter = world.mediasoupAdapter;
 		if (isWebcamOn) {
 			mediasoupAdapter.disableWebcam();
@@ -59,7 +58,6 @@ function RoomFooter(props): JSX.Element {
 
 	const shareButtonClicked = async () => {
 		document.dispatchEvent(new Event('toggle-out-event'));
-		const world = props.getWorld();
 		const mediasoupAdapter = world.mediasoupAdapter;
 
 		if (isShareOn) {
@@ -81,9 +79,9 @@ function RoomFooter(props): JSX.Element {
 
 	const controlsButtonClicked = async () => {
 		if (isUiContainerOn) {
-			props.setUiContainerOn(false);
+			setUiContainerOn(false);
 		} else {
-			props.setUiContainerOn(true);
+			setUiContainerOn(true);
 		}
 	};
 

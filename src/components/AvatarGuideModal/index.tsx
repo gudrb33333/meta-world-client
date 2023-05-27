@@ -1,16 +1,13 @@
-import classNames from 'classnames';
-import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import styles from './style.module.css';
 import ModalButton from '../ModalButton';
 
-function AvatarGuideModal(props): JSX.Element {
-	const [isGuideModalOn, setIsGuideModalOn] = useState(true);
+interface AvatarGuideModalProps {
+	isGuideModalOn: boolean;
+	close: () => void;
+}
 
-	useEffect(() => {
-		setIsGuideModalOn(props.isGuideModalOn);
-	}, [props.isGuideModalOn]);
-
+function AvatarGuideModal({ isGuideModalOn, close }:AvatarGuideModalProps): JSX.Element {
 	return (
 		<Modal
 			isOpen={isGuideModalOn}
@@ -59,7 +56,7 @@ function AvatarGuideModal(props): JSX.Element {
 						<td>
 							<ModalButton 
 								buttonName='닫기'
-								onClick={props.close}
+								onClick={close}
 							/>
 						</td>
 					</tr>

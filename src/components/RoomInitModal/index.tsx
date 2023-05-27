@@ -10,26 +10,26 @@ import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
 import { findMyProfile } from '../../api/profile';
 
 import { Joystick } from '../../systems/core/Joystick';
+import { World } from 'src/systems/world/World';
 
-export default function RoomInitModal(props): JSX.Element {
+interface RoomInitModalProps {
+	isLoading: boolean;
+	world: World;
+}
+
+function RoomInitModal({ isLoading, world }: RoomInitModalProps): JSX.Element {
 	const navigate = useNavigate();
-	const [isLoading, setIsLoading] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(true);
 	const [nickname, setNickname] = useState('');
 	const [profileCanvas, setProfileCanvas] = useState(null);
 
-	useEffect(() => {
-		setIsLoading(props.isLoading);
-	}, [props.isLoading]);
-
 	const closeModal = () => {
-		const world = props.getWorld();
 		profileCanvas.stopRendering();
 		setProfileCanvas(null);
 
 		if (checkIsMobile() && screenfull.isEnabled) {
 			screenfull.request();
-			new Joystick(world, world._inputManager);
+			new Joystick(world, world.inputManager);
 		}
 
 		world.initLocalVideoSceen();
@@ -55,18 +55,18 @@ export default function RoomInitModal(props): JSX.Element {
 			} catch (error) {
 				if (error.response.status === 401) {
 					alert('권한이 없습니다. 다시 로그인 해주세요.');
-					props.close();
+					close();
 				} else if (error.response.status === 404) {
 					if (
 						confirm('생성된 프로필이 없습니다. 프로필 생성으로 이동합니다.')
 					) {
 						navigate('/avatar');
 					} else {
-						props.close();
+						close();
 					}
 				} else {
 					alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
-					props.close();
+					close();
 				}
 			}
 		}
@@ -238,3 +238,5 @@ export default function RoomInitModal(props): JSX.Element {
 		);
 	}
 }
+
+export default RoomInitModal;

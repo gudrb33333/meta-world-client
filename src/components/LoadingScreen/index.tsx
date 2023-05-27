@@ -2,13 +2,12 @@ import styles from './style.module.css';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
-function LoadingScreen(props): JSX.Element {
-	const [isLoading, setIsLoading] = useState(props.isLoading);
-	const [doneLoading, setDoneLoading] = useState(0);
+interface LoadingScreenProps {
+	isLoading: boolean
+}
 
-	useEffect(() => {
-		setIsLoading(props.isLoading);
-	}, [props.isLoading]);
+function LoadingScreen({ isLoading }: LoadingScreenProps): JSX.Element {
+	const [doneLoading, setDoneLoading] = useState(0);
 
 	useEffect(() => {
 		const doneLoadingStatusCallback = (e: CustomEvent) => {

@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './style.module.css';
 import { findClothing } from '../../api/clothing';
+import { World } from 'src/systems/world/World';
 
-function RoomSidebar(props): JSX.Element {
+interface RoomSidebarProps {
+	world: World;
+}
+
+function RoomSidebar({ world }: RoomSidebarProps): JSX.Element {
 	const width = window.innerWidth / 2.5;
 	const [permission, setPermission] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
@@ -24,7 +29,6 @@ function RoomSidebar(props): JSX.Element {
 			setX(0);
 			setOpen(true);
 		} else {
-			const world = props.getWorld();
 			world.userAvatar.avatarState.sidebarClose();
 			setX(-width);
 			setOpen(false);

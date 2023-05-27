@@ -7,7 +7,7 @@ interface ModalButtonProp {
     onClick: () => void;
 }
 
-function ModalButton({buttonName, disable = false, onClick}: ModalButtonProp): JSX.Element   {
+function ModalButton({ buttonName, disable = false, onClick }: ModalButtonProp): JSX.Element   {
 
     return (
         <button

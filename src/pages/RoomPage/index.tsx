@@ -1,11 +1,11 @@
 import styles from './style.module.css';
 import { World } from '../../systems/world/World';
-import Footer from '../../components/RoomFooter';
+import RoomFooter from '../../components/RoomFooter';
 import LoadingScreen from '../../components/LoadingScreen';
 import UiContainer from '../../components/UiContainer';
 import { createBrowserHistory } from 'history';
 import { useEffect, useState } from 'react';
-import Sidebar from '../../components/RoomSidebar';
+import RoomSidebar from '../../components/RoomSidebar';
 import { findMyProfile } from '../../api/profile';
 import { useNavigate, useParams } from 'react-router-dom';
 import RoomInitModal from '../../components/RoomInitModal';
@@ -154,15 +154,15 @@ function RoomPage(): JSX.Element {
 			></canvas>
 			<div id="remote-producer-container"></div>
 			<LoadingScreen isLoading={isLoading} />
-			<RoomInitModal isLoading={isLoading} getWorld={getWorld} />
+			<RoomInitModal isLoading={isLoading} world={getWorld()} />
 			<UiContainer isLoading={isLoading} isUiContainerOn={isUiContainerOn} />
-			<Footer
+			<RoomFooter
 				isLoading={isLoading}
-				getWorld={getWorld}
+				world={getWorld()}
 				isUiContainerOn={isUiContainerOn}
 				setUiContainerOn={setUiContainerOn}
 			/>
-			<Sidebar getWorld={getWorld} />
+			<RoomSidebar world={getWorld()} />
 		</>
 	);
 }

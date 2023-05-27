@@ -1,17 +1,13 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
 import styles from './style.module.css';
 import checkIsMobile from '../../utils/isMobile';
 
-function UiContainer(props) {
-	const [isLoading, setIsLoading] = useState(props.isLoading);
-	const [isUiContainerOn, setIsUiContainerOn] = useState(props.isUiContainerOn);
+interface UiContainerProps {
+	isLoading: boolean;
+	isUiContainerOn: boolean;
+}
 
-	useEffect(() => {
-		setIsLoading(props.isLoading);
-		setIsUiContainerOn(props.isUiContainerOn);
-	}, [props.isLoading, props.isUiContainerOn]);
-
+function UiContainer({ isLoading, isUiContainerOn}: UiContainerProps) {
 	return (
 		<div
 			id={styles.uiContainer}

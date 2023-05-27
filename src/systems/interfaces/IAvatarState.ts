@@ -6,4 +6,5 @@ export interface IAvatarState {
 
 	update(timeStep: number): void;
 	onInputChange(): void;
+	sidebarClose(): void;
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import classNames from 'classnames';
 import styles from './style.module.css';
 import { useNavigate } from 'react-router-dom';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
@@ -15,15 +14,14 @@ interface ProfileModalProps {
 	close: () => void;
 }
 
-function ProfileModal(props: ProfileModalProps): JSX.Element {
-	const [isModalOn, setIsModalOn] = useState(false);
+function ProfileModal({ isModalOn, isLoggedIn, profileModalType, close }: ProfileModalProps): JSX.Element {
 	const [nickname, setNickname] = useState('');
 	const [profileCanvas, setProfileCanvas] = useState(null);
 	const navigate = useNavigate();
 
 	const afterOpenModal = async () => {
-		if (props.isModalOn) {
-			if (props.profileModalType === '?user-type=guest') {
+		if (isModalOn) {
+			if (profileModalType === '?user-type=guest') {
 				sessionStorage.setItem(
 					'avatar_url',
 					'/assets/male/readyDefaultMaleAvatar.glb',
@@ -43,32 +41,22 @@ function ProfileModal(props: ProfileModalProps): JSX.Element {
 			} catch (error) {
 				if (error.response.status === 401) {
 					alert('권한이 없습니다. 다시 로그인 해주세요.');
-					props.close();
+					close();
 				} else if (error.response.status === 404) {
 					if (
 						confirm('생성된 프로필이 없습니다. 프로필 생성으로 이동합니다.')
 					) {
 						navigate('/avatar');
 					} else {
-						props.close();
+						close();
 					}
 				} else {
 					alert('알 수 없는 에러로 프로필 조회를 실패했습니다.');
-					props.close();
+					close();
 				}
 			}
 		}
 	};
-
-	const closeModal = () => {
-		profileCanvas.stopRendering();
-		setProfileCanvas(null);
-		props.close();
-	};
-
-	useEffect(() => {
-		setIsModalOn(props.isModalOn);
-	}, [props.isModalOn]);
 
 	const changeProfileHandler = () => {
 		navigate('/avatar?edit-mode');
@@ -79,17 +67,17 @@ function ProfileModal(props: ProfileModalProps): JSX.Element {
 			await deleteProfile();
 			confirm('프로필을 성공적으로 삭제했습니다.');
 			setNickname('');
-			props.close();
+			close();
 		} catch (error) {
 			if (error.response.status === 404) {
 				alert('삭제할 프로필을 찾지 못했습니다.');
-				props.close();
+				close();
 			} else if (error.response.status === 401) {
 				alert('권한이 없습니다. 로그인을 다시 해주세요.');
-				props.close();
+				close();
 			} else {
 				alert('알 수 없는 에러가 발생했습니다.');
-				props.close();
+				close();
 			}
 		}
 	};
@@ -174,7 +162,7 @@ function ProfileModal(props: ProfileModalProps): JSX.Element {
 					</tr>
 					<tr>
 						<td>
-							{props.isLoggedIn && (
+							{isLoggedIn && (
 								<>
 									<ModalButton 
 										buttonName='아바타 변경'
@@ -188,7 +176,7 @@ function ProfileModal(props: ProfileModalProps): JSX.Element {
 							)}
 							<ModalButton 
 								buttonName='닫기'
-								onClick={props.close}
+								onClick={close}
 							/>
 						</td>
 					</tr>
