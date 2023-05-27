@@ -1,0 +1,11 @@
+.modal-button {
+    height: 2.5rem;
+    color: #1d221c;
+    background-color: #00e8da;
+    border: none;
+    border-radius: 10px;
+    margin: 1%;
+    width: 10%;
+    min-width: 147px;
+    cursor: pointer;
+}
