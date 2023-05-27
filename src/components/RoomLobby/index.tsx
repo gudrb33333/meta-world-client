@@ -68,9 +68,9 @@ function RoomLobby() {
 						roomUrl={`/rooms/shopping-mall${profileModalType}`}
 					/>
 					<Card
-						title="공연장"
+						title="클럽"
 						imageUrl="/assets/images/after-party-thumbnail.png"
-						body="&nbsp;조명이 있는 공연장에서 친구들과 비디오 감상을 해보세요."
+						body="&nbsp;조명이 있는 클럽에서 친구들과 비디오 감상을 해보세요."
 						roomUrl={`/rooms/after-party${profileModalType}`}
 					/>
 				</div>
