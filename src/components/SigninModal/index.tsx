@@ -1,7 +1,7 @@
 import Modal from 'react-modal';
 import styles from './style.module.css';
 import checkIsMobile from '../../utils/isMobile';
-import ModalButton from '../Buttons/ModalButton';
+import ModalButton from '../buttons/ModalButton';
 
 interface SigninModalProps {
 	isModalOn: boolean;
