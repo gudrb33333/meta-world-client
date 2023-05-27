@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { createProfile, findMyProfile, updateProfile } from '../../api/profile';
 import AvatarCreateLoading from '../AvatarCreateLoading';
 import styles from './style.module.css';
+import ModalButton from '../buttons/ModalButton';
 
 function AvatarNameModal(props): JSX.Element {
 	Modal.setAppElement('#root');
@@ -173,39 +174,23 @@ function AvatarNameModal(props): JSX.Element {
 						<tr>
 							<td>
 								{isEditMode ? (
-									<button
-										disabled={disable}
-										className={classNames([
-											styles.enterRoom,
-											styles.avatarSetInfoButton,
-										])}
+									<ModalButton 
+										buttonName='아바타 변경'
+										disable={disable}
 										onClick={updateAvatarHandler}
-									>
-										아바타 변경
-									</button>
+									/>
 								) : (
-									<button
-										disabled={disable}
-										className={classNames([
-											styles.enterRoom,
-											styles.avatarSetInfoButton,
-										])}
+									<ModalButton 
+										buttonName='아바타 생성'
+										disable={disable}
 										onClick={createAvatarHandler}
-									>
-										아바타 생성
-									</button>
+									/>
 								)}
-
-								<button
-									disabled={disable}
-									className={classNames([
-										styles.close,
-										styles.avatarSetInfoButton,
-									])}
+								<ModalButton 
+									buttonName='아바타 다시 선택'
+									disable={disable}
 									onClick={props.close}
-								>
-									아바타 다시 선택
-								</button>
+								/>
 							</td>
 						</tr>
 					</tbody>

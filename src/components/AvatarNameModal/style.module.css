@@ -6,17 +6,6 @@
     width: 100%;
 }
 
-.avatar-set-info-button {
-    height: 2.5rem;
-    color: #1d221c;
-    background-color: #00e8da;
-    border: none;
-    border-radius: 10px;
-    margin: 1%;
-    cursor: pointer;
-}
-
-
 input {
     width: 28%;
     height: 32px;

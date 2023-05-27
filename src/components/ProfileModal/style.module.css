@@ -26,30 +26,6 @@
     border-collapse: collapse;
 }
 
-.profile-info-button {
-    height: 2.4rem;
-    color: #1d221c;
-    background-color: #00e8da;
-    border: none;
-    border-radius: 10px;
-    margin: 1%;
-    margin-top: 0px;
-    width: 6.8%;
-    min-width: 104px;
-    cursor: pointer;
-}
-
-.profile-enter-button {
-    height: 2.4rem;
-    color: #1d221c;
-    background-color: #00e8da;
-    border: none;
-    border-radius: 7px;
-    width: 33%;
-    min-width: 500px;
-    cursor: pointer;
-}
-
 .profile-input {
     width: 22%;
     min-width: 300px;

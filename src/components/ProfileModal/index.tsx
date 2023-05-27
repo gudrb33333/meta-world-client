@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ProfileCanvas } from '../../systems/world/ProfileCanvas';
 import { deleteProfile, findMyProfile } from '../../api/profile';
 import checkIsMobile from '../../utils/isMobile';
+import ModalButton from '../buttons/ModalButton';
 
 interface ProfileModalProps {
 	isModalOn: boolean;
@@ -174,35 +175,20 @@ function ProfileModal(props: ProfileModalProps): JSX.Element {
 						<td>
 							{props.isLoggedIn && (
 								<>
-									<button
-										type="button"
-										className={classNames([
-											styles.close,
-											styles.profileInfoButton,
-										])}
+									<ModalButton 
+										buttonName='아바타 변경'
 										onClick={changeProfileHandler}
-									>
-										아바타 변경
-									</button>
-									<button
-										type="button"
-										className={classNames([
-											styles.close,
-											styles.profileInfoButton,
-										])}
+									/>
+									<ModalButton 
+										buttonName='아바타 삭제'
 										onClick={deleteProfileHandler}
-									>
-										아바타 삭제
-									</button>
+									/>
 								</>
 							)}
-							<button
-								type="button"
-								className={classNames([styles.close, styles.profileInfoButton])}
-								onClick={closeModal}
-							>
-								닫기
-							</button>
+							<ModalButton 
+								buttonName='닫기'
+								onClick={props.close}
+							/>
 						</td>
 					</tr>
 				</tbody>
