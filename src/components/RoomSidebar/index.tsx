@@ -21,7 +21,7 @@ function RoomSidebar({ world }: RoomSidebarProps): JSX.Element {
 	const [clothingAssociateLink, setClothingAssociateLink] = useState(null);
 	const [clothingDetailDescription, setClothingDetailDescription] =
 		useState(null);
-	const side = useRef<any>();
+	const side = useRef<HTMLDivElement>();
 
 	// button 클릭 시 토글
 	const toggleMenu = async () => {

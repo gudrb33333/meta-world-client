@@ -522,6 +522,8 @@ export class MediasoupAdapter implements IUpdatable {
 						remoteWebcamScreen: remoteWebcamScreen,
 					};
 
+					console.log('111111', remoteWebcamInfo.remoteWebcam);
+
 					this._remoteWebcamMap.set(remoteProducerId, remoteWebcamInfo);
 				} else if (params.appData.target === 'share') {
 					if (this._shareProducer) {

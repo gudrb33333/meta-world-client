@@ -48,7 +48,7 @@ export class EnteringChair extends AvatarStateBase {
 				this._endPosition.z,
 			);
 
-			this.avatar.setState(new Sitting(this.avatar, this._chair));
+			this.avatar.setState(new Sitting(this.avatar));
 		} else {
 			this.avatar.setPosition(
 				this._endPosition.x,

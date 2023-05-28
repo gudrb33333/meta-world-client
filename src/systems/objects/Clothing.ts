@@ -1,22 +1,22 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { EntityType } from '../enums/EntityType';
-import * as _ from 'lodash';
 import { CollisionGroups } from '../enums/CollisionGroups';
 import { WorldObject } from './WorldObject';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export class Clothing extends WorldObject {
 	public entityType: EntityType = EntityType.Clothing;
 	private _targetPoint: THREE.Object3D;
 
-	constructor(gltf: any, object: THREE.Object3D) {
+	constructor(gltf: GLTF, object: THREE.Object3D) {
 		super(gltf, object);
 
 		// Read GLTF
 		this.readGltfData(gltf);
 	}
 
-	public readGltfData(gltf: any) {
+	public readGltfData(gltf: GLTF) {
 		gltf.scene.traverse((child) => {
 			if (child.hasOwnProperty('userData')) {
 				if (child.userData.data === 'collision') {

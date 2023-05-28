@@ -1,9 +1,8 @@
 import { AvatarStateBase } from '../_stateLibrary';
 import { Avatar } from '../../Avatar';
-import { Chair } from 'src/systems/objects/Chair';
 
 export class Sitting extends AvatarStateBase {
-	constructor(avatar: Avatar, chair: Chair) {
+	constructor(avatar: Avatar) {
 		super(avatar);
 
 		this.canFindChairsToEnter = false;

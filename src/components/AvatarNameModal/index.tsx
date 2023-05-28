@@ -12,7 +12,11 @@ interface AvatarNameModalProps {
 	avatarUrl: string;
 }
 
-function AvatarNameModal({ isNameModalOn, close, avatarUrl }:AvatarNameModalProps): JSX.Element {
+function AvatarNameModal({
+	isNameModalOn,
+	close,
+	avatarUrl,
+}: AvatarNameModalProps): JSX.Element {
 	Modal.setAppElement('#root');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isEditMode, setIsEditMode] = useState(false);
@@ -174,20 +178,20 @@ function AvatarNameModal({ isNameModalOn, close, avatarUrl }:AvatarNameModalProp
 						<tr>
 							<td>
 								{isEditMode ? (
-									<ModalButton 
-										buttonName='아바타 변경'
+									<ModalButton
+										buttonName="아바타 변경"
 										disable={disable}
 										onClick={updateAvatarHandler}
 									/>
 								) : (
-									<ModalButton 
-										buttonName='아바타 생성'
+									<ModalButton
+										buttonName="아바타 생성"
 										disable={disable}
 										onClick={createAvatarHandler}
 									/>
 								)}
-								<ModalButton 
-									buttonName='아바타 다시 선택'
+								<ModalButton
+									buttonName="아바타 다시 선택"
 									disable={disable}
 									onClick={close}
 								/>

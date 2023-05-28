@@ -6,6 +6,7 @@ import { Chair } from '../objects/Chair';
 import { Clothing } from '../objects/Clothing';
 import { LoadingManager } from '../core/LoadingManager';
 import { WorldObject } from '../objects/WorldObject';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export class ObjectSpawnPoint implements ISpawnPoint {
 	private _type: string;
@@ -17,7 +18,7 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 	}
 
 	public spawn(loadingManager: LoadingManager, world: World): void {
-		loadingManager.loadGLTF('/assets/' + this._type + '.glb', (model: any) => {
+		loadingManager.loadGLTF('/assets/' + this._type + '.glb', (model: GLTF) => {
 			const object: WorldObject = this.getNewWorldObjectByType(
 				model,
 				this._type,
@@ -37,7 +38,7 @@ export class ObjectSpawnPoint implements ISpawnPoint {
 	}
 
 	private getNewWorldObjectByType(
-		model: any,
+		model: GLTF,
 		type: string,
 		object: THREE.Object3D,
 	): WorldObject {

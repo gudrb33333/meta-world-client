@@ -7,7 +7,7 @@ interface UiContainerProps {
 	isUiContainerOn: boolean;
 }
 
-function UiContainer({ isLoading, isUiContainerOn}: UiContainerProps) {
+function UiContainer({ isLoading, isUiContainerOn }: UiContainerProps) {
 	return (
 		<div
 			id={styles.uiContainer}

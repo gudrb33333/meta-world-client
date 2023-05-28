@@ -8,6 +8,7 @@ import { CollisionGroups } from '../enums/CollisionGroups';
 import { EntityType } from '../enums/EntityType';
 import { IControllable } from '../interfaces/IControllable';
 import { WorldObject } from './WorldObject';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export class Chair extends WorldObject implements IControllable {
 	public entityType: EntityType = EntityType.Chair;
@@ -21,7 +22,7 @@ export class Chair extends WorldObject implements IControllable {
 	private _entryPoints: THREE.Object3D;
 	private _occupiedBy: Avatar = null;
 
-	constructor(gltf: any, object: THREE.Object3D) {
+	constructor(gltf: GLTF, object: THREE.Object3D) {
 		super(gltf, object);
 
 		// Read GLTF
@@ -43,11 +44,7 @@ export class Chair extends WorldObject implements IControllable {
 		}
 	}
 
-	public handleMouseButton(
-		event: MouseEvent,
-		code: string,
-		pressed: boolean,
-	): void {
+	public handleMouseButton(): void {
 		return;
 	}
 

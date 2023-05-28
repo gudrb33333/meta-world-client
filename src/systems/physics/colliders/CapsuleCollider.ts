@@ -1,15 +1,24 @@
 import * as CANNON from 'cannon';
-import * as THREE from 'three';
 import * as Utils from '../../core/FunctionLibrary';
 import { ICollider } from '../../interfaces/ICollider';
 
+interface CapsuleColliderOptions {
+	mass?: number;
+	position?: CANNON.Vec3;
+	height?: number;
+	radius?: number;
+	segments?: number;
+	friction?: number;
+	avatarAdjustValue?: number;
+}
+
 export class CapsuleCollider implements ICollider {
-	public options: any;
+	public options: CapsuleColliderOptions;
 	public body: CANNON.Body;
 	// public visual: THREE.Mesh;
 
-	constructor(options: any) {
-		const defaults = {
+	constructor(options: CapsuleColliderOptions) {
+		const defaults: CapsuleColliderOptions = {
 			mass: 0,
 			position: new CANNON.Vec3(),
 			height: 0.5,

@@ -9,9 +9,8 @@ import PushableButton from '../../components/PushableButton';
 function HomePage(): JSX.Element {
 	const movePage = useNavigate();
 
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [, setIsLoggedIn] = useState(false);
 	const [isSigninModalOn, setIsSigninModalOn] = useState(false);
-	const [isSignupModalOn, setIsSignupModalOn] = useState(false);
 
 	const openSigninModal = () => {
 		setIsSigninModalOn(true);
@@ -19,11 +18,6 @@ function HomePage(): JSX.Element {
 
 	const closeSigninModal = () => {
 		setIsSigninModalOn(false);
-	};
-
-	const loginComplete = () => {
-		setIsLoggedIn(true);
-		movePage('/lobby');
 	};
 
 	useEffect(() => {
@@ -61,12 +55,7 @@ function HomePage(): JSX.Element {
 							onClick={null}
 						/>
 					</Link>
-					<SigninModal
-						isModalOn={isSigninModalOn}
-						close={closeSigninModal}
-						loginComplete={loginComplete}
-						// openProfileModal={openProfileModal}
-					/>
+					<SigninModal isModalOn={isSigninModalOn} close={closeSigninModal} />
 				</div>
 			</div>
 		</div>

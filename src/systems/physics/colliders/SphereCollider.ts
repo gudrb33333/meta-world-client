@@ -3,13 +3,20 @@ import * as THREE from 'three';
 import * as Utils from '../../core/FunctionLibrary';
 import { ICollider } from '../../interfaces/ICollider';
 
+interface SphereColliderOptions {
+	mass?: number;
+	position?: CANNON.Vec3;
+	radius?: number;
+	friction?: number;
+}
+
 export class SphereCollider implements ICollider {
-	public options: any;
+	public options: SphereColliderOptions;
 	public body: CANNON.Body;
 	public debugModel: THREE.Mesh;
 
-	constructor(options: any) {
-		const defaults = {
+	constructor(options: SphereColliderOptions) {
+		const defaults: SphereColliderOptions = {
 			mass: 0,
 			position: new CANNON.Vec3(),
 			radius: 0.3,

@@ -7,7 +7,10 @@ interface AvatarGuideModalProps {
 	close: () => void;
 }
 
-function AvatarGuideModal({ isGuideModalOn, close }:AvatarGuideModalProps): JSX.Element {
+function AvatarGuideModal({
+	isGuideModalOn,
+	close,
+}: AvatarGuideModalProps): JSX.Element {
 	return (
 		<Modal
 			isOpen={isGuideModalOn}
@@ -54,10 +57,7 @@ function AvatarGuideModal({ isGuideModalOn, close }:AvatarGuideModalProps): JSX.
 					</tr>
 					<tr>
 						<td>
-							<ModalButton 
-								buttonName='닫기'
-								onClick={close}
-							/>
+							<ModalButton buttonName="닫기" onClick={close} />
 						</td>
 					</tr>
 				</tbody>

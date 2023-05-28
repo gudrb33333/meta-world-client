@@ -1,10 +1,8 @@
 import * as THREE from 'three';
-import { IUpdatable } from '../interfaces/IUpdatable';
 import { World } from '../world/World';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 export class Bloom {
 	private world: World;

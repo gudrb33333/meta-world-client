@@ -54,7 +54,7 @@ export class VectorSpringSimulator extends SimulatorBase {
 	/**
 	 * Gets another simulation frame
 	 */
-	public getFrame(isLastFrame: boolean): SimulationFrameVector {
+	public getFrame(): SimulationFrameVector {
 		// Deep clone data from previous frame
 		const newSpring = new SimulationFrameVector(
 			this.lastFrame().position.clone(),

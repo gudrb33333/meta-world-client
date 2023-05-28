@@ -6,13 +6,12 @@ import ModalButton from '../ModalButton';
 interface SigninModalProps {
 	isModalOn: boolean;
 	close: () => void;
-	loginComplete: () => void;
-  }
+}
 
-function SigninModal({ isModalOn, close, loginComplete }: SigninModalProps): JSX.Element {
+function SigninModal({ isModalOn, close }: SigninModalProps): JSX.Element {
 	const apiUrl = process.env.VITE_API_URL;
-	const googleAuthorizationUrl: string = `${apiUrl}/oauth2/authorization/google`;
-	const kakaoAuthorizationUrl: string = `${apiUrl}/oauth2/authorization/kakao`;
+	const googleAuthorizationUrl = `${apiUrl}/oauth2/authorization/google`;
+	const kakaoAuthorizationUrl = `${apiUrl}/oauth2/authorization/kakao`;
 
 	let overlayStyle;
 	if (checkIsMobile() && window.innerWidth < window.innerHeight) {
@@ -92,10 +91,7 @@ function SigninModal({ isModalOn, close, loginComplete }: SigninModalProps): JSX
 						</tr>
 						<tr>
 							<td>
-								<ModalButton 
-									buttonName='닫기'
-									onClick={close}
-								/>
+								<ModalButton buttonName="닫기" onClick={close} />
 							</td>
 						</tr>
 					</tbody>

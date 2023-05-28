@@ -4,12 +4,11 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { DirectionalLight, HemisphereLight, Object3D } from 'three';
+import { DirectionalLight, HemisphereLight } from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import ThreeMeshUI from 'three-mesh-ui';
-import { resolve } from 'path';
 
 import checkIsMobile from '../../utils/isMobile';
 
@@ -39,7 +38,6 @@ export class ProfileCanvas {
 	private _pointerupCallback: () => void;
 
 	constructor(avatar_url: string) {
-		const scope = this;
 		this._container = document.getElementById('profile-container');
 		this._clock = new THREE.Clock();
 		this._raycaster = new THREE.Raycaster();
@@ -199,7 +197,7 @@ export class ProfileCanvas {
 
 	public async setAvatarAnimation(model): Promise<void> {
 		const load = this.loadGLTF;
-		const animationGlbList = Array<any>();
+		const animationGlbList = Array<GLTF>();
 		if (
 			model.parser.json.nodes[4].name === 'Neck' &&
 			model.parser.json.nodes[4].rotation[1] === 6.802843444120299e-8
@@ -240,7 +238,7 @@ export class ProfileCanvas {
 		dracoLoader.setDecoderConfig({ type: 'js' });
 
 		gltfLoader.setDRACOLoader(dracoLoader);
-		return function loadGLTF(url): Promise<any> {
+		return function loadGLTF(url: string): Promise<GLTF> {
 			return new Promise(function (resolve, reject) {
 				gltfLoader.load(url, resolve, null, reject);
 			});

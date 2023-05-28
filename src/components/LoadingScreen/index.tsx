@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 interface LoadingScreenProps {
-	isLoading: boolean
+	isLoading: boolean;
 }
 
 function LoadingScreen({ isLoading }: LoadingScreenProps): JSX.Element {

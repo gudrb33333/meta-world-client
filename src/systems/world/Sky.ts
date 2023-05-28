@@ -72,7 +72,7 @@ export class Sky extends THREE.Object3D implements IUpdatable {
 		// };
 
 		// Legacy
-		const splitsCallback = (amount, near, far) => {
+		const splitsCallback = (amount) => {
 			const arr = [];
 
 			for (let i = amount - 1; i >= 0; i--) {
@@ -101,7 +101,7 @@ export class Sky extends THREE.Object3D implements IUpdatable {
 		world.registerUpdatable(this);
 	}
 
-	public update(timeScale: number): void {
+	public update(): void {
 		this.position.copy(this.world.camera.position);
 		this.refreshSunPosition();
 

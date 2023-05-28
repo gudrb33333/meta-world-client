@@ -7,7 +7,11 @@ interface PushableButtonProps {
 	onClick: () => void;
 }
 
-function PushableButton({ slideDirection, content, onClick }: PushableButtonProps): JSX.Element {
+function PushableButton({
+	slideDirection,
+	content,
+	onClick,
+}: PushableButtonProps): JSX.Element {
 	return (
 		<button
 			className={classNames([

@@ -6,7 +6,7 @@ import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { DirectionalLight, HemisphereLight, Object3D } from 'three';
+import { DirectionalLight, HemisphereLight } from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 
 export class SidebarCanvas {

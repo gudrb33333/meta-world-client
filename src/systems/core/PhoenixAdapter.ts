@@ -6,8 +6,6 @@ import { Socket, Channel, Presence } from 'phoenix';
 import { Avatar } from '../avatars/Avatar';
 import { AvatarSpawnPoint } from '../world/AvatarSpawnPoint';
 import { LoadingManager } from './LoadingManager';
-import { Vector3 } from 'three';
-import { Chair } from '../objects/Chair';
 
 export class PhoenixAdapter implements IUpdatable {
 	public updateOrder = 6;
@@ -17,9 +15,7 @@ export class PhoenixAdapter implements IUpdatable {
 	private _socket: Socket;
 	private _channel: Channel;
 	private _presence: Presence;
-	private _animationMap = new Map<string, Array<any>>();
-
-	private _idleState = 0;
+	private _animationMap = new Map<string, [string, number]>();
 
 	constructor(
 		world: World,
@@ -107,7 +103,7 @@ export class PhoenixAdapter implements IUpdatable {
 	}
 
 	public onLeave() {
-		this._presence.onLeave((id, remaining, afteremovedrJoin) => {
+		this._presence.onLeave((id) => {
 			let leaveAvatar: Avatar;
 			this._world.avatars.forEach((avatar) => {
 				if (avatar.sessionId == id) {

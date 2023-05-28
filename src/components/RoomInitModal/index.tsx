@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import styles from './style.module.css';
@@ -90,7 +90,6 @@ function RoomInitModal({ isLoading, world }: RoomInitModalProps): JSX.Element {
 			right: 0,
 			bottom: 30,
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-
 		};
 	} else {
 		overlayStyle = {
@@ -102,7 +101,6 @@ function RoomInitModal({ isLoading, world }: RoomInitModalProps): JSX.Element {
 			backgroundColor: 'rgba(0, 0, 0, 0)',
 		};
 	}
-
 
 	if (checkIsMobile() && window.innerWidth > window.innerHeight) {
 		return (

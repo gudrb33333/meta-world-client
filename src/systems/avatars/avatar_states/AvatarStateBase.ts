@@ -12,7 +12,7 @@ import { IAvatarState } from '../../interfaces/IAvatarState';
 export abstract class AvatarStateBase implements IAvatarState {
 	public avatar: Avatar;
 	public timer: number;
-	public animationLength: any;
+	public animationLength: number;
 
 	public canFindChairsToEnter: boolean;
 	public canEnterChairs: boolean;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Modal from 'react-modal';
 import styles from './style.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -14,9 +14,14 @@ interface ProfileModalProps {
 	close: () => void;
 }
 
-function ProfileModal({ isModalOn, isLoggedIn, profileModalType, close }: ProfileModalProps): JSX.Element {
+function ProfileModal({
+	isModalOn,
+	isLoggedIn,
+	profileModalType,
+	close,
+}: ProfileModalProps): JSX.Element {
 	const [nickname, setNickname] = useState('');
-	const [profileCanvas, setProfileCanvas] = useState(null);
+	const [, setProfileCanvas] = useState(null);
 	const navigate = useNavigate();
 
 	const afterOpenModal = async () => {
@@ -100,7 +105,6 @@ function ProfileModal({ isModalOn, isLoggedIn, profileModalType, close }: Profil
 			right: 0,
 			bottom: 30,
 			backgroundColor: 'rgba(0, 0, 0, 0)',
-
 		};
 	} else {
 		overlayStyle = {
@@ -164,20 +168,17 @@ function ProfileModal({ isModalOn, isLoggedIn, profileModalType, close }: Profil
 						<td>
 							{isLoggedIn && (
 								<>
-									<ModalButton 
-										buttonName='아바타 변경'
+									<ModalButton
+										buttonName="아바타 변경"
 										onClick={changeProfileHandler}
 									/>
-									<ModalButton 
-										buttonName='아바타 삭제'
+									<ModalButton
+										buttonName="아바타 삭제"
 										onClick={deleteProfileHandler}
 									/>
 								</>
 							)}
-							<ModalButton 
-								buttonName='닫기'
-								onClick={close}
-							/>
+							<ModalButton buttonName="닫기" onClick={close} />
 						</td>
 					</tr>
 				</tbody>

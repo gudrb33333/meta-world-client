@@ -171,7 +171,7 @@ export class Joystick implements IUpdatable {
 		);
 	}
 
-	update(timestep: number, unscaledTimeStep: number): void {
+	update(): void {
 		if (this._rotating) {
 			this._inputManager.onRightJoystickDown(
 				this._lookDx,

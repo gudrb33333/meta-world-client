@@ -26,13 +26,14 @@ import { UIManager } from '../core/UIManager';
 import { ObjectSpawnPoint } from './ObjectSpawnPoint';
 import { PhoenixAdapter } from '../core/PhoenixAdapter';
 import { MediasoupAdapter } from '../core/MediasoupAdapter';
-import checkIsMobile, { isIOS } from '../../utils/isMobile';
+import { isIOS } from '../../utils/isMobile';
 import { WorldObject } from '../objects/WorldObject';
 import { Light } from './Light';
 
 import { Bloom } from '../core/Bloom';
 import { LocalVideoScreen } from '../core/LocalVideoScreen';
 import { AudioFrequencyAnalyser } from '../core/AudioFrequencyAnalyser';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export interface WorldParams {
 	Pointer_Lock: boolean;
@@ -122,19 +123,19 @@ export class World {
 		document.body.appendChild(this._renderer.domElement);
 
 		// Auto window resize
-		function onWindowResize(): void {
-			scope._camera.aspect = window.innerWidth / window.innerHeight;
-			scope._camera.updateProjectionMatrix();
-			scope._renderer.setSize(window.innerWidth, window.innerHeight);
-			fxaaPass.uniforms['resolution'].value.set(
-				1 / (window.innerWidth * pixelRatio),
-				1 / (window.innerHeight * pixelRatio),
-			);
-			scope._composer.setSize(
-				window.innerWidth * pixelRatio,
-				window.innerHeight * pixelRatio,
-			);
-		}
+		// function onWindowResize(): void {
+		// 	scope._camera.aspect = window.innerWidth / window.innerHeight;
+		// 	scope._camera.updateProjectionMatrix();
+		// 	scope._renderer.setSize(window.innerWidth, window.innerHeight);
+		// 	fxaaPass.uniforms['resolution'].value.set(
+		// 		1 / (window.innerWidth * pixelRatio),
+		// 		1 / (window.innerHeight * pixelRatio),
+		// 	);
+		// 	scope._composer.setSize(
+		// 		window.innerWidth * pixelRatio,
+		// 		window.innerHeight * pixelRatio,
+		// 	);
+		// }
 
 		const maxResolution = {
 			width: screen.width * window.devicePixelRatio,
@@ -392,22 +393,28 @@ export class World {
 		this.render(this);
 	}
 
-	public loadScene(loadingManager: LoadingManager, gltf: any): void {
+	public loadScene(loadingManager: LoadingManager, gltf: GLTF): void {
 		gltf.scene.traverse((child) => {
-			if (child.material) {
-				if (
-					child.material.name === 'pink_bloom' ||
-					child.material.name === 'iceblue_bloom' ||
-					child.material.name === 'yellow_bloom_highyy' ||
-					child.material.name === 'yellow_bloom_low' ||
-					child.material.name === 'turkuaz_bloom' ||
-					child.material.name === 'orange_bloom' ||
-					child.material.name === 'purple_bloom' ||
-					child.material.name === 'yellow_bloom_high'
-				) {
-					child.layers.enable(1);
-				} else {
-					child.material.dispose();
+			if (child instanceof THREE.Mesh) {
+				const materials = Array.isArray(child.material)
+					? child.material
+					: [child.material];
+
+				for (const material of materials) {
+					if (
+						material.name === 'pink_bloom' ||
+						material.name === 'iceblue_bloom' ||
+						material.name === 'yellow_bloom_highyy' ||
+						material.name === 'yellow_bloom_low' ||
+						material.name === 'turkuaz_bloom' ||
+						material.name === 'orange_bloom' ||
+						material.name === 'purple_bloom' ||
+						material.name === 'yellow_bloom_high'
+					) {
+						child.layers.enable(1);
+					} else {
+						material.dispose();
+					}
 				}
 			}
 

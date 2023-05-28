@@ -5,6 +5,7 @@ import { IWorldEntity } from '../interfaces/IWorldEntity';
 import { World } from '../world/World';
 import _ = require('lodash');
 import { SpriteText2D, textAlign } from 'three-text2d';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export abstract class WorldObject
 	extends THREE.Object3D
@@ -22,7 +23,7 @@ export abstract class WorldObject
 
 	public _isSeated = false;
 
-	constructor(gltf: any, object: THREE.Object3D) {
+	constructor(gltf: GLTF, object: THREE.Object3D) {
 		super();
 		// Physics mat
 		const mat = new CANNON.Material('Mat');
@@ -78,7 +79,7 @@ export abstract class WorldObject
 		this._interactionText.visible = false;
 	}
 
-	public abstract readGltfData(gltf: any): void;
+	public abstract readGltfData(gltf: GLTF): void;
 
 	public removeFromWorld(world: World): void {
 		const chairs = world.worldObjects;
@@ -92,7 +93,7 @@ export abstract class WorldObject
 		}
 	}
 
-	public update(timeStep: number): void {
+	public update(): void {
 		if (this.world.userAvatar) {
 			const distance = this.position.distanceTo(this.world.userAvatar.position);
 			if (distance < 2) {

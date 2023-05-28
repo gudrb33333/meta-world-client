@@ -4,6 +4,7 @@ import { ISpawnPoint } from '../interfaces/ISpawnPoint';
 import { World } from './World';
 import { Avatar } from '../avatars/Avatar';
 import { LoadingManager } from '../core/LoadingManager';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export interface Profile {
 	avatar_url: string;
@@ -53,7 +54,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 					// here the models are returned in deterministic order
 					results.forEach((gltf) => {
 						const animationAction = mixer.clipAction(
-							(gltf as any).animations[0],
+							(gltf as GLTF).animations[0],
 						);
 						animationAction.getClip().name =
 							gltf.scene.children[0].userData.name;
@@ -91,14 +92,13 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 			(model) => {
 				const mixer = new THREE.AnimationMixer(model.scene);
 				const animationClipArr = new Array<THREE.AnimationClip>();
-				const modelType = this.findAvatarType(model);
 				const animationClipGltfs =
 					this.setFullBodyLoadingAvatarAnimationClip(loadingManager);
 
 				animationClipGltfs.then((results) => {
 					results.forEach((gltf) => {
 						const animationAction = mixer.clipAction(
-							(gltf as any).animations[0],
+							(gltf as GLTF).animations[0],
 						);
 						animationAction.getClip().name =
 							gltf.scene.children[0].userData.name;
@@ -139,7 +139,7 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 								// here the models are returned in deterministic order
 								results.forEach((gltf) => {
 									const animationAction = mixer.clipAction(
-										(gltf as any).animations[0],
+										(gltf as GLTF).animations[0],
 									);
 									animationAction.getClip().name =
 										gltf.scene.children[0].userData.name;
@@ -150,10 +150,6 @@ export class AvatarSpawnPoint implements ISpawnPoint {
 								player = new Avatar(model, world.avatarAdjustValue);
 								player.sessionId = sessionId;
 								player.setAvatarName(profile.avatar_name);
-								const worldPos = new THREE.Vector3();
-								//this.object.getWorldPosition(worldPos);
-								//console.log(this.object.getWorldPosition(worldPos))
-								//player.setPosition(-0.08083007484674454, 2.3437719345092773, -0.27053260803222656);
 
 								const forward = Utils.getForward(this._object);
 								player.setOrientation(forward, false);

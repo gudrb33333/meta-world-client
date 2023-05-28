@@ -3,13 +3,20 @@ import * as THREE from 'three';
 import * as Utils from '../../core/FunctionLibrary';
 import { ICollider } from '../../interfaces/ICollider';
 
+interface BoxColliderOptions {
+	mass?: number;
+	position?: THREE.Vector3;
+	size?: THREE.Vector3;
+	friction?: number;
+}
+
 export class BoxCollider implements ICollider {
-	public options: any;
+	public options: BoxColliderOptions;
 	public body: CANNON.Body;
 	public debugModel: THREE.Mesh;
 
-	constructor(options: any) {
-		const defaults = {
+	constructor(options: BoxColliderOptions) {
+		const defaults: BoxColliderOptions = {
 			mass: 0,
 			position: new THREE.Vector3(),
 			size: new THREE.Vector3(0.3, 0.3, 0.3),
@@ -18,12 +25,12 @@ export class BoxCollider implements ICollider {
 		options = Utils.setDefaults(options, defaults);
 		this.options = options;
 
-		options.position = new CANNON.Vec3(
+		const position = new CANNON.Vec3(
 			options.position.x,
 			options.position.y,
 			options.position.z,
 		);
-		options.size = new CANNON.Vec3(
+		const size = new CANNON.Vec3(
 			options.size.x,
 			options.size.y,
 			options.size.z,
@@ -33,13 +40,13 @@ export class BoxCollider implements ICollider {
 		mat.friction = options.friction;
 		// mat.restitution = 0.7;
 
-		const shape = new CANNON.Box(options.size);
+		const shape = new CANNON.Box(size);
 		// shape.material = mat;
 
 		// Add phys sphere
 		const physBox = new CANNON.Body({
 			mass: options.mass,
-			position: options.position,
+			position: position,
 			shape,
 		});
 

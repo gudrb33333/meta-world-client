@@ -10,7 +10,12 @@ interface RoomFooterProps {
 	setUiContainerOn: Dispatch<SetStateAction<boolean>>;
 }
 
-function RoomFooter({ isLoading, world, isUiContainerOn, setUiContainerOn }: RoomFooterProps): JSX.Element {
+function RoomFooter({
+	isLoading,
+	world,
+	isUiContainerOn,
+	setUiContainerOn,
+}: RoomFooterProps): JSX.Element {
 	const [isMicOn, setIsMicOn] = useState(false);
 	const [isWebcamOn, setIsWebcamOn] = useState(false);
 	const [isShareOn, setIsShareOn] = useState(false);
@@ -64,14 +69,14 @@ function RoomFooter({ isLoading, world, isUiContainerOn, setUiContainerOn }: Roo
 			try {
 				await mediasoupAdapter.disableShare();
 				setIsShareOn(false);
-			} catch (e: any) {
+			} catch (e) {
 				setIsShareOn(true);
 			}
 		} else {
 			try {
 				await mediasoupAdapter.enableShare();
 				setIsShareOn(true);
-			} catch (e: any) {
+			} catch (e) {
 				setIsShareOn(false);
 			}
 		}

@@ -12,7 +12,7 @@ export class ChairEntryInstance {
 		this._avatar = avatar;
 	}
 
-	public update(timeStep: number): void {
+	public update(): void {
 		const entryPointWorldPos = new THREE.Vector3();
 		this._entryPoint.getWorldPosition(entryPointWorldPos);
 		const viewVector = new THREE.Vector3().subVectors(

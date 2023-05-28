@@ -19,8 +19,8 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 	private _theta: number;
 	private _phi: number;
 	private _onMouseDownPosition: THREE.Vector2;
-	private _onMouseDownTheta: any;
-	private _onMouseDownPhi: any;
+	private _onMouseDownTheta: number;
+	private _onMouseDownPhi: number;
 	private _targetRadius = 1;
 	private _avatarAdjustValue: number;
 
@@ -90,7 +90,7 @@ export class CameraOperator implements IInputReceiver, IUpdatable {
 		this._phi = Math.min(85, Math.max(-85, this._phi));
 	}
 
-	public update(timeScale: number): void {
+	public update(): void {
 		if (this._followMode === true) {
 			this._camera.position.y = THREE.MathUtils.clamp(
 				this._camera.position.y,

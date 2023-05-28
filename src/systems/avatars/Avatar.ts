@@ -300,12 +300,14 @@ export class Avatar
 		}
 	}
 
-	public readAvatarData(gltf: any): void {
+	public readAvatarData(gltf: GLTF): void {
 		gltf.scene.traverse((child) => {
-			if (child.isMesh) {
+			if (child instanceof THREE.Mesh) {
 				Utils.setupMeshProperties(child);
 
-				if (child.material !== undefined) {
+				if (Array.isArray(child.material)) {
+					this._materials.push(child.material[0]);
+				} else {
 					this._materials.push(child.material);
 				}
 			}
@@ -355,11 +357,7 @@ export class Avatar
 		}
 	}
 
-	public handleRightJoystickEvent(
-		lookDx: number,
-		lookDy: number,
-		pressed: boolean,
-	): void {
+	public handleRightJoystickEvent(lookDx: number, lookDy: number): void {
 		this._world.cameraOperator.move(lookDx, lookDy);
 	}
 
@@ -403,7 +401,7 @@ export class Avatar
 		}
 	}
 
-	public handleDomElementBlurEvent(event: FocusEvent): void {
+	public handleDomElementBlurEvent(): void {
 		this.triggerAction('up', false);
 		this.triggerAction('down', false);
 		this.triggerAction('left', false);
@@ -454,8 +452,8 @@ export class Avatar
 	}
 
 	public update(timeStep: number): void {
-		this._clothingObjectInstance?.update(timeStep);
-		this._chairEntryInstance?.update(timeStep);
+		this._clothingObjectInstance?.update();
+		this._chairEntryInstance?.update();
 		// console.log(this.occupyingSeat);
 		this.avatarState?.update(timeStep);
 
