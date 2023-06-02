@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const InterpolateHtmlPlugin = require("interpolate-html-plugin");
 const DotEnv = require("dotenv-webpack");
 const webpack = require("webpack");
 
@@ -9,14 +8,9 @@ module.exports = {
         app: './src/index.tsx'
     },
     output: {
-        filename: 'main.js',
-        library: 'MetaWorld',
-        libraryTarget: 'umd',
+        filename: 'main.js'
     },
     plugins: [
-        new InterpolateHtmlPlugin({
-            PUBLIC_URL: './'
-        }),
         new HtmlWebpackPlugin({
           template: './public/index.html',
           filename: 'index.html',
