@@ -32,9 +32,9 @@
 </div>
 
 ## Demo
-모바일 기기별로 모두 테스트 되지않아, PC에서 접속해주세요.
+모바일 기기별로 모두 테스트 되지않아, PC 크롬에서 접속해주세요.
 
-Meta World Demo: https://meta-world.gudrb33333.click
+<h4>Meta World Demo: https://meta-world.gudrb33333.click</h4>
 
 ## 연관 프로젝트 정보
 [meta-world-api](https://github.com/gudrb33333/meta-world-api.git) : REST API (Spring Boot)\
